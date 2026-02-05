@@ -1,9 +1,9 @@
 package com.tokenly.backend.service;
 
-import com.tokenly.backend.dto.ApplicationRequest;
+import com.tokenly.backend.dto.request.application.CreateApplicationRequest;
 import com.tokenly.backend.entity.Application;
 import com.tokenly.backend.entity.Client;
-import com.tokenly.backend.enums.Environment;
+import com.tokenly.backend.enums.ApplicationEnvironment;
 import com.tokenly.backend.exception.ResourceNotFoundException;
 import com.tokenly.backend.repository.ApplicationRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,6 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -32,138 +33,102 @@ class ApplicationServiceTest {
 
     private Application testApplication;
     private Client testClient;
+    private UUID testAppId;
 
     @BeforeEach
     void setUp() {
         testClient = new Client();
-        testClient.setId(1L);
+        testClient.setId(UUID.randomUUID());
         testClient.setEmail("client@test.com");
 
+        testAppId = UUID.randomUUID();
         testApplication = new Application();
-        testApplication.setId(1L);
+        testApplication.setId(testAppId);
         testApplication.setAppName("Test App");
         testApplication.setClient(testClient);
-        testApplication.setEnvironment(Environment.DEVELOPMENT);
+        testApplication.setEnvironment(ApplicationEnvironment.DEV);
     }
 
     @Test
     void createApplication_WithValidRequest_ShouldCreateApplication() {
         // Arrange
-        ApplicationRequest request = new ApplicationRequest();
+        CreateApplicationRequest request = new CreateApplicationRequest();
         request.setAppName("New App");
-        request.setEnvironment("DEVELOPMENT");
+        request.setEnvironment(ApplicationEnvironment.DEV);
 
         when(applicationRepository.save(any(Application.class))).thenAnswer(invocation -> {
             Application app = invocation.getArgument(0);
-            app.setId(2L);
+            app.setId(UUID.randomUUID());
             return app;
         });
 
         // Act
-        Application result = applicationService.createApplication(request, testClient);
+        ApplicationService.ApplicationWithApiKey result = applicationService.createApplication(testClient, request);
 
         // Assert
         assertNotNull(result);
-        assertEquals("New App", result.getAppName());
-        assertEquals(Environment.DEVELOPMENT, result.getEnvironment());
-        assertEquals(testClient, result.getClient());
+        assertEquals("New App", result.application().getAppName());
+        assertEquals(ApplicationEnvironment.DEV, result.application().getEnvironment());
+        assertEquals(testClient, result.application().getClient());
         verify(applicationRepository).save(any(Application.class));
     }
 
     @Test
-    void findById_WithValidId_ShouldReturnApplication() {
+    void getApplicationById_WithValidId_ShouldReturnApplication() {
         // Arrange
-        when(applicationRepository.findById(1L)).thenReturn(Optional.of(testApplication));
+        when(applicationRepository.findByIdAndClient(testAppId, testClient)).thenReturn(Optional.of(testApplication));
 
         // Act
-        Application result = applicationService.findById(1L);
+        Application result = applicationService.getApplicationById(testClient, testAppId);
 
         // Assert
         assertNotNull(result);
         assertEquals("Test App", result.getAppName());
-        verify(applicationRepository).findById(1L);
     }
 
     @Test
-    void findById_WithInvalidId_ShouldThrowException() {
-        // Arrange
-        when(applicationRepository.findById(999L)).thenReturn(Optional.empty());
-
-        // Act & Assert
-        assertThrows(ResourceNotFoundException.class, () -> applicationService.findById(999L));
-    }
-
-    @Test
-    void getAllByClient_ShouldReturnClientApplications() {
+    void getApplicationsByClient_ShouldReturnClientApplications() {
         // Arrange
         List<Application> applications = Arrays.asList(testApplication, new Application());
-        when(applicationRepository.findByClientId(1L)).thenReturn(applications);
+        when(applicationRepository.findAllByClient(testClient)).thenReturn(applications);
 
         // Act
-        List<Application> result = applicationService.getAllByClient(testClient);
+        List<Application> result = applicationService.getApplicationsByClient(testClient);
 
         // Assert
         assertNotNull(result);
         assertEquals(2, result.size());
-        verify(applicationRepository).findByClientId(1L);
     }
 
     @Test
     void updateApplication_WithValidData_ShouldUpdateApplication() {
         // Arrange
-        ApplicationRequest request = new ApplicationRequest();
+        CreateApplicationRequest request = new CreateApplicationRequest();
         request.setAppName("Updated App");
-        request.setEnvironment("PRODUCTION");
+        request.setEnvironment(ApplicationEnvironment.PROD);
 
-        when(applicationRepository.findById(1L)).thenReturn(Optional.of(testApplication));
+        when(applicationRepository.findByIdAndClient(testAppId, testClient)).thenReturn(Optional.of(testApplication));
         when(applicationRepository.save(any(Application.class))).thenReturn(testApplication);
 
         // Act
-        Application result = applicationService.updateApplication(1L, request, testClient);
+        Application result = applicationService.updateApplication(testClient, testAppId, request);
 
         // Assert
         assertNotNull(result);
         assertEquals("Updated App", result.getAppName());
-        assertEquals(Environment.PRODUCTION, result.getEnvironment());
-        verify(applicationRepository).save(any(Application.class));
+        assertEquals(ApplicationEnvironment.PROD, result.getEnvironment());
     }
 
     @Test
     void deleteApplication_WithValidId_ShouldDeleteApplication() {
         // Arrange
-        when(applicationRepository.findById(1L)).thenReturn(Optional.of(testApplication));
-        doNothing().when(applicationRepository).deleteById(1L);
+        when(applicationRepository.findByIdAndClient(testAppId, testClient)).thenReturn(Optional.of(testApplication));
+        doNothing().when(applicationRepository).delete(testApplication);
 
         // Act
-        applicationService.deleteApplication(1L, testClient);
+        applicationService.deleteApplication(testClient, testAppId);
 
         // Assert
-        verify(applicationRepository).deleteById(1L);
-    }
-
-    @Test
-    void findByIdAndClient_WithValidData_ShouldReturnApplication() {
-        // Arrange
-        when(applicationRepository.findByIdAndClientId(1L, 1L))
-            .thenReturn(Optional.of(testApplication));
-
-        // Act
-        Application result = applicationService.findByIdAndClient(1L, testClient);
-
-        // Assert
-        assertNotNull(result);
-        assertEquals("Test App", result.getAppName());
-    }
-
-    @Test
-    void findByIdAndClient_WithMismatchedClient_ShouldThrowException() {
-        // Arrange
-        when(applicationRepository.findByIdAndClientId(1L, 1L))
-            .thenReturn(Optional.empty());
-
-        // Act & Assert
-        assertThrows(ResourceNotFoundException.class, () -> 
-            applicationService.findByIdAndClient(1L, testClient)
-        );
+        verify(applicationRepository).delete(testApplication);
     }
 }

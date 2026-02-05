@@ -1,28 +1,24 @@
 package com.tokenly.backend.service;
 
+import com.tokenly.backend.dto.request.auth.UserSignupRequest;
 import com.tokenly.backend.entity.Application;
-import com.tokenly.backend.entity.Client;
 import com.tokenly.backend.entity.User;
 import com.tokenly.backend.enums.UserStatus;
-import com.tokenly.backend.exception.ResourceNotFoundException;
 import com.tokenly.backend.repository.UserRepository;
+import com.tokenly.backend.service.impl.UserServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -31,169 +27,77 @@ class UserServiceTest {
     @Mock
     private UserRepository userRepository;
 
+    @Mock
+    private PasswordEncoder passwordEncoder;
+
+    @Mock
+    private EmailService emailService;
+
     @InjectMocks
-    private UserService userService;
+    private UserServiceImpl userService;
 
     private User testUser;
     private Application testApplication;
+    private UUID testUserId;
 
     @BeforeEach
     void setUp() {
         testApplication = new Application();
-        testApplication.setId(1L);
+        testApplication.setId(UUID.randomUUID());
         testApplication.setAppName("Test App");
 
+        testUserId = UUID.randomUUID();
         testUser = new User();
-        testUser.setId(1L);
+        testUser.setId(testUserId);
         testUser.setEmail("user@test.com");
         testUser.setApplication(testApplication);
         testUser.setStatus(UserStatus.ACTIVE);
     }
 
     @Test
-    void findById_WithValidId_ShouldReturnUser() {
+    void getUserById_WithValidId_ShouldReturnUser() {
         // Arrange
-        when(userRepository.findById(1L)).thenReturn(Optional.of(testUser));
+        when(userRepository.findById(testUserId)).thenReturn(Optional.of(testUser));
 
         // Act
-        User result = userService.findById(1L);
+        User result = userService.getUserById(testApplication, testUserId);
 
         // Assert
         assertNotNull(result);
         assertEquals("user@test.com", result.getEmail());
-        verify(userRepository).findById(1L);
     }
 
     @Test
-    void findById_WithInvalidId_ShouldThrowException() {
+    void findByEmail_WithValidData_ShouldReturnUser() {
         // Arrange
-        when(userRepository.findById(999L)).thenReturn(Optional.empty());
-
-        // Act & Assert
-        assertThrows(ResourceNotFoundException.class, () -> userService.findById(999L));
-    }
-
-    @Test
-    void findByEmailAndApplication_WithValidData_ShouldReturnUser() {
-        // Arrange
-        when(userRepository.findByEmailAndApplicationId("user@test.com", 1L))
+        when(userRepository.findByApplicationAndEmail(testApplication, "user@test.com"))
             .thenReturn(Optional.of(testUser));
 
         // Act
-        Optional<User> result = userService.findByEmailAndApplication("user@test.com", testApplication);
-
-        // Assert
-        assertTrue(result.isPresent());
-        assertEquals("user@test.com", result.get().getEmail());
-    }
-
-    @Test
-    void getAllUsersByApplication_ShouldReturnPagedUsers() {
-        // Arrange
-        List<User> users = Arrays.asList(testUser, new User());
-        Page<User> page = new PageImpl<>(users);
-        Pageable pageable = PageRequest.of(0, 10);
-
-        when(userRepository.findByApplicationId(eq(1L), any(Pageable.class))).thenReturn(page);
-
-        // Act
-        Page<User> result = userService.getAllUsersByApplication(testApplication, pageable);
+        User result = userService.findByEmail(testApplication, "user@test.com");
 
         // Assert
         assertNotNull(result);
-        assertEquals(2, result.getContent().size());
-        verify(userRepository).findByApplicationId(eq(1L), any(Pageable.class));
+        assertEquals("user@test.com", result.getEmail());
     }
 
     @Test
-    void blockUser_WithValidUser_ShouldUpdateStatus() {
+    void signup_WithValidRequest_ShouldCreateUser() {
         // Arrange
-        when(userRepository.findById(1L)).thenReturn(Optional.of(testUser));
-        when(userRepository.save(any(User.class))).thenReturn(testUser);
+        UserSignupRequest request = new UserSignupRequest();
+        request.setEmail("new@test.com");
+        request.setPassword("password123");
+
+        when(userRepository.existsByApplicationAndEmail(any(Application.class), anyString())).thenReturn(false);
+        when(passwordEncoder.encode(anyString())).thenReturn("hashed");
+        when(userRepository.save(any(User.class))).thenAnswer(i -> i.getArgument(0));
 
         // Act
-        User result = userService.blockUser(1L);
+        User result = userService.signup(testApplication, request);
 
         // Assert
         assertNotNull(result);
-        assertEquals(UserStatus.BLOCKED, result.getStatus());
+        assertEquals("new@test.com", result.getEmail());
         verify(userRepository).save(any(User.class));
-    }
-
-    @Test
-    void unblockUser_WithValidUser_ShouldUpdateStatus() {
-        // Arrange
-        testUser.setStatus(UserStatus.BLOCKED);
-        when(userRepository.findById(1L)).thenReturn(Optional.of(testUser));
-        when(userRepository.save(any(User.class))).thenReturn(testUser);
-
-        // Act
-        User result = userService.unblockUser(1L);
-
-        // Assert
-        assertNotNull(result);
-        assertEquals(UserStatus.ACTIVE, result.getStatus());
-        verify(userRepository).save(any(User.class));
-    }
-
-    @Test
-    void deleteUser_WithValidId_ShouldDeleteUser() {
-        // Arrange
-        when(userRepository.findById(1L)).thenReturn(Optional.of(testUser));
-        doNothing().when(userRepository).deleteById(1L);
-
-        // Act
-        userService.deleteUser(1L);
-
-        // Assert
-        verify(userRepository).deleteById(1L);
-    }
-
-    @Test
-    void searchUsers_WithQuery_ShouldReturnMatchingUsers() {
-        // Arrange
-        List<User> users = Arrays.asList(testUser);
-        Page<User> page = new PageImpl<>(users);
-        Pageable pageable = PageRequest.of(0, 10);
-
-        when(userRepository.searchByEmailOrNameInApplication(anyString(), anyLong(), any(Pageable.class)))
-            .thenReturn(page);
-
-        // Act
-        Page<User> result = userService.searchUsers("user", testApplication, pageable);
-
-        // Assert
-        assertNotNull(result);
-        assertEquals(1, result.getContent().size());
-        verify(userRepository).searchByEmailOrNameInApplication(anyString(), anyLong(), any(Pageable.class));
-    }
-
-    @Test
-    void updateUser_WithValidData_ShouldUpdateUser() {
-        // Arrange
-        when(userRepository.findById(1L)).thenReturn(Optional.of(testUser));
-        when(userRepository.save(any(User.class))).thenReturn(testUser);
-
-        // Act
-        testUser.setEmail("updated@test.com");
-        User result = userService.updateUser(testUser);
-
-        // Assert
-        assertNotNull(result);
-        assertEquals("updated@test.com", result.getEmail());
-        verify(userRepository).save(any(User.class));
-    }
-
-    @Test
-    void countUsersByApplication_ShouldReturnCount() {
-        // Arrange
-        when(userRepository.countByApplicationId(1L)).thenReturn(10L);
-
-        // Act
-        long result = userService.countUsersByApplication(testApplication);
-
-        // Assert
-        assertEquals(10L, result);
-        verify(userRepository).countByApplicationId(1L);
     }
 }

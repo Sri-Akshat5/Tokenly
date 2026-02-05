@@ -3,16 +3,15 @@ package com.tokenly.backend.repository;
 import com.tokenly.backend.entity.Application;
 import com.tokenly.backend.entity.Client;
 import com.tokenly.backend.entity.User;
-import com.tokenly.backend.enums.Environment;
+import com.tokenly.backend.enums.ApplicationEnvironment;
 import com.tokenly.backend.enums.UserStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -40,7 +39,7 @@ class UserRepositoryTest {
         testApplication = new Application();
         testApplication.setAppName("Test App");
         testApplication.setClient(client);
-        testApplication.setEnvironment(Environment.DEVELOPMENT);
+        testApplication.setEnvironment(ApplicationEnvironment.DEV);
         entityManager.persist(testApplication);
 
         testUser = new User();
@@ -54,10 +53,10 @@ class UserRepositoryTest {
     }
 
     @Test
-    void findByEmailAndApplicationId_WithExistingUser_ShouldReturnUser() {
+    void findByApplicationAndEmail_WithExistingUser_ShouldReturnUser() {
         // Act
-        Optional<User> found = userRepository.findByEmailAndApplicationId(
-            "user@test.com", testApplication.getId()
+        Optional<User> found = userRepository.findByApplicationAndEmail(
+            testApplication, "user@test.com"
         );
 
         // Assert
@@ -66,10 +65,10 @@ class UserRepositoryTest {
     }
 
     @Test
-    void findByEmailAndApplicationId_WithNonExistentUser_ShouldReturnEmpty() {
+    void findByApplicationAndEmail_WithNonExistentUser_ShouldReturnEmpty() {
         // Act
-        Optional<User> found = userRepository.findByEmailAndApplicationId(
-            "nonexistent@test.com", testApplication.getId()
+        Optional<User> found = userRepository.findByApplicationAndEmail(
+            testApplication, "nonexistent@test.com"
         );
 
         // Assert
@@ -77,10 +76,10 @@ class UserRepositoryTest {
     }
 
     @Test
-    void existsByEmailAndApplicationId_WithExistingUser_ShouldReturnTrue() {
+    void existsByApplicationAndEmail_WithExistingUser_ShouldReturnTrue() {
         // Act
-        boolean exists = userRepository.existsByEmailAndApplicationId(
-            "user@test.com", testApplication.getId()
+        boolean exists = userRepository.existsByApplicationAndEmail(
+            testApplication, "user@test.com"
         );
 
         // Assert
@@ -88,10 +87,10 @@ class UserRepositoryTest {
     }
 
     @Test
-    void existsByEmailAndApplicationId_WithNonExistentUser_ShouldReturnFalse() {
+    void existsByApplicationAndEmail_WithNonExistentUser_ShouldReturnFalse() {
         // Act
-        boolean exists = userRepository.existsByEmailAndApplicationId(
-            "nonexistent@test.com", testApplication.getId()
+        boolean exists = userRepository.existsByApplicationAndEmail(
+            testApplication, "nonexistent@test.com"
         );
 
         // Assert
@@ -99,49 +98,35 @@ class UserRepositoryTest {
     }
 
     @Test
-    void findByApplicationId_ShouldReturnPagedUsers() {
+    void findByApplication_ShouldReturnUsers() {
         // Act
-        Page<User> users = userRepository.findByApplicationId(
-            testApplication.getId(), PageRequest.of(0, 10)
-        );
+        List<User> users = userRepository.findByApplication(testApplication);
 
         // Assert
         assertNotNull(users);
-        assertEquals(1, users.getTotalElements());
-        assertEquals("user@test.com", users.getContent().get(0).getEmail());
+        assertEquals(1, users.size());
+        assertEquals("user@test.com", users.get(0).getEmail());
     }
 
     @Test
-    void countByApplicationId_ShouldReturnCount() {
+    void countByApplication_ShouldReturnCount() {
         // Act
-        long count = userRepository.countByApplicationId(testApplication.getId());
+        long count = userRepository.countByApplication(testApplication);
 
         // Assert
         assertEquals(1, count);
     }
 
     @Test
-    void searchByEmailOrNameInApplication_ShouldReturnMatchingUsers() {
+    void findByApplicationAndStatus_ShouldReturnUsersWithStatus() {
         // Act
-        Page<User> users = userRepository.searchByEmailOrNameInApplication(
-            "user", testApplication.getId(), PageRequest.of(0, 10)
+        List<User> users = userRepository.findByApplicationAndStatus(
+            testApplication, UserStatus.ACTIVE
         );
 
         // Assert
         assertNotNull(users);
-        assertTrue(users.getTotalElements() > 0);
-    }
-
-    @Test
-    void findByStatus_ShouldReturnUsersWithStatus() {
-        // Act
-        Page<User> users = userRepository.findByApplicationIdAndStatus(
-            testApplication.getId(), UserStatus.ACTIVE, PageRequest.of(0, 10)
-        );
-
-        // Assert
-        assertNotNull(users);
-        assertEquals(1, users.getTotalElements());
-        assertEquals(UserStatus.ACTIVE, users.getContent().get(0).getStatus());
+        assertEquals(1, users.size());
+        assertEquals(UserStatus.ACTIVE, users.get(0).getStatus());
     }
 }

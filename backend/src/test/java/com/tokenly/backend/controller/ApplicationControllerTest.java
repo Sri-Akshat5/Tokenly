@@ -1,10 +1,10 @@
 package com.tokenly.backend.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.tokenly.backend.dto.ApplicationRequest;
+import com.tokenly.backend.dto.request.application.CreateApplicationRequest;
 import com.tokenly.backend.entity.Application;
 import com.tokenly.backend.entity.Client;
-import com.tokenly.backend.enums.Environment;
+import com.tokenly.backend.enums.ApplicationEnvironment;
 import com.tokenly.backend.service.ApplicationService;
 import com.tokenly.backend.service.ClientService;
 import org.junit.jupiter.api.BeforeEach;
@@ -54,7 +54,7 @@ class ApplicationControllerTest {
         testApplication.setId(1L);
         testApplication.setAppName("Test App");
         testApplication.setClient(testClient);
-        testApplication.setEnvironment(Environment.DEVELOPMENT);
+        testApplication.setEnvironment(ApplicationEnvironment.DEV);
     }
 
     @Test
@@ -93,12 +93,12 @@ class ApplicationControllerTest {
     @WithMockUser
     void createApplication_WithValidRequest_ShouldReturnCreated() throws Exception {
         // Arrange
-        ApplicationRequest request = new ApplicationRequest();
+        CreateApplicationRequest request = new CreateApplicationRequest();
         request.setAppName("New App");
-        request.setEnvironment("PRODUCTION");
+        request.setEnvironment(ApplicationEnvironment.PROD);
 
         when(clientService.getCurrentClient()).thenReturn(testClient);
-        when(applicationService.createApplication(any(ApplicationRequest.class), any(Client.class)))
+        when(applicationService.createApplication(any(CreateApplicationRequest.class), any(Client.class)))
             .thenReturn(testApplication);
 
         // Act & Assert
@@ -114,12 +114,12 @@ class ApplicationControllerTest {
     @WithMockUser
     void updateApplication_WithValidRequest_ShouldReturnUpdated() throws Exception {
         // Arrange
-        ApplicationRequest request = new ApplicationRequest();
+        CreateApplicationRequest request = new CreateApplicationRequest();
         request.setAppName("Updated App");
-        request.setEnvironment("PRODUCTION");
+        request.setEnvironment(ApplicationEnvironment.PROD);
 
         when(clientService.getCurrentClient()).thenReturn(testClient);
-        when(applicationService.updateApplication(eq(1L), any(ApplicationRequest.class), any(Client.class)))
+        when(applicationService.updateApplication(eq(1L), any(CreateApplicationRequest.class), any(Client.class)))
             .thenReturn(testApplication);
 
         // Act & Assert

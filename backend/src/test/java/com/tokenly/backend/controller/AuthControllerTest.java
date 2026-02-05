@@ -1,16 +1,17 @@
 package com.tokenly.backend.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.tokenly.backend.dto.LoginRequest;
-import com.tokenly.backend.dto.SignupRequest;
-import com.tokenly.backend.dto.TokenResponse;
+import com.tokenly.backend.dto.request.auth.UserLoginRequest;
+import com.tokenly.backend.dto.request.auth.UserSignupRequest;
+import com.tokenly.backend.dto.responce.auth.AuthResponse;
 import com.tokenly.backend.entity.Application;
 import com.tokenly.backend.entity.User;
-import com.tokenly.backend.enums.Environment;
+import com.tokenly.backend.enums.ApplicationEnvironment;
 import com.tokenly.backend.enums.UserStatus;
-import com.tokenly.backend.service.ApiKeyService;
-import com.tokenly.backend.service.ApplicationService;
-import com.tokenly.backend.service.AuthService;
+import com.tokenly.backend.service.*;
+import com.tokenly.backend.security.JwtService;
+import com.tokenly.backend.mapper.AuthMapper;
+import com.tokenly.backend.config.AppProperties;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,21 @@ class AuthControllerTest {
     private AuthService authService;
 
     @MockBean
+    private UserService userService;
+
+    @MockBean
+    private SessionService sessionService;
+
+    @MockBean
+    private JwtService jwtService;
+
+    @MockBean
+    private AuthMapper authMapper;
+
+    @MockBean
+    private AppProperties appProperties;
+
+    @MockBean
     private ApplicationService applicationService;
 
     @MockBean
@@ -50,7 +66,7 @@ class AuthControllerTest {
         testApplication = new Application();
         testApplication.setId(1L);
         testApplication.setAppName("Test App");
-        testApplication.setEnvironment(Environment.DEVELOPMENT);
+        testApplication.setEnvironment(ApplicationEnvironment.DEV);
 
         testUser = new User();
         testUser.setId(1L);
@@ -64,11 +80,11 @@ class AuthControllerTest {
     @Test
     void signup_WithValidRequest_ShouldReturnCreated() throws Exception {
         // Arrange
-        SignupRequest request = new SignupRequest();
+        UserSignupRequest request = new UserSignupRequest();
         request.setEmail("newuser@test.com");
         request.setPassword("password123");
 
-        when(authService.signup(any(SignupRequest.class), any(Application.class)))
+        when(userService.signup(any(Application.class), any(UserSignupRequest.class)))
             .thenReturn(testUser);
 
         // Act & Assert
@@ -84,7 +100,7 @@ class AuthControllerTest {
     @Test
     void signup_WithInvalidRequest_ShouldReturnBadRequest() throws Exception {
         // Arrange
-        SignupRequest request = new SignupRequest();
+        UserSignupRequest request = new UserSignupRequest();
         request.setEmail("invalid-email");
         request.setPassword("123"); // Too short
 
@@ -99,13 +115,13 @@ class AuthControllerTest {
     @Test
     void login_WithValidCredentials_ShouldReturnTokens() throws Exception {
         // Arrange
-        LoginRequest request = new LoginRequest();
+        UserLoginRequest request = new UserLoginRequest();
         request.setEmail("user@test.com");
         request.setPassword("password123");
 
-        TokenResponse tokenResponse = new TokenResponse("accessToken", "refreshToken");
+        AuthResponse tokenResponse = new AuthResponse("accessToken", "refreshToken");
 
-        when(authService.login(any(LoginRequest.class), any(Application.class), anyString(), anyString()))
+        when(authService.login(any(Application.class), any(UserLoginRequest.class)))
             .thenReturn(tokenResponse);
 
         // Act & Assert
@@ -121,7 +137,7 @@ class AuthControllerTest {
     @Test
     void login_WithMissingApiKey_ShouldReturnUnauthorized() throws Exception {
         // Arrange
-        LoginRequest request = new LoginRequest();
+        UserLoginRequest request = new UserLoginRequest();
         request.setEmail("user@test.com");
         request.setPassword("password123");
 
@@ -146,9 +162,9 @@ class AuthControllerTest {
     @Test
     void refreshToken_WithValidToken_ShouldReturnNewTokens() throws Exception {
         // Arrange
-        TokenResponse tokenResponse = new TokenResponse("newAccessToken", "newRefreshToken");
+        AuthResponse tokenResponse = new AuthResponse("newAccessToken", "newRefreshToken");
 
-        when(authService.refreshToken(anyString())).thenReturn(tokenResponse);
+        when(authService.refresh(any(Application.class), anyString())).thenReturn(tokenResponse);
 
         // Act & Assert
         mockMvc.perform(post("/api/auth/refresh")
