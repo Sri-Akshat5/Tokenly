@@ -1,0 +1,70 @@
+    @Override
+    public void requestPasswordReset(Application application, String email) {
+        User user = userRepository.findByApplicationAndEmail(application, email)
+                .orElseThrow(() -> new IllegalStateException("User not found"));
+
+        String resetToken = UUID.randomUUID().toString();
+        user.setPasswordResetToken(resetToken);
+        user.setPasswordResetTokenExpiry(Instant.now().plus(1, ChronoUnit.HOURS));
+
+        userRepository.save(user);
+
+        // Send password reset email
+        emailService.sendPasswordResetEmail(user.getEmail(), resetToken);
+        log.info("Password reset requested for user: {}", email);
+    }
+
+    @Override
+    public void resetPassword(String token, String newPassword) {
+        User user = userRepository.findByPasswordResetToken(token)
+                .orElseThrow(() -> new IllegalStateException("Invalid reset token"));
+
+        if (user.getPasswordResetTokenExpiry().isBefore(Instant.now())) {
+            throw new IllegalStateException("Reset token expired");
+        }
+
+        user.setPasswordHash(passwordEncoder.encode(newPassword));
+        user.setPasswordResetToken(null);
+        user.setPasswordResetTokenExpiry(null);
+
+        userRepository.save(user);
+        log.info("Password reset successfully for user: {}", user.getEmail());
+    }
+
+    @Override
+    public void changePassword(User user, String currentPassword, String newPassword) {
+        if (!passwordEncoder.matches(currentPassword, user.getPasswordHash())) {
+            throw new IllegalStateException("Current password is incorrect");
+        }
+
+        user.setPasswordHash(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+        log.info("Password changed for user: {}", user.getEmail());
+    }
+
+    @Override
+    public User getProfile(User user) {
+        return user;
+    }
+
+    @Override
+    public User updateProfile(User user, Map<String, Object> customData) {
+        // Validate custom data against application field schema
+        if (customData != null && !customData.isEmpty()) {
+            fieldService.validateCustomData(user.getApplication(), customData);
+        }
+
+        try {
+            user.setCustomData(
+                    customData == null
+                            ? null
+                            : objectMapper.writeValueAsString(customData)
+            );
+        } catch (Exception e) {
+            throw new IllegalStateException("Invalid custom data");
+        }
+
+        userRepository.save(user);
+        log.info("Profile updated for user: {}", user.getEmail());
+        return user;
+    }
