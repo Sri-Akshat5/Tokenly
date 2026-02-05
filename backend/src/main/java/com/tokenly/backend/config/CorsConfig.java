@@ -32,7 +32,9 @@ public class CorsConfig {
             "http://localhost:5175",      // Vite dev server (alternate)
             "http://127.0.0.1:3000",
             "http://127.0.0.1:5173",
-            "http://127.0.0.1:5175"
+            "http://127.0.0.1:5175",
+            "https://tokenly.codes",
+    "https://www.tokenly.codes",
         ));
         
         // Allow all headers
