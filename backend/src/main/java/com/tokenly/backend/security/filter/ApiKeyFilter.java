@@ -54,7 +54,8 @@ public class ApiKeyFilter extends OncePerRequestFilter {
         // Skip API key validation for client/admin routes (they use JWT authentication)
         if (path.startsWith("/api/clients/") || 
             path.startsWith("/api/admin/") ||
-            path.startsWith("/api/applications")) {
+            path.startsWith("/api/applications") ||
+            path.startsWith("/actuator")) {
             return true;
         }
         

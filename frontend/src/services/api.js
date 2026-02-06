@@ -12,11 +12,12 @@ const api = axios.create({
 // Request interceptor - add auth token
 api.interceptors.request.use(
     (config) => {
-        const appId = config.headers['X-Application-Id'];
+        const apiKey = config.headers['X-API-KEY'];
 
-        if (appId) {
-            // Priority to application user token if appId is present
-            const userToken = localStorage.getItem(`userToken_${appId}`);
+        if (apiKey) {
+            // Priority to application user token if apiKey is present
+            // We use the apiKey (which serves as appId) to namespace the token
+            const userToken = localStorage.getItem(`userToken_${apiKey}`);
             if (userToken) {
                 config.headers['Authorization'] = `Bearer ${userToken}`;
             }
@@ -37,7 +38,7 @@ api.interceptors.response.use(
     (response) => response,
     (error) => {
         const config = error.config;
-        const isAppLevel = !!config?.headers['X-Application-Id'];
+        const isAppLevel = !!config?.headers['X-API-KEY'];
 
         if (error.response?.status === 401 && !isAppLevel) {
             localStorage.removeItem('clientToken');

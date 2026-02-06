@@ -39,12 +39,13 @@ export const authService = {
         return !!localStorage.getItem('clientToken');
     },
     // --- End-User Auth (Application Level) ---
+    // Note: 'appId' parameter correlates to the Public API Key
 
     // Request Login OTP
     requestOtp: async (appId, email) => {
         const response = await api.post('/auth/request-otp', null, {
             params: { email },
-            headers: { 'X-Application-Id': appId }
+            headers: { 'X-API-KEY': appId }
         });
         return response.data;
     },
@@ -52,7 +53,7 @@ export const authService = {
     // Get Application Info (Public)
     getAppInfo: async (appId) => {
         const response = await api.get('/auth/app-info', {
-            headers: { 'X-Application-Id': appId }
+            headers: { 'X-API-KEY': appId }
         });
         return response.data;
     },
@@ -61,7 +62,7 @@ export const authService = {
     requestMagicLink: async (appId, email) => {
         const response = await api.post('/auth/request-magic-link', null, {
             params: { email },
-            headers: { 'X-Application-Id': appId }
+            headers: { 'X-API-KEY': appId }
         });
         return response.data;
     },
@@ -69,10 +70,11 @@ export const authService = {
     // Application User Login (Password, OTP, Magic Link, OAuth)
     userLogin: async (appId, data) => {
         const response = await api.post('/auth/login', data, {
-            headers: { 'X-Application-Id': appId }
+            headers: { 'X-API-KEY': appId }
         });
         const userData = response.data?.data;
         if (userData?.accessToken) {
+            // Store using appId/apiKey as namespace
             localStorage.setItem(`userToken_${appId}`, userData.accessToken);
             if (userData.refreshToken) {
                 localStorage.setItem(`userRefreshToken_${appId}`, userData.refreshToken);
@@ -84,7 +86,7 @@ export const authService = {
     // Application User Signup
     userSignup: async (appId, data) => {
         const response = await api.post('/auth/signup', data, {
-            headers: { 'X-Application-Id': appId }
+            headers: { 'X-API-KEY': appId }
         });
         return response.data;
     },
@@ -99,7 +101,7 @@ export const authService = {
         const token = localStorage.getItem(`userToken_${appId}`);
         const response = await api.get('/auth/profile', {
             headers: {
-                'X-Application-Id': appId,
+                'X-API-KEY': appId,
                 'Authorization': `Bearer ${token}`
             }
         });
