@@ -31,7 +31,10 @@ public class ApiPrefixFilter extends OncePerRequestFilter {
         }
 
         // If path is missing /api prefix (e.g. /clients/..., /auth/...), pretend it has it
-        if (path.startsWith("/clients") || path.startsWith("/auth")) {
+        if (path.startsWith("/clients") || 
+            path.startsWith("/auth") || 
+            path.startsWith("/applications") || 
+            path.startsWith("/admin")) {
             log.info("ApiPrefixFilter: Detected missing /api prefix for path: {}. Rewriting to /api{}", path, path);
             
             HttpServletRequestWrapper wrappedRequest = new HttpServletRequestWrapper(request) {
