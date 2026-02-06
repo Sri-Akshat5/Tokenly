@@ -1,5 +1,6 @@
 package com.tokenly.backend.security.util;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -24,7 +25,7 @@ public class OriginValidator {
         }
 
         try {
-            List<String> allowedOrigins = objectMapper.readValue(allowedOriginsJson, List.class);
+            List<String> allowedOrigins = objectMapper.readValue(allowedOriginsJson, new TypeReference<List<String>>() {});
             
             // Supporting wildcard origin
             return allowedOrigins.contains("*") || allowedOrigins.contains(origin);

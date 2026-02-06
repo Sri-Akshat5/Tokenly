@@ -4,7 +4,7 @@ import com.tokenly.backend.dto.request.application.CreateApplicationRequest;
 import com.tokenly.backend.entity.Application;
 import com.tokenly.backend.entity.Client;
 import com.tokenly.backend.enums.ApplicationEnvironment;
-import com.tokenly.backend.exception.ResourceNotFoundException;
+import com.tokenly.backend.exception.NotFoundException;
 import com.tokenly.backend.repository.ApplicationRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
