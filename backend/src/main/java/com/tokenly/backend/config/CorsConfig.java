@@ -24,19 +24,22 @@ public class CorsConfig {
         // Allow credentials
         config.setAllowCredentials(true);
         
+        // Allow frontend origins with Pattern to support wildcard + credentials
+        config.setAllowedOriginPatterns(List.of("*"));
+        
         // Allow frontend origins
-        config.setAllowedOrigins(Arrays.asList(
-        appProperties.getUrl().getBaseFrontend(),
-        "http://localhost:3000",
-        "http://localhost:5173",
-        "http://localhost:5175",
-        "http://127.0.0.1:3000",
-        "http://127.0.0.1:5173",
-        "http://127.0.0.1:5175",
-        "https://tokenly.codes",
-        "https://www.tokenly.codes",
-        "*"
-));
+        // config.setAllowedOrigins(Arrays.asList(
+        // appProperties.getUrl().getBaseFrontend(),
+        // "http://localhost:3000",
+        // "http://localhost:5173",
+        // "http://localhost:5175",
+        // "http://127.0.0.1:3000",
+        // "http://127.0.0.1:5173",
+        // "http://127.0.0.1:5175",
+        // "https://tokenly.codes",
+        // "https://www.tokenly.codes",
+        // "*"
+        // ));
         
         // Allow all headers
         config.setAllowedHeaders(List.of("*"));

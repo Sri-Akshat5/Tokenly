@@ -27,7 +27,6 @@ import java.util.UUID;
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
 @Tag(name = "Authentication", description = "User authentication and profile management endpoints")
-@CrossOrigin(origins = "*")
 public class AuthController {
 
     private final AuthService authService;
