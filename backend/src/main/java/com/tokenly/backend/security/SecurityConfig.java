@@ -9,7 +9,6 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig {
@@ -17,31 +16,30 @@ public class SecurityConfig {
     private final ApiKeyFilter apiKeyFilter;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
+    private static final String[] PUBLIC_ENDPOINTS = {
+            "/api/auth/**",
+            "/api/clients/login",
+            "/api/clients/signup"
+    };
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
                 .csrf(csrf -> csrf.disable())
-                .cors(Customizer.withDefaults()) // Enable CORS
+                .cors(Customizer.withDefaults())
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(
                                 org.springframework.security.config.http.SessionCreationPolicy.STATELESS
                         )
                 )
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(
-                                "/api/auth/login",
-                                "/api/auth/signup",
-                                "/api/auth/refresh",
-                                "/api/auth/verify-email",
-                                "/api/clients/login",
-                                "/api/clients/signup"
-                        ).permitAll()
+                        .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(apiKeyFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterAfter(jwtAuthenticationFilter, ApiKeyFilter.class)
-                .httpBasic(Customizer.withDefaults());
+                .httpBasic(http -> http.disable());
 
         return http.build();
     }
