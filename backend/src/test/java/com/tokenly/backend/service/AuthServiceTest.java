@@ -64,7 +64,11 @@ class AuthServiceTest {
         request.setEmail("user@test.com");
         request.setPassword("password123");
 
-        AuthResponse expectedResponse = new AuthResponse("accessToken", "refreshToken");
+        AuthResponse expectedResponse = AuthResponse.builder()
+                .accessToken("accessToken")
+                .refreshToken("refreshToken")
+                .expiresIn(3600L)
+                .build();
 
         when(authFlowResolver.resolve(testApplication)).thenReturn(authFlow);
         when(authFlow.login(testApplication, request)).thenReturn(expectedResponse);

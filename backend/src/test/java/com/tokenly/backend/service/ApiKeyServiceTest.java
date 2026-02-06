@@ -93,7 +93,7 @@ class ApiKeyServiceTest {
     void listApiKeys_ShouldReturnApiKeys() {
         // Arrange
         List<ApiKey> apiKeys = Arrays.asList(testApiKey);
-        when(apiKeyRepository.findAllByApplication(testApplication)).thenReturn(apiKeys);
+        when(apiKeyRepository.findByApplication(testApplication)).thenReturn(apiKeys);
 
         // Act
         List<ApiKey> result = apiKeyService.listApiKeys(testApplication);

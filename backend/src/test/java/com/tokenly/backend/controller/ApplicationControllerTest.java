@@ -7,6 +7,7 @@ import com.tokenly.backend.entity.Client;
 import com.tokenly.backend.enums.ApplicationEnvironment;
 import com.tokenly.backend.service.ApplicationService;
 import com.tokenly.backend.service.ClientService;
+import com.tokenly.backend.mapper.ApplicationMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -41,17 +43,20 @@ class ApplicationControllerTest {
     @MockBean
     private ClientService clientService;
 
+    @MockBean
+    private ApplicationMapper applicationMapper;
+
     private Client testClient;
     private Application testApplication;
 
     @BeforeEach
     void setUp() {
         testClient = new Client();
-        testClient.setId(1L);
+        testClient.setId(UUID.randomUUID());
         testClient.setEmail("client@test.com");
 
         testApplication = new Application();
-        testApplication.setId(1L);
+        testApplication.setId(UUID.randomUUID());
         testApplication.setAppName("Test App");
         testApplication.setClient(testClient);
         testApplication.setEnvironment(ApplicationEnvironment.DEV);
@@ -62,14 +67,14 @@ class ApplicationControllerTest {
     void getAllApplications_ShouldReturnList() throws Exception {
         // Arrange
         List<Application> applications = Arrays.asList(testApplication);
-        when(clientService.getCurrentClient()).thenReturn(testClient);
-        when(applicationService.getAllByClient(any(Client.class))).thenReturn(applications);
+        when(applicationService.getApplicationsByClient(any(Client.class))).thenReturn(applications);
 
         // Act & Assert
         mockMvc.perform(get("/api/applications")
+                .requestAttr("client", testClient) // Inject client into request attribute
                 .with(csrf()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].id").value(1))
+                .andExpect(jsonPath("$[0].id").value(testApplication.getId().toString()))
                 .andExpect(jsonPath("$[0].appName").value("Test App"));
     }
 
@@ -77,15 +82,15 @@ class ApplicationControllerTest {
     @WithMockUser
     void getApplicationById_WithValidId_ShouldReturnApplication() throws Exception {
         // Arrange
-        when(clientService.getCurrentClient()).thenReturn(testClient);
-        when(applicationService.findByIdAndClient(eq(1L), any(Client.class)))
+        when(applicationService.getApplicationById(any(Client.class), eq(testApplication.getId())))
             .thenReturn(testApplication);
 
         // Act & Assert
-        mockMvc.perform(get("/api/applications/1")
+        mockMvc.perform(get("/api/applications/" + testApplication.getId())
+                .requestAttr("client", testClient)
                 .with(csrf()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.id").value(testApplication.getId().toString()))
                 .andExpect(jsonPath("$.appName").value("Test App"));
     }
 
@@ -97,17 +102,19 @@ class ApplicationControllerTest {
         request.setAppName("New App");
         request.setEnvironment(ApplicationEnvironment.PROD);
 
-        when(clientService.getCurrentClient()).thenReturn(testClient);
-        when(applicationService.createApplication(any(CreateApplicationRequest.class), any(Client.class)))
-            .thenReturn(testApplication);
+        ApplicationService.ApplicationWithApiKey result = new ApplicationService.ApplicationWithApiKey(testApplication, "api-key");
+        
+        when(applicationService.createApplication(any(Client.class), any(CreateApplicationRequest.class)))
+            .thenReturn(result);
 
         // Act & Assert
         mockMvc.perform(post("/api/applications")
+                .requestAttr("client", testClient)
                 .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.id").value(1));
+                .andExpect(status().isOk()) // Contoller returns 200 OK (ApiResponse.success), not 201 Created explicitly in status line usually unless configured
+                .andExpect(jsonPath("$.data.application.id").value(testApplication.getId().toString()));
     }
 
     @Test
@@ -118,28 +125,26 @@ class ApplicationControllerTest {
         request.setAppName("Updated App");
         request.setEnvironment(ApplicationEnvironment.PROD);
 
-        when(clientService.getCurrentClient()).thenReturn(testClient);
-        when(applicationService.updateApplication(eq(1L), any(CreateApplicationRequest.class), any(Client.class)))
+        when(applicationService.updateApplication(any(Client.class), eq(testApplication.getId()), any(CreateApplicationRequest.class)))
             .thenReturn(testApplication);
 
         // Act & Assert
-        mockMvc.perform(put("/api/applications/1")
+        mockMvc.perform(put("/api/applications/" + testApplication.getId())
+                .requestAttr("client", testClient)
                 .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(1));
+                .andExpect(jsonPath("$.data.id").value(testApplication.getId().toString()));
     }
 
     @Test
     @WithMockUser
     void deleteApplication_WithValidId_ShouldReturnNoContent() throws Exception {
-        // Arrange
-        when(clientService.getCurrentClient()).thenReturn(testClient);
-
         // Act & Assert
-        mockMvc.perform(delete("/api/applications/1")
+        mockMvc.perform(delete("/api/applications/" + testApplication.getId())
+                .requestAttr("client", testClient)
                 .with(csrf()))
-                .andExpect(status().isNoContent());
+                .andExpect(status().isOk()); // Controller returns ApiResponse.success which is 200 OK
     }
 }

@@ -35,9 +35,10 @@ class UserControllerTest {
         testUser.setId(UUID.randomUUID());
         testUser.setEmail("user@test.com");
 
-        testUserResponse = new UserResponse();
-        testUserResponse.setId(testUser.getId());
-        testUserResponse.setEmail(testUser.getEmail());
+        testUserResponse = UserResponse.builder()
+                .id(testUser.getId())
+                .email(testUser.getEmail())
+                .build();
     }
 
     @Test

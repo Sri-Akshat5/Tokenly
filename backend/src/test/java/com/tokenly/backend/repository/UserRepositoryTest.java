@@ -32,8 +32,8 @@ class UserRepositoryTest {
     void setUp() {
         Client client = new Client();
         client.setEmail("client@test.com");
-        client.setPassword("password");
-        client.setName("Test Client");
+        client.setPasswordHash("password");
+        client.setCompanyName("Test Client");
         entityManager.persist(client);
 
         testApplication = new Application();
@@ -44,7 +44,7 @@ class UserRepositoryTest {
 
         testUser = new User();
         testUser.setEmail("user@test.com");
-        testUser.setPassword("password");
+        testUser.setPasswordHash("password");
         testUser.setApplication(testApplication);
         testUser.setStatus(UserStatus.ACTIVE);
         entityManager.persist(testUser);

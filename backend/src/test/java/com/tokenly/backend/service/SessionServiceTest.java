@@ -1,19 +1,25 @@
 package com.tokenly.backend.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tokenly.backend.entity.Application;
 import com.tokenly.backend.entity.Session;
 import com.tokenly.backend.entity.User;
 import com.tokenly.backend.repository.SessionRepository;
+import com.tokenly.backend.security.JwtService;
+import com.tokenly.backend.security.util.TokenHashUtil;
+import com.tokenly.backend.service.impl.SessionServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
+import java.time.Instant;
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -26,152 +32,95 @@ class SessionServiceTest {
     @Mock
     private SessionRepository sessionRepository;
 
+    @Mock
+    private JwtService jwtService;
+
+    @Mock
+    private TokenHashUtil tokenHashUtil;
+
+    @Mock
+    private StringRedisTemplate redisTemplate;
+
+    @Mock
+    private ValueOperations<String, String> valueOperations;
+
+    @Mock
+    private ObjectMapper objectMapper;
+
     @InjectMocks
-    private SessionService sessionService;
+    private SessionServiceImpl sessionService;
 
     private User testUser;
+    private Application testApplication;
     private Session testSession;
 
     @BeforeEach
     void setUp() {
         testUser = new User();
-        testUser.setId(1L);
+        testUser.setId(UUID.randomUUID());
         testUser.setEmail("user@test.com");
 
+        testApplication = new Application();
+        testApplication.setId(UUID.randomUUID());
+
         testSession = new Session();
-        testSession.setId(1L);
+        testSession.setId(UUID.randomUUID());
         testSession.setUser(testUser);
-        testSession.setRefreshToken("refreshToken123");
-        testSession.setActive(true);
-        testSession.setCreatedAt(LocalDateTime.now());
-        testSession.setExpiresAt(LocalDateTime.now().plusDays(7));
+        testSession.setApplication(testApplication);
+        testSession.setRefreshTokenHash("hashedToken");
+        testSession.setRevoked(false);
+        testSession.setExpiresAt(Instant.now().plusSeconds(3600));
+
+        lenient().when(redisTemplate.opsForValue()).thenReturn(valueOperations);
     }
 
     @Test
     void createSession_ShouldCreateNewSession() {
         // Arrange
+        when(tokenHashUtil.hash(anyString())).thenReturn("hashedToken");
         when(sessionRepository.save(any(Session.class))).thenReturn(testSession);
 
         // Act
-        Session result = sessionService.createSession(testUser, "refreshToken123");
+        Session result = sessionService.createSession(testUser, testApplication, "rawToken", "127.0.0.1", "UserAgent");
 
         // Assert
         assertNotNull(result);
         assertEquals(testUser, result.getUser());
-        assertTrue(result.isActive());
+        assertEquals("hashedToken", result.getRefreshTokenHash());
         verify(sessionRepository).save(any(Session.class));
+        verify(redisTemplate).opsForValue(); // Verify redis interaction
     }
 
     @Test
-    void findByRefreshToken_WithValidToken_ShouldReturnSession() {
+    void revokeSession_ShouldRevokeAndRemoveFromRedis() {
         // Arrange
-        when(sessionRepository.findByRefreshTokenAndActiveTrue(anyString()))
-            .thenReturn(Optional.of(testSession));
-
-        // Act
-        Optional<Session> result = sessionService.findByRefreshToken("refreshToken123");
-
-        // Assert
-        assertTrue(result.isPresent());
-        assertEquals("refreshToken123", result.get().getRefreshToken());
-    }
-
-    @Test
-    void findByRefreshToken_WithInvalidToken_ShouldReturnEmpty() {
-        // Arrange
-        when(sessionRepository.findByRefreshTokenAndActiveTrue(anyString()))
-            .thenReturn(Optional.empty());
-
-        // Act
-        Optional<Session> result = sessionService.findByRefreshToken("invalidToken");
-
-        // Assert
-        assertFalse(result.isPresent());
-    }
-
-    @Test
-    void invalidateSession_ShouldDeactivateSession() {
-        // Arrange
+        when(sessionRepository.findById(testSession.getId())).thenReturn(Optional.of(testSession));
         when(sessionRepository.save(any(Session.class))).thenReturn(testSession);
 
         // Act
-        sessionService.invalidateSession(testSession);
+        sessionService.revokeSession(testSession.getId());
 
         // Assert
-        assertFalse(testSession.isActive());
+        assertTrue(testSession.isRevoked());
         verify(sessionRepository).save(testSession);
+        verify(redisTemplate).delete(anyString());
     }
 
     @Test
-    void invalidateAllUserSessions_ShouldDeactivateAllSessions() {
-        // Arrange
-        List<Session> sessions = Arrays.asList(testSession, new Session());
-        when(sessionRepository.findByUserIdAndActiveTrue(1L)).thenReturn(sessions);
-
+    void cleanupExpiredSessions_ShouldCallRepository() {
         // Act
-        sessionService.invalidateAllUserSessions(testUser);
+        sessionService.cleanupExpiredSessions();
 
         // Assert
-        verify(sessionRepository).saveAll(anyList());
+        verify(sessionRepository).deleteByExpiresAtBeforeAndRevokedTrue(any(Instant.class));
     }
 
     @Test
-    void deleteExpiredSessions_ShouldRemoveExpiredSessions() {
-        // Arrange
-        doNothing().when(sessionRepository).deleteByExpiresAtBefore(any(LocalDateTime.class));
-
+    void revokeAllUserSessions_ShouldCallRepository() {
         // Act
-        sessionService.deleteExpiredSessions();
+        sessionService.revokeAllUserSessions(testUser);
 
         // Assert
-        verify(sessionRepository).deleteByExpiresAtBefore(any(LocalDateTime.class));
-    }
-
-    @Test
-    void getActiveSessionsByUser_ShouldReturnActiveSessions() {
-        // Arrange
-        List<Session> sessions = Arrays.asList(testSession);
-        when(sessionRepository.findByUserIdAndActiveTrue(1L)).thenReturn(sessions);
-
-        // Act
-        List<Session> result = sessionService.getActiveSessionsByUser(testUser);
-
-        // Assert
-        assertNotNull(result);
-        assertEquals(1, result.size());
-        verify(sessionRepository).findByUserIdAndActiveTrue(1L);
-    }
-
-    @Test
-    void isSessionValid_WithValidSession_ShouldReturnTrue() {
-        // Act
-        boolean result = sessionService.isSessionValid(testSession);
-
-        // Assert
-        assertTrue(result);
-    }
-
-    @Test
-    void isSessionValid_WithExpiredSession_ShouldReturnFalse() {
-        // Arrange
-        testSession.setExpiresAt(LocalDateTime.now().minusDays(1));
-
-        // Act
-        boolean result = sessionService.isSessionValid(testSession);
-
-        // Assert
-        assertFalse(result);
-    }
-
-    @Test
-    void isSessionValid_WithInactiveSession_ShouldReturnFalse() {
-        // Arrange
-        testSession.setActive(false);
-
-        // Act
-        boolean result = sessionService.isSessionValid(testSession);
-
-        // Assert
-        assertFalse(result);
+        verify(sessionRepository).revokeAllUserSessions(eq(testUser), any(Instant.class));
     }
 }
