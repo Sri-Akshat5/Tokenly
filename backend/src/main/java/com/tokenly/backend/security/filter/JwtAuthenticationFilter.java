@@ -87,7 +87,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
 
         } catch (Exception ex) {
-            throw new UnauthorizedException("Invalid or expired token");
+            // Token validation failed - allow request to proceed as anonymous
+            // SecurityContextHolder is already empty by default
+            SecurityContextHolder.clearContext();
         }
 
         filterChain.doFilter(request, response);
