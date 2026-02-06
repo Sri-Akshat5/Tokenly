@@ -39,7 +39,12 @@ public class ApiKeyFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
-        String path = request.getRequestURI();
+        // Skip for CORS preflight requests
+        if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+            return true;
+        }
+
+        String path = request.getRequestURI().replaceAll("//+", "/");
         
         // Skip API key validation for public endpoints
         if (PUBLIC_ENDPOINTS.contains(path)) {
