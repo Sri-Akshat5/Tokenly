@@ -13,6 +13,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -22,6 +23,7 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class ApiKeyFilter extends OncePerRequestFilter {
 
     private static final String API_KEY_HEADER = "X-API-KEY";
@@ -39,15 +41,19 @@ public class ApiKeyFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
+        String path = request.getRequestURI().replaceAll("//+", "/");
+        String method = request.getMethod();
+        
         // Skip for CORS preflight requests
-        if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+        if ("OPTIONS".equalsIgnoreCase(method)) {
             return true;
         }
 
-        String path = request.getRequestURI().replaceAll("//+", "/");
-        
+        log.info("ApiKeyFilter checking path: {} [Method: {}]", path, method);
+
         // Skip API key validation for public endpoints
         if (PUBLIC_ENDPOINTS.contains(path)) {
+            log.info("ApiKeyFilter skipping public endpoint: {}", path);
             return true;
         }
         
@@ -56,9 +62,11 @@ public class ApiKeyFilter extends OncePerRequestFilter {
             path.startsWith("/api/admin/") ||
             path.startsWith("/api/applications") ||
             path.startsWith("/actuator")) {
+            log.info("ApiKeyFilter skipping client/admin/actuator route: {}", path);
             return true;
         }
         
+        log.info("ApiKeyFilter proceeding with validation for: {}", path);
         return false;
     }
 
@@ -68,6 +76,7 @@ public class ApiKeyFilter extends OncePerRequestFilter {
             HttpServletResponse response,
             FilterChain filterChain
     ) throws ServletException, IOException {
+        log.info("ApiKeyFilter executing validation for request: {}", request.getRequestURI());
 
         // 1️⃣ Read API key
         String apiKeyValue = request.getHeader(API_KEY_HEADER);
