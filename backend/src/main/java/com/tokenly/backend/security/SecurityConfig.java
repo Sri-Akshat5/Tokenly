@@ -39,7 +39,8 @@ public class SecurityConfig {
                 )
                 .addFilterBefore(apiKeyFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterAfter(jwtAuthenticationFilter, ApiKeyFilter.class)
-                .httpBasic(http -> http.disable());
+                .httpBasic(basic -> basic.disable());
+
 
         return http.build();
     }
