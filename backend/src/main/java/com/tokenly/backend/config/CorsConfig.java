@@ -34,7 +34,8 @@ public class CorsConfig {
         "http://127.0.0.1:5173",
         "http://127.0.0.1:5175",
         "https://tokenly.codes",
-        "https://www.tokenly.codes"
+        "https://www.tokenly.codes",
+        "*"
 ));
         
         // Allow all headers
