@@ -63,12 +63,12 @@ public class GlobalExceptionHandler {
             Exception ex,
             HttpServletRequest request
     ) {
-        log.error("Unexpected exception at path: {} - Exception: {}", 
-            request.getRequestURI(), ex.getClass().getName(), ex);
+        log.error("Unexpected exception at path: {} - Message: {}", 
+            request.getRequestURI(), ex.getMessage(), ex);
         
         ErrorResponse response = ErrorResponse.builder()
                 .success(false)
-                .message("Internal server error")
+                .message("Internal server error: " + ex.getMessage()) // Expose error for debugging (TEMPORARY)
                 .timestamp(Instant.now())
                 .path(request.getRequestURI())
                 .build();

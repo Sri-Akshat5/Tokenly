@@ -47,11 +47,6 @@ class JwtServiceTest {
         testApplication = new Application();
         testApplication.setId(UUID.randomUUID());
         
-        // Mock AuthConfig interactions if necessary
-        // AuthConfig config = new AuthConfig();
-        // config.setAccessTokenTtlMinutes(60);
-        // testApplication.setAuthConfig(config); // If Application has this field accessable
-
         when(jwtProperties.getSecret()).thenReturn(secretKey);
         when(jwtProperties.getAccessTokenExpiry()).thenReturn(3600L); // Default fallback
     }
@@ -82,13 +77,17 @@ class JwtServiceTest {
         // Assert
         assertEquals(testUser.getId(), extractedId);
     }
-
+    
+    // Note: extractApplicationId test removed if method is not present in JwtService, 
+    // BUT checking JwtService.java, it seems to exist. If compile fails, I will remove it.
+    // Based on previous view_file, JwtService DOES have extractApplicationId.
     @Test
     void extractApplicationId_ShouldReturnCorrectId() {
         // Arrange
         String token = jwtService.generateAccessToken(testUser, testApplication);
 
         // Act
+        // The method in JwtService uses: validateToken(token).getBody().get("appId", String.class) -> UUID.fromString
         UUID extractedAppId = jwtService.extractApplicationId(token);
 
         // Assert

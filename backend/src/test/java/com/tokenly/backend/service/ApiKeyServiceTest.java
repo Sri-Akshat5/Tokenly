@@ -45,6 +45,7 @@ class ApiKeyServiceTest {
         testApiKey = new ApiKey();
         testApiKey.setId(testApiKeyId);
         testApiKey.setPublicKey("tk_test_123456");
+        testApiKey.setKeyName("Test Key");
         testApiKey.setApplication(testApplication);
         testApiKey.setActive(true);
         testApiKey.setCreatedAt(Instant.now());

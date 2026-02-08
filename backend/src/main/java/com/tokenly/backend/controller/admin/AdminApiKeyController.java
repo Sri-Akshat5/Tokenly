@@ -9,6 +9,7 @@ import com.tokenly.backend.entity.Client;
 import com.tokenly.backend.exception.ForbiddenException;
 import com.tokenly.backend.repository.ApplicationRepository;
 import com.tokenly.backend.service.ApiKeyService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,9 +31,17 @@ public class AdminApiKeyController {
 
     @GetMapping
     public ResponseEntity<ApiResponse<List<ApiKeyResponse>>> listApiKeys(
-            @RequestAttribute Client client,
+            HttpServletRequest request,
             @PathVariable UUID applicationId
     ) {
+        log.info("AdminApiKeyController: List keys request received for app: {}", applicationId);
+        
+        Client client = (Client) request.getAttribute("client");
+        if (client == null) {
+             log.error("Client attribute is NULL in controller! Auth filter failed or bypassed.");
+             throw new com.tokenly.backend.exception.UnauthorizedException("User not authenticated as client");
+        }
+
         Application application = getAndVerifyApplication(client, applicationId);
         log.info("Listing API keys for application: {}", application.getAppName());
         List<ApiKeyResponse> keys = apiKeyService.listApiKeys(application).stream()
@@ -43,10 +52,11 @@ public class AdminApiKeyController {
 
     @PostMapping
     public ResponseEntity<ApiResponse<ApiKeyResponse>> generateApiKey(
-            @RequestAttribute Client client,
+            HttpServletRequest httpRequest,
             @PathVariable UUID applicationId,
             @Valid @RequestBody CreateApiKeyRequest request
     ) {
+        Client client = getClient(httpRequest);
         Application application = getAndVerifyApplication(client, applicationId);
         log.info("Generating new API key '{}' for application: {}", 
                  request.getKeyName(), application.getAppName());
@@ -63,14 +73,23 @@ public class AdminApiKeyController {
 
     @DeleteMapping("/{keyId}")
     public ResponseEntity<ApiResponse<?>> revokeApiKey(
-            @RequestAttribute Client client,
+            HttpServletRequest httpRequest,
             @PathVariable UUID applicationId,
             @PathVariable UUID keyId
     ) {
+        Client client = getClient(httpRequest);
         getAndVerifyApplication(client, applicationId); // Verify ownership
         log.info("Revoking API key: {}", keyId);
         apiKeyService.revokeApiKey(keyId);
         return ResponseEntity.ok(ApiResponse.success("API key revoked successfully", null));
+    }
+    
+    private Client getClient(HttpServletRequest request) {
+        Client client = (Client) request.getAttribute("client");
+        if (client == null) {
+             throw new com.tokenly.backend.exception.UnauthorizedException("User not authenticated as client");
+        }
+        return client;
     }
 
     private ApiKeyResponse toResponse(ApiKey apiKey) {

@@ -15,6 +15,7 @@ public class SecurityConfig {
 
     private final ApiKeyFilter apiKeyFilter;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final RestAuthenticationEntryPoint restAuthenticationEntryPoint;
 
     private static final String[] PUBLIC_ENDPOINTS = {
             "/api/auth/**",
@@ -34,6 +35,7 @@ public class SecurityConfig {
                                 org.springframework.security.config.http.SessionCreationPolicy.STATELESS
                         )
                 )
+                .exceptionHandling(ex -> ex.authenticationEntryPoint(restAuthenticationEntryPoint))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
                         .anyRequest().authenticated()

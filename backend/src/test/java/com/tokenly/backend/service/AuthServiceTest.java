@@ -42,6 +42,9 @@ class AuthServiceTest {
     private AppProperties appProperties;
 
     @Mock
+    private AppProperties.Auth authProperties; // Mock inner class if possible, or return mock from appProperties
+
+    @Mock
     private AuthFlow authFlow;
 
     @InjectMocks
@@ -90,9 +93,8 @@ class AuthServiceTest {
         ValueOperations<String, String> valueOps = mock(ValueOperations.class);
         when(redisTemplate.opsForValue()).thenReturn(valueOps);
         
-        AppProperties.Auth auth = mock(AppProperties.Auth.class);
-        when(appProperties.getAuth()).thenReturn(auth);
-        when(auth.getOtpExpiryMinutes()).thenReturn(10);
+        when(appProperties.getAuth()).thenReturn(authProperties);
+        when(authProperties.getOtpExpiryMinutes()).thenReturn(10);
 
         // Act
         authService.requestOtp(testApplication, email);
@@ -100,5 +102,25 @@ class AuthServiceTest {
         // Assert
         verify(valueOps).set(anyString(), anyString(), any());
         verify(emailService).sendOtpEmail(eq(email), anyString(), eq("Test App"));
+    }
+
+    @Test
+    void requestMagicLink_ShouldStoreInRedisAndSendEmail() {
+        // Arrange
+        String email = "user@test.com";
+        ValueOperations<String, String> valueOps = mock(ValueOperations.class);
+        when(redisTemplate.opsForValue()).thenReturn(valueOps);
+
+        when(appProperties.getAuth()).thenReturn(authProperties);
+        when(authProperties.getMagicLinkExpiryMinutes()).thenReturn(15);
+
+        // Act
+        authService.requestMagicLink(testApplication, email);
+
+        // Assert
+        verify(valueOps).set(anyString(), anyString(), any());
+        
+        // EmailService.sendMagicLinkEmail(to, token, appId, appName)
+        verify(emailService).sendMagicLinkEmail(eq(email), anyString(), eq(testApplication.getId().toString()), eq("Test App"));
     }
 }

@@ -28,6 +28,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import jakarta.servlet.http.HttpServletRequest;
+
+// ... other imports
+
 @Slf4j
 @RestController
 @RequestMapping("/api/admin/{applicationId}")
@@ -44,11 +48,12 @@ public class AdminUserController {
     @GetMapping("/users")
     @Operation(summary = "List all users", description = "Get paginated list of all users")
     public ResponseEntity<ApiResponse<Page<User>>> listUsers(
-            @RequestAttribute Client client,
+            HttpServletRequest request,
             @PathVariable UUID applicationId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size
     ) {
+        Client client = getClient(request);
         Application application = getAndVerifyApplication(client, applicationId);
         log.info("Admin listing users for application: {}", application.getAppName());
         Page<User> users = userRepository.findAll(PageRequest.of(page, size));
@@ -58,22 +63,23 @@ public class AdminUserController {
     @PostMapping("/users/search")
     @Operation(summary = "Search users", description = "Search and filter users by email or status")
     public ResponseEntity<ApiResponse<List<User>>> searchUsers(
-            @RequestAttribute Client client,
+            HttpServletRequest request,
             @PathVariable UUID applicationId,
-            @RequestBody UserSearchRequest request
+            @RequestBody UserSearchRequest searchRequest
     ) {
+        Client client = getClient(request);
         Application application = getAndVerifyApplication(client, applicationId);
-        log.info("Searching users: email={}, status={}", request.getEmail(), request.getStatus());
+        log.info("Searching users: email={}, status={}", searchRequest.getEmail(), searchRequest.getStatus());
         
         List<User> users;
         
-        if (request.getEmail() != null && !request.getEmail().isEmpty()) {
+        if (searchRequest.getEmail() != null && !searchRequest.getEmail().isEmpty()) {
             // Search by email
             users = userRepository.findByApplicationAndEmailContainingIgnoreCase(
-                    application, request.getEmail());
-        } else if (request.getStatus() != null && !request.getStatus().isEmpty()) {
+                    application, searchRequest.getEmail());
+        } else if (searchRequest.getStatus() != null && !searchRequest.getStatus().isEmpty()) {
             // Filter by status
-            UserStatus status = UserStatus.valueOf(request.getStatus());
+            UserStatus status = UserStatus.valueOf(searchRequest.getStatus());
             users = userRepository.findByApplicationAndStatus(application, status);
         } else {
             // Return all users for this application
@@ -86,10 +92,11 @@ public class AdminUserController {
     @GetMapping("/users/{userId}")
     @Operation(summary = "Get user details", description = "Get detailed information about a specific user")
     public ResponseEntity<ApiResponse<User>> getUser(
-            @RequestAttribute Client client,
+            HttpServletRequest request,
             @PathVariable UUID applicationId,
             @PathVariable UUID userId
     ) {
+        Client client = getClient(request);
         Application application = getAndVerifyApplication(client, applicationId);
         User user = userRepository.findById(userId)
                 .filter(u -> u.getApplication().getId().equals(application.getId()))
@@ -99,11 +106,12 @@ public class AdminUserController {
 
     @PutMapping("/users/{userId}/status")
     public ResponseEntity<ApiResponse<?>> updateUserStatus(
-            @RequestAttribute Client client,
+            HttpServletRequest request,
             @PathVariable UUID applicationId,
             @PathVariable UUID userId,
             @RequestParam UserStatus status
     ) {
+        Client client = getClient(request);
         Application application = getAndVerifyApplication(client, applicationId);
         User user = userRepository.findById(userId)
                 .filter(u -> u.getApplication().getId().equals(application.getId()))
@@ -122,10 +130,11 @@ public class AdminUserController {
 
     @GetMapping("/users/{userId}/sessions")
     public ResponseEntity<ApiResponse<List<Session>>> getUserSessions(
-            @RequestAttribute Client client,
+            HttpServletRequest request,
             @PathVariable UUID applicationId,
             @PathVariable UUID userId
     ) {
+        Client client = getClient(request);
         Application application = getAndVerifyApplication(client, applicationId);
         User user = userRepository.findById(userId)
                 .filter(u -> u.getApplication().getId().equals(application.getId()))
@@ -137,10 +146,11 @@ public class AdminUserController {
 
     @DeleteMapping("/sessions/{sessionId}")
     public ResponseEntity<ApiResponse<?>> revokeSession(
-            @RequestAttribute Client client,
+            HttpServletRequest request,
             @PathVariable UUID applicationId,
             @PathVariable UUID sessionId
     ) {
+        Client client = getClient(request);
         getAndVerifyApplication(client, applicationId); // Verify ownership
         sessionService.revokeSession(sessionId);
         return ResponseEntity.ok(ApiResponse.success("Session revoked", null));
@@ -148,12 +158,13 @@ public class AdminUserController {
 
     @GetMapping("/users/{userId}/login-history")
     public ResponseEntity<ApiResponse<Page<LoginLog>>> getUserLoginHistory(
-            @RequestAttribute Client client,
+            HttpServletRequest request,
             @PathVariable UUID applicationId,
             @PathVariable UUID userId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size
     ) {
+        Client client = getClient(request);
         Application application = getAndVerifyApplication(client, applicationId);
         User user = userRepository.findById(userId)
                 .filter(u -> u.getApplication().getId().equals(application.getId()))
@@ -165,9 +176,10 @@ public class AdminUserController {
 
     @GetMapping("/analytics")
     public ResponseEntity<ApiResponse<Map<String, Object>>> getAnalytics(
-            @RequestAttribute Client client,
+            HttpServletRequest request,
             @PathVariable UUID applicationId
     ) {
+        Client client = getClient(request);
         Application application = getAndVerifyApplication(client, applicationId);
         Map<String, Object> analytics = new HashMap<>();
         analytics.put("totalUsers", userRepository.count());
@@ -175,6 +187,14 @@ public class AdminUserController {
         analytics.put("activeSessions", sessionRepository.countByApplicationAndRevokedFalse(application));
 
         return ResponseEntity.ok(ApiResponse.success(analytics));
+    }
+    
+    private Client getClient(HttpServletRequest request) {
+        Client client = (Client) request.getAttribute("client");
+        if (client == null) {
+             throw new com.tokenly.backend.exception.UnauthorizedException("User not authenticated as client");
+        }
+        return client;
     }
 
     private Application getAndVerifyApplication(Client client, UUID applicationId) {

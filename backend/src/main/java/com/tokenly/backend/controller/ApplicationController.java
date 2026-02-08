@@ -15,6 +15,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.HashMap;
 import java.util.List;
@@ -35,11 +36,12 @@ public class ApplicationController {
     @PostMapping
     @Operation(summary = "Create Application", description = "Create a new application for the client")
     public ApiResponse<CreateApplicationResponse> createApplication(
-            @RequestAttribute Client client,
-            @Valid @RequestBody CreateApplicationRequest request
+            HttpServletRequest request,
+            @Valid @RequestBody CreateApplicationRequest appRequest
     ) {
+        Client client = getClient(request);
         log.info("Creating application for client: {}", client.getId());
-        ApplicationService.ApplicationWithApiKey result = applicationService.createApplication(client, request);
+        ApplicationService.ApplicationWithApiKey result = applicationService.createApplication(client, appRequest);
         
         ApplicationResponse appResponse = applicationMapper.toResponse(result.application());
         CreateApplicationResponse response = CreateApplicationResponse.builder()
@@ -53,8 +55,9 @@ public class ApplicationController {
     @GetMapping
     @Operation(summary = "List Applications", description = "Get all applications for the logged-in client")
     public ApiResponse<List<ApplicationResponse>> listApplications(
-            @RequestAttribute Client client
+            HttpServletRequest request
     ) {
+        Client client = getClient(request);
         log.info("Listing applications for client: {}", client.getId());
         List<Application> applications = applicationService.getApplicationsByClient(client);
         List<ApplicationResponse> response = applications.stream()
@@ -66,9 +69,10 @@ public class ApplicationController {
     @GetMapping("/{id}")
     @Operation(summary = "Get Application", description = "Get application details by ID")
     public ApiResponse<ApplicationResponse> getApplication(
-            @RequestAttribute Client client,
+            HttpServletRequest request,
             @PathVariable UUID id
     ) {
+        Client client = getClient(request);
         log.info("Getting application: {} for client: {}", id, client.getId());
         Application application = applicationService.getApplicationById(client, id);
         return ApiResponse.success(applicationMapper.toResponse(application));
@@ -77,21 +81,23 @@ public class ApplicationController {
     @PutMapping("/{id}")
     @Operation(summary = "Update Application", description = "Update application details")
     public ApiResponse<ApplicationResponse> updateApplication(
-            @RequestAttribute Client client,
+            HttpServletRequest request,
             @PathVariable UUID id,
-            @Valid @RequestBody CreateApplicationRequest request
+            @Valid @RequestBody CreateApplicationRequest appRequest
     ) {
+        Client client = getClient(request);
         log.info("Updating application: {} for client: {}", id, client.getId());
-        Application application = applicationService.updateApplication(client, id, request);
+        Application application = applicationService.updateApplication(client, id, appRequest);
         return ApiResponse.success(applicationMapper.toResponse(application));
     }
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete Application", description = "Delete an application")
     public ApiResponse<?> deleteApplication(
-            @RequestAttribute Client client,
+            HttpServletRequest request,
             @PathVariable UUID id
     ) {
+        Client client = getClient(request);
         log.info("Deleting application: {} for client: {}", id, client.getId());
         applicationService.deleteApplication(client, id);
         return ApiResponse.success("Application deleted successfully", null);
@@ -100,9 +106,10 @@ public class ApplicationController {
     @GetMapping("/{id}/endpoints")
     @Operation(summary = "Get API Endpoints", description = "Get available API endpoints for this application")
     public ApiResponse<Map<String, Object>> getApiEndpoints(
-            @RequestAttribute Client client,
+            HttpServletRequest request,
             @PathVariable UUID id
     ) {
+        Client client = getClient(request);
         log.info("Getting API endpoints for application: {}", id);
         Application application = applicationService.getApplicationById(client, id);
         
@@ -153,7 +160,7 @@ public class ApplicationController {
             "Authorization", "Bearer {accessToken}"
         ));
         endpoints.put("profile", profile);
-
+        
         // Update Profile
         Map<String, Object> updateProfile = new HashMap<>();
         updateProfile.put("method", "PUT");
@@ -207,5 +214,13 @@ public class ApplicationController {
         endpoints.put("resetPassword", resetPassword);
         
         return ApiResponse.success(endpoints);
+    }
+    
+    private Client getClient(HttpServletRequest request) {
+        Client client = (Client) request.getAttribute("client");
+        if (client == null) {
+             throw new com.tokenly.backend.exception.UnauthorizedException("User not authenticated as client");
+        }
+        return client;
     }
 }

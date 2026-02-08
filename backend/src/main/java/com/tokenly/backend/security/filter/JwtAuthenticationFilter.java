@@ -13,6 +13,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -22,6 +23,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.UUID;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -55,11 +57,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             // Check if this is a client token (admin portal) or user token (end-user app)
             if ("client".equals(tokenType)) {
                 // Client token - for admin portal access
-                UUID clientId = UUID.fromString(claims.getBody().getSubject());
+                String subject = claims.getBody().getSubject();
+                UUID clientId = UUID.fromString(subject);
                 
                 // Load the client entity from database
                 Client client = clientRepository.findById(clientId)
-                        .orElseThrow(() -> new UnauthorizedException("Client not found"));
+                        .orElseThrow(() -> new UnauthorizedException("Client not found: " + clientId));
                 
                 request.setAttribute("client", client);
                 request.setAttribute("clientId", clientId);
@@ -72,10 +75,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 
             } else {
                 // User token - for end-user app authentication
-                UUID userId = UUID.fromString(claims.getBody().getSubject());
+                // Log if token type is unexpected for debugging
+                if (tokenType != null && !tokenType.equals("user")) {
+                     log.warn("Unexpected token type: {}", tokenType);
+                }
+
+                String subject = claims.getBody().getSubject();
+                UUID userId = UUID.fromString(subject);
                 
                 User user = userRepository.findById(userId)
-                        .orElseThrow(() -> new UnauthorizedException("User not found"));
+                        .orElseThrow(() -> new UnauthorizedException("User not found: " + userId));
                 
                 request.setAttribute("user", user);
                 request.setAttribute("isClientToken", false);
@@ -88,6 +97,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         } catch (Exception ex) {
             // Token validation failed - allow request to proceed as anonymous
+            log.error("Authentication failed: {}", ex.getMessage(), ex);
             // SecurityContextHolder is already empty by default
             SecurityContextHolder.clearContext();
         }

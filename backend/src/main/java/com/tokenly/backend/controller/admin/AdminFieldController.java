@@ -8,6 +8,7 @@ import com.tokenly.backend.entity.Client;
 import com.tokenly.backend.exception.ForbiddenException;
 import com.tokenly.backend.repository.ApplicationRepository;
 import com.tokenly.backend.service.ApplicationFieldService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,21 +29,23 @@ public class AdminFieldController {
 
     @PostMapping
     public ResponseEntity<ApiResponse<ApplicationField>> createField(
-            @RequestAttribute Client client,
+            HttpServletRequest request,
             @PathVariable UUID applicationId,
-            @Valid @RequestBody CreateFieldRequest request
+            @Valid @RequestBody CreateFieldRequest fieldRequest
     ) {
+        Client client = getClient(request);
         Application application = getAndVerifyApplication(client, applicationId);
-        log.info("Admin creating custom field: {} for application: {}", request.getFieldName(), application.getAppName());
-        ApplicationField field = fieldService.defineField(application, request);
+        log.info("Admin creating custom field: {} for application: {}", fieldRequest.getFieldName(), application.getAppName());
+        ApplicationField field = fieldService.defineField(application, fieldRequest);
         return ResponseEntity.ok(ApiResponse.success("Field created successfully", field));
     }
 
     @GetMapping
     public ResponseEntity<ApiResponse<List<ApplicationField>>> listFields(
-            @RequestAttribute Client client,
+            HttpServletRequest request,
             @PathVariable UUID applicationId
     ) {
+        Client client = getClient(request);
         Application application = getAndVerifyApplication(client, applicationId);
         log.info("Admin fetching custom fields for application: {}", application.getAppName());
         List<ApplicationField> fields = fieldService.getFieldSchema(application);
@@ -51,27 +54,37 @@ public class AdminFieldController {
 
     @PutMapping("/{fieldName}")
     public ResponseEntity<ApiResponse<ApplicationField>> updateField(
-            @RequestAttribute Client client,
+            HttpServletRequest request,
             @PathVariable UUID applicationId,
             @PathVariable String fieldName,
-            @Valid @RequestBody CreateFieldRequest request
+            @Valid @RequestBody CreateFieldRequest fieldRequest
     ) {
+        Client client = getClient(request);
         Application application = getAndVerifyApplication(client, applicationId);
         log.info("Admin updating field: {} for application: {}", fieldName, application.getAppName());
-        ApplicationField field = fieldService.updateField(application, fieldName, request);
+        ApplicationField field = fieldService.updateField(application, fieldName, fieldRequest);
         return ResponseEntity.ok(ApiResponse.success("Field updated successfully", field));
     }
 
     @DeleteMapping("/{fieldName}")
     public ResponseEntity<ApiResponse<?>> deleteField(
-            @RequestAttribute Client client,
+            HttpServletRequest request,
             @PathVariable UUID applicationId,
             @PathVariable String fieldName
     ) {
+        Client client = getClient(request);
         Application application = getAndVerifyApplication(client, applicationId);
         log.info("Admin deleting field: {} from application: {}", fieldName, application.getAppName());
         fieldService.deleteField(application, fieldName);
         return ResponseEntity.ok(ApiResponse.success("Field deleted successfully", null));
+    }
+    
+    private Client getClient(HttpServletRequest request) {
+        Client client = (Client) request.getAttribute("client");
+        if (client == null) {
+             throw new com.tokenly.backend.exception.UnauthorizedException("User not authenticated as client");
+        }
+        return client;
     }
 
     private Application getAndVerifyApplication(Client client, UUID applicationId) {

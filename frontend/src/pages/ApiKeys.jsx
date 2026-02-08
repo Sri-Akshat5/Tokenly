@@ -28,13 +28,15 @@ export default function ApiKeys() {
     const [loading, setLoading] = useState(true);
     const [showCreateModal, setShowCreateModal] = useState(false);
     const [newKey, setNewKey] = useState(null);
-    const [copiedKeyId, setCopiedKeyId] = useState(null);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
         loadData();
     }, [appId]);
 
     const loadData = async () => {
+        setLoading(true);
+        setError(null);
         try {
             const [appRes, keysRes] = await Promise.all([
                 api.get(`/applications/${appId}`),
@@ -44,32 +46,37 @@ export default function ApiKeys() {
             setApiKeys(keysRes.data.data || []);
         } catch (error) {
             console.error('Failed to load data:', error);
+            setError('Failed to load application data. Please try again.');
         } finally {
             setLoading(false);
         }
     };
 
-    const handleCreateKey = async (keyName) => {
+    const [copiedKeyId, setCopiedKeyId] = useState(null);
+
+    const handleCreateKey = async (name) => {
         try {
-            const response = await api.post(`/admin/${appId}/api-keys`, {
-                keyName
-            });
+            const response = await api.post(`/admin/${appId}/api-keys`, { name });
             setNewKey(response.data.data);
             loadData();
         } catch (error) {
-            console.error('Failed to create API key:', error);
+            console.error('Failed to create key:', error);
+            // Optionally set an error state here specifically for creation if needed
+            alert('Failed to create API key');
         }
     };
 
     const handleRevokeKey = async (keyId) => {
-        if (!confirm('Are you sure you want to revoke this API key? This will immediately break any application using it.')) {
+        if (!window.confirm('Are you sure you want to revoke this API key? This action cannot be undone.')) {
             return;
         }
+
         try {
             await api.delete(`/admin/${appId}/api-keys/${keyId}`);
             loadData();
         } catch (error) {
-            console.error('Failed to revoke API key:', error);
+            console.error('Failed to revoke key:', error);
+            alert('Failed to revoke API key');
         }
     };
 
@@ -84,6 +91,23 @@ export default function ApiKeys() {
             <DashboardLayout>
                 <div className="flex items-center justify-center min-h-[60vh]">
                     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white"></div>
+                </div>
+            </DashboardLayout>
+        );
+    }
+
+    if (error) {
+        return (
+            <DashboardLayout>
+                <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
+                    <div className="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center mb-4">
+                        <ShieldAlert className="w-8 h-8 text-red-500" />
+                    </div>
+                    <h3 className="text-xl font-bold text-white mb-2">Something went wrong</h3>
+                    <p className="text-zinc-400 mb-6">{error}</p>
+                    <Button onClick={loadData}>
+                        Try Again
+                    </Button>
                 </div>
             </DashboardLayout>
         );
