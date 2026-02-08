@@ -1,10 +1,10 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import Button from '../components/ui/Button';
 import AnimatedCounter from '../components/ui/AnimatedCounter';
 import Navbar from '../components/layout/Navbar';
-import { Shield, Zap, Code2, Lock, Sparkles, Database, Key, Users, Terminal, ArrowRight, CheckCircle2, ChevronRight } from 'lucide-react';
+import { Shield, Zap, Code2, Lock, Sparkles, Database, Key, Users, Terminal, ArrowRight, CheckCircle2, ChevronRight, X } from 'lucide-react';
 import env from '../config/env';
 
 export default function Landing() {
@@ -303,6 +303,11 @@ export default function Landing() {
             {/* Features Grid - Animated */}
             <FeaturesSection />
 
+            {/* Technical Specs Section */}
+            <TechSpecsSection />
+
+
+
             {/* Stats Section */}
             <section className="container mx-auto px-6 py-10 md:py-20">
                 <div className="relative bg-zinc-950/50 backdrop-blur-xl border border-zinc-800/50 rounded-3xl p-8 md:p-16 overflow-hidden">
@@ -332,6 +337,8 @@ export default function Landing() {
                     </div>
                 </div>
             </section>
+            {/* User Management Demo Section */}
+            <UserManagementSection />
 
             {/* CTA Section */}
             <section className="container mx-auto px-6 py-10 md:py-20">
@@ -365,6 +372,144 @@ export default function Landing() {
                     <p className="text-sm">© 2026 {env.footerText}. Built with precision for developers worldwide.</p>
                 </div>
             </footer>
+        </div>
+    );
+}
+
+function TechSpecsSection() {
+    const [selectedFeature, setSelectedFeature] = useState(null);
+
+    const hashingAlgos = [
+        { name: 'Bcrypt (Default)', desc: 'The industry standard for password hashing. Adaptive work factors make it resistant to brute-force search attacks even as hardware improves.' },
+        { name: 'Argon2id', desc: 'Winner of the Password Hashing Competition (PHC). Memory-hard design provides superior resistance against GPU/ASIC cracking attacks.' },
+        { name: 'PBKDF2', desc: 'NIST-approved key derivation function. Uses a pseudorandom function to derive keys, widely accepted in enterprise compliance standards.' },
+        { name: 'SHA-256', desc: 'Used for data integrity and HMAC operations. Not recommended for passwords, but essential for digital signatures and checksums.' }
+    ];
+
+    const authModes = [
+        { name: 'Stateless JWT', desc: 'Self-contained tokens signed with RS256/HS256. Perfect for microservices as they require no database lookup validation.' },
+        { name: 'Stateful Sessions', desc: 'Traditional server-side sessions stored in Redis. Offers immediate revocation and strict control over concurrent user sessions.' },
+        { name: 'OAuth 2.0', desc: 'The industry standard for delegated authorization. Enables secure third-party access without sharing credentials.' },
+        { name: 'OIDC', desc: 'OpenID Connect adds an identity layer on top of OAuth 2.0, allowing clients to verify the identity of the end-user.' },
+        { name: 'API Keys', desc: 'Long-lived, high-entropy credentials for machine-to-machine communication. Scoped permissions ensure least-privilege access.' }
+    ];
+
+    const loginFlows = [
+        { name: 'Email & Password', desc: 'The classic flow reinforced with zxcvbn strength estimation and breach detection integration.' },
+        { name: 'Magic Links', desc: 'Passwordless authentication via secure, time-limited email tokens. Reduces friction and eliminates password reuse risks.' },
+        { name: 'Email OTP', desc: 'One-Time Passwords sent via email. Ideal for 2FA or as a primary passwordless method for high-security contexts.' },
+        { name: 'Social Login', desc: 'Frictionless onboarding using existing trust anchors like Google and GitHub. Increases conversion rates significantly.' }
+    ];
+
+    return (
+        <section className="py-24 bg-black border-y border-zinc-900 overflow-hidden">
+            <div className="container mx-auto px-6">
+                <div className="text-center mb-16">
+                    <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">Technical Specifications</h2>
+                    <p className="text-zinc-400">Built on open standards. Click any item for details.</p>
+                </div>
+
+                <div className="space-y-4">
+                    {/* Hashing Algos */}
+                    <Marquee direction="left" speed={40}>
+                        {hashingAlgos.map((item, i) => (
+                            <TechCard key={i} item={item} onClick={() => setSelectedFeature(item)} />
+                        ))}
+                    </Marquee>
+
+                    {/* Auth Modes */}
+                    <Marquee direction="right" speed={40}>
+                        {authModes.map((item, i) => (
+                            <TechCard key={i} item={item} onClick={() => setSelectedFeature(item)} />
+                        ))}
+                    </Marquee>
+
+                    {/* Login Flows */}
+                    <Marquee direction="left" speed={40}>
+                        {loginFlows.map((item, i) => (
+                            <TechCard key={i} item={item} onClick={() => setSelectedFeature(item)} />
+                        ))}
+                    </Marquee>
+                </div>
+            </div>
+
+            {/* Feature Detail Modal */}
+            <AnimatePresence>
+                {selectedFeature && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            onClick={() => setSelectedFeature(null)}
+                            className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+                        />
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                            className="relative w-full max-w-lg bg-zinc-900 border border-zinc-800 rounded-2xl p-8 shadow-2xl overflow-hidden"
+                        >
+                            <div className="absolute top-0 right-0 p-4">
+                                <button
+                                    onClick={() => setSelectedFeature(null)}
+                                    className="p-2 text-zinc-500 hover:text-white transition-colors"
+                                >
+                                    <X className="w-6 h-6" />
+                                </button>
+                            </div>
+
+                            <h3 className="text-2xl font-bold text-white mb-4">{selectedFeature.name}</h3>
+                            <p className="text-zinc-300 leading-relaxed text-lg">
+                                {selectedFeature.desc}
+                            </p>
+                        </motion.div>
+                    </div>
+                )}
+            </AnimatePresence>
+        </section>
+    );
+}
+
+function Marquee({ children, direction = 'left', speed = 30 }) {
+    return (
+        <div className="relative flex overflow-hidden group">
+            <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-black via-black/80 to-transparent z-10 pointer-events-none" />
+            <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-black via-black/80 to-transparent z-10 pointer-events-none" />
+
+            <motion.div
+                initial={{ x: direction === 'left' ? 0 : '-50%' }}
+                animate={{ x: direction === 'left' ? '-50%' : 0 }}
+                transition={{
+                    duration: speed,
+                    repeat: Infinity,
+                    ease: "linear"
+                }}
+                className="flex gap-4 shrink-0 py-2"
+            >
+                {children}
+                {children}
+                {children}
+                {children}
+            </motion.div>
+        </div>
+    );
+}
+
+function TechCard({ item, onClick }) {
+    return (
+        <div
+            onClick={onClick}
+            className="relative group/card cursor-pointer"
+        >
+            <div className="
+                px-8 py-3 rounded-full border border-zinc-800 bg-zinc-900/50 backdrop-blur-sm 
+                text-zinc-400 font-medium transition-all duration-300
+                group-hover/card:border-zinc-600 group-hover/card:bg-zinc-800 group-hover/card:text-white
+                active:scale-95
+            ">
+                <span className="text-lg whitespace-nowrap">{item.name}</span>
+            </div>
         </div>
     );
 }
@@ -447,6 +592,108 @@ function ProblemSection() {
                 </div>
             </div>
         </motion.section>
+    );
+}
+
+function UserManagementSection() {
+    return (
+        <section className="py-24 bg-zinc-950 relative overflow-hidden border-b border-zinc-800/50">
+            {/* Background Gradients */}
+            <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-blue-900/10 via-zinc-950 to-zinc-950 pointer-events-none" />
+
+            <div className="container mx-auto px-6 relative z-10">
+                <div className="flex flex-col lg:flex-row items-center gap-16">
+                    {/* Left Content */}
+                    <div className="lg:w-1/2 space-y-8">
+                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-sm font-medium">
+                            <Users className="w-4 h-4" />
+                            <span>User Management</span>
+                        </div>
+                        <h2 className="text-4xl md:text-5xl font-bold text-white tracking-tight leading-tight">
+                            Complete visibility over your <span className="text-blue-500">user base</span>.
+                        </h2>
+                        <p className="text-xl text-zinc-400 leading-relaxed">
+                            View, manage, and analyze your users in real-time. Track active sessions, login history, and security events from a single powerful dashboard.
+                        </p>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-4">
+                            <div>
+                                <h4 className="text-white font-bold text-lg mb-2">Real-time Sync</h4>
+                                <p className="text-zinc-500 text-sm">Updates instantly across all devices.</p>
+                            </div>
+                            <div>
+                                <h4 className="text-white font-bold text-lg mb-2">Access Control</h4>
+                                <p className="text-zinc-500 text-sm">Block suspicious users instantly.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Right Demo */}
+                    <div className="lg:w-1/2 w-full">
+                        <div className="relative rounded-2xl border border-zinc-800 bg-zinc-900/50 backdrop-blur-xl p-6 shadow-2xl">
+                            {/* Decorative glow */}
+                            <div className="absolute -inset-1 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-2xl blur opacity-30 -z-10" />
+
+                            {/* Mock Table Header */}
+                            <div className="flex items-center justify-between mb-6 pb-4 border-b border-zinc-800">
+                                <h3 className="text-white font-bold flex items-center gap-2">
+                                    <Users className="w-4 h-4 text-zinc-400" />
+                                    Recent Users
+                                </h3>
+                                <div className="flex gap-2">
+                                    <div className="w-2.5 h-2.5 rounded-full bg-red-500/20 border border-red-500/50" />
+                                    <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/20 border border-yellow-500/50" />
+                                    <div className="w-2.5 h-2.5 rounded-full bg-green-500/20 border border-green-500/50" />
+                                </div>
+                            </div>
+
+                            {/* Mock Users */}
+                            <div className="space-y-3 mb-8">
+                                {[
+                                    { name: 'Alex Morgan', email: 'alex@example.com', status: 'Active', time: '2m ago' },
+                                    { name: 'Sarah Chen', email: 'sarah@tech.co', status: 'Active', time: '5m ago' },
+                                    { name: 'James Wilson', email: 'james@corp.net', status: 'Blocked', time: '1h ago' },
+                                    { name: 'Maria Garcia', email: 'maria@studio.io', status: 'Active', time: 'Just now' },
+                                ].map((user, i) => (
+                                    <div key={i} className="flex items-center justify-between p-3 rounded-lg hover:bg-white/5 transition-colors group cursor-default border border-transparent hover:border-zinc-800">
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-zinc-800 to-zinc-700 flex items-center justify-center text-xs font-bold text-white border border-zinc-700 shadow-inner">
+                                                {user.name.charAt(0)}
+                                            </div>
+                                            <div>
+                                                <div className="text-white text-sm font-medium">{user.name}</div>
+                                                <div className="text-zinc-500 text-[10px]">{user.email}</div>
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center gap-3">
+                                            <div className="text-right">
+                                                <div className={`text-[10px] font-medium px-2 py-0.5 rounded-full inline-block ${user.status === 'Active' ? 'bg-emerald-500/10 text-emerald-500 border border-emerald-500/20' : 'bg-red-500/10 text-red-500 border border-red-500/20'}`}>
+                                                    {user.status}
+                                                </div>
+                                                <div className="text-zinc-600 text-[10px] mt-1">{user.time}</div>
+                                            </div>
+                                            {/* Block/Unblock Action */}
+                                            <button className={`p-1.5 rounded-md transition-colors ${user.status === 'Active' ? 'text-zinc-600 hover:text-red-400 hover:bg-red-500/10' : 'text-zinc-600 hover:text-emerald-400 hover:bg-emerald-500/10'}`}>
+                                                {user.status === 'Active' ? <Lock className="w-3.5 h-3.5" /> : <Shield className="w-3.5 h-3.5" />}
+                                            </button>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+
+                            {/* Total Calculation */}
+                            <div className="bg-zinc-950 rounded-xl p-4 border border-zinc-800 flex items-center justify-between shadow-inner">
+                                <div className="text-zinc-400 text-sm font-medium">Total Registered Users</div>
+                                <div className="text-2xl font-mono font-bold text-white tracking-widest flex items-center gap-1">
+                                    <AnimatedCounter end={124592} separator="," />
+                                    <span className="text-zinc-600 text-sm font-normal ml-1">users</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
     );
 }
 
