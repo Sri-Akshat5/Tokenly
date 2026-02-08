@@ -475,7 +475,7 @@ function FeaturesSection() {
                         viewport={{ once: true }}
                         className="text-4xl md:text-5xl font-bold text-white mb-6 tracking-tight"
                     >
-                        Everything you need to ship faster
+                        Enterprise-grade capabilities
                     </motion.h2>
                     <motion.p
                         initial={{ opacity: 0, y: 20 }}
@@ -484,40 +484,40 @@ function FeaturesSection() {
                         transition={{ delay: 0.1 }}
                         className="text-xl text-zinc-400 max-w-2xl mx-auto"
                     >
-                        Production-ready authentication with enterprise-grade security
+                        Everything you need for secure, scalable authentication
                     </motion.p>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     <FeatureCard
-                        icon={<Zap className="w-8 h-8" />}
-                        title="Lightning Fast"
-                        description="Optimized for performance with Redis caching and efficient database queries. Sub-50ms response times."
-                    />
-                    <FeatureCard
-                        icon={<Lock className="w-8 h-8" />}
-                        title="Secure by Default"
-                        description="Industry-standard encryption, JWT tokens, and bcrypt password hashing out of the box."
-                    />
-                    <FeatureCard
-                        icon={<Code2 className="w-8 h-8" />}
-                        title="Developer First"
-                        description="Beautiful documentation, clear APIs, and code examples in every language you need."
-                    />
-                    <FeatureCard
-                        icon={<Database className="w-8 h-8" />}
-                        title="Custom Fields"
-                        description="Add unlimited custom fields to user profiles. String, number, boolean, or date types."
+                        icon={<Shield className="w-8 h-8" />}
+                        title="Advanced Hashing"
+                        description="Support for industry-standard algorithms including Bcrypt, Argon2, and PBKDF2. Your user credentials are mathematically uncrackable."
                     />
                     <FeatureCard
                         icon={<Key className="w-8 h-8" />}
-                        title="API Key Management"
-                        description="Generate, rotate, and revoke API keys with fine-grained scopes and rate limiting."
+                        title="Flexible Auth Modes"
+                        description="Choose your architecture: Stateless JWTs for scalability, Stateful Sessions for control, or Simple Auth Tokens for internal APIs."
                     />
                     <FeatureCard
                         icon={<Users className="w-8 h-8" />}
-                        title="User Management"
-                        description="Complete user administration dashboard. Search, filter, block, and manage users effortlessly."
+                        title="Login Architecture"
+                        description="Implement Magic Links, Email OTP, Social Auth (Google/GitHub), or traditional password flows with zero friction."
+                    />
+                    <FeatureCard
+                        icon={<Database className="w-8 h-8" />}
+                        title="Token Control"
+                        description="Fine-grained control over Access Token and Refresh Token durations (minutes/hours). Implement strict rotation policies."
+                    />
+                    <FeatureCard
+                        icon={<Lock className="w-8 h-8" />}
+                        title="Strict Verification"
+                        description="Enforce email verification before login. Enable 'Strict Mode' to block suspicious IPs and prevent brute-force attacks."
+                    />
+                    <FeatureCard
+                        icon={<Code2 className="w-8 h-8" />}
+                        title="Custom User Data"
+                        description="Capture custom fields during signup (e.g., 'phone_number', 'is_beta_user'). Store strings, numbers, or booleans directly on the user object."
                     />
                 </div>
             </div>
