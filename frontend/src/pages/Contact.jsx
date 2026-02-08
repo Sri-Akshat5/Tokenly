@@ -28,7 +28,7 @@ export default function Contact() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-12 w-full max-w-2xl text-left">
                         {/* LinkedIn Card */}
                         <a
-                            href="https://linkedin.com/in/yourprofile"
+                            href="https://www.linkedin.com/in/sriakshat5/"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="group p-8 bg-zinc-900/50 backdrop-blur-xl border border-zinc-800 hover:border-blue-500/50 rounded-2xl transition-all duration-300 hover:bg-zinc-900/80"
@@ -42,7 +42,7 @@ export default function Contact() {
 
                         {/* Email Card */}
                         <a
-                            href="mailto:contact@tokenly.com"
+                            href="mailto:akshatsrivastava566@gmail.com"
                             className="group p-8 bg-zinc-900/50 backdrop-blur-xl border border-zinc-800 hover:border-emerald-500/50 rounded-2xl transition-all duration-300 hover:bg-zinc-900/80"
                         >
                             <div className="w-12 h-12 bg-emerald-500/10 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
@@ -54,7 +54,7 @@ export default function Contact() {
 
                         {/* GitHub Card */}
                         <a
-                            href="https://github.com/yourusername"
+                            href="https://github.com/Sri-Akshat5/"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="group p-8 bg-zinc-900/50 backdrop-blur-xl border border-zinc-800 hover:border-zinc-500/50 rounded-2xl transition-all duration-300 hover:bg-zinc-900/80"
