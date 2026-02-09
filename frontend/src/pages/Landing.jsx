@@ -4,7 +4,7 @@ import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
 import Button from '../components/ui/Button';
 import AnimatedCounter from '../components/ui/AnimatedCounter';
 import Navbar from '../components/layout/Navbar';
-import { Shield, Zap, Code2, Lock, Sparkles, Database, Key, Users, Terminal, ArrowRight, CheckCircle2, ChevronRight, X } from 'lucide-react';
+import { Shield, Zap, Code2, Lock, Sparkles, Database, Key, Users, Terminal, ArrowRight, CheckCircle2, ChevronRight, X, Check } from 'lucide-react';
 import env from '../config/env';
 
 export default function Landing() {
@@ -305,6 +305,9 @@ export default function Landing() {
 
             {/* Technical Specs Section */}
             <TechSpecsSection />
+
+            {/* Comparison Section */}
+            <ComparisonSection />
 
 
 
@@ -697,6 +700,199 @@ function UserManagementSection() {
     );
 }
 
+function ComparisonSection() {
+    // Helper to determine status based on meaningful differentiation
+    // True = Effective/Good (White Check), False = Limited/Complex (Zinc Cross/Gray)
+    const features = [
+        {
+            name: 'Authentication Coverage',
+            tokenly: { status: true, text: 'End-to-end identity infrastructure' },
+            auth0: { status: true, text: 'Authentication services' },
+            cognito: { status: true, text: 'Authentication services' },
+            google: { status: true, text: 'Authentication services' }
+        },
+        {
+            name: 'Developer Experience',
+            tokenly: { status: true, text: 'API-first, developer-optimized' },
+            auth0: { status: false, text: 'Dashboard-driven' },
+            cognito: { status: false, text: 'AWS-centric complexity' },
+            google: { status: false, text: 'Google Cloud-centric' }
+        },
+        {
+            name: 'User Management',
+            tokenly: { status: true, text: 'Built-in, extensible management' },
+            auth0: { status: true, text: 'Built-in user management' },
+            cognito: { status: true, text: 'Built-in user pools' },
+            google: { status: true, text: 'Built-in user management' }
+        },
+        {
+            name: 'Configuration Model',
+            tokenly: { status: true, text: 'Runtime, dynamic config' },
+            auth0: { status: false, text: 'Predominantly static' },
+            cognito: { status: false, text: 'Predominantly static' },
+            google: { status: false, text: 'Predominantly static' }
+        },
+        {
+            name: 'Multi-Tenancy Model',
+            tokenly: { status: true, text: 'Native multi-tenant arch' },
+            auth0: { status: false, text: 'Organization-based' },
+            cognito: { status: false, text: 'User pool–based' },
+            google: { status: false, text: 'Project-based' }
+        },
+        {
+            name: 'Tenant Isolation',
+            tokenly: { status: true, text: 'Strong isolation by design' },
+            auth0: { status: false, text: 'Partial isolation' },
+            cognito: { status: false, text: 'Complex to enforce' },
+            google: { status: false, text: 'Limited isolation' }
+        },
+        {
+            name: 'Customization',
+            tokenly: { status: true, text: 'Full code-level control' },
+            auth0: { status: false, text: 'Rule-based extensions' },
+            cognito: { status: false, text: 'Event-driven triggers' },
+            google: { status: false, text: 'Function-based extensions' }
+        },
+        {
+            name: 'Auth Flow Control',
+            tokenly: { status: true, text: 'Fully programmable pipelines' },
+            auth0: { status: false, text: 'Limited customization' },
+            cognito: { status: false, text: 'Limited customization' },
+            google: { status: false, text: 'Limited customization' }
+        },
+        {
+            name: 'Rate Limiting',
+            tokenly: { status: true, text: 'Adaptive, tenant-aware' },
+            auth0: { status: false, text: 'Fixed platform limits' },
+            cognito: { status: false, text: 'Service-level limits' },
+            google: { status: false, text: 'Fixed quota limits' }
+        },
+        {
+            name: 'Identity Verification',
+            tokenly: { status: true, text: 'Native, strict enforcement' },
+            auth0: { status: false, text: 'External integrations' },
+            cognito: { status: false, text: 'External integrations' },
+            google: { status: false, text: 'External integrations' }
+        },
+        {
+            name: 'Security Posture',
+            tokenly: { status: true, text: 'Secure-by-default' },
+            auth0: { status: false, text: 'Configuration-dependent' },
+            cognito: { status: false, text: 'Configuration-sensitive' },
+            google: { status: false, text: 'Configuration-dependent' }
+        },
+        {
+            name: 'Operational Dependency',
+            tokenly: { status: true, text: 'Dashboard optional, API-driven' },
+            auth0: { status: false, text: 'Dashboard-dependent' },
+            cognito: { status: false, text: 'Console-dependent' },
+            google: { status: false, text: 'Console-dependent' }
+        },
+        {
+            name: 'Ideal Use Case',
+            tokenly: { status: true, text: 'Multi-tenant B2B SaaS' },
+            auth0: { status: true, text: 'General SaaS auth' },
+            cognito: { status: true, text: 'AWS-native apps' },
+            google: { status: true, text: 'Google Cloud apps' }
+        },
+    ];
+
+    const StatusCell = ({ status, text, isTokenly }) => (
+        <div className="relative w-full h-full flex items-center justify-start group/cell min-h-[50px]">
+            {/* Icon - Visible by default, hidden on hover */}
+            <div className={`absolute inset-0 flex items-center justify-start transition-all duration-300 transform origin-left ${status ? 'scale-100 opacity-100 group-hover/cell:scale-95 group-hover/cell:opacity-0' : 'scale-100 opacity-100 group-hover/cell:scale-95 group-hover/cell:opacity-0'}`}>
+                {status ? (
+                    <div className="flex items-center gap-2">
+                        <div className={`p-1 rounded-full ${isTokenly ? 'bg-white text-black' : 'bg-zinc-800 text-zinc-400'}`}>
+                            <Check className="w-3.5 h-3.5" />
+                        </div>
+                        {isTokenly && <span className="text-xs font-bold text-white tracking-wide">Included</span>}
+                    </div>
+                ) : (
+                    <div className="p-1  text-zinc-900">
+                        <X className="w-4 h-4 text-zinc-600" />
+                    </div>
+                )}
+            </div>
+
+            {/* Text - Hidden by default, visible on hover */}
+            <div className="absolute inset-0 flex items-center justify-start transition-all duration-300 opacity-0 group-hover/cell:opacity-100 translate-y-1 group-hover/cell:translate-y-0 text-left">
+                <span className={`text-xs leading-tight font-medium ${isTokenly ? 'text-white' : 'text-zinc-400'}`}>
+                    {text}
+                </span>
+            </div>
+        </div>
+    );
+
+    return (
+        <section className="py-24 bg-black relative border-b border-zinc-800/50">
+            <div className="container mx-auto px-6">
+                <div className="text-center mb-16">
+                    <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">Why developers choose {env.appName}</h2>
+                    <p className="text-zinc-400 max-w-2xl mx-auto text-lg leading-relaxed">
+                        Avoid the <span className="text-white font-bold animate-pulse bg-gradient-to-r from-white to-red-400 bg-clip-text text-transparent bg-size-200 bg-pos-0 hover:bg-pos-100 transition-all duration-500 hover:cursor-pointer hover:text-red-500">Monthly Active User</span> pricing trap. Own your users, own your data.
+                    </p>
+                </div>
+
+                <div className="max-w-6xl mx-auto overflow-x-auto pb-4 scrollbar-hide">
+                    {/* Modern Table Container */}
+                    <div className="min-w-[800px] bg-zinc-900/10 backdrop-blur-sm rounded-3xl border border-zinc-800/50">
+
+                        {/* Header */}
+                        <div className="grid grid-cols-[1.2fr_1.2fr_1fr_1fr_1fr] border-b border-zinc-800/50">
+                            <div className="p-5 text-zinc-500 font-medium text-xs uppercase tracking-wider flex items-center pl-8">Feature</div>
+
+                            {/* Tokenly Header */}
+                            <div className="p-5 relative bg-zinc-900/40 border-x border-zinc-800/50">
+                                <div className="absolute top-0 inset-x-0 h-[1px] bg-gradient-to-r from-transparent via-zinc-500/20 to-transparent opacity-50" />
+                                <div className="flex items-center gap-3">
+                                    <div className="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_8px_rgba(255,255,255)] animate-pulse" />
+                                    <span className="text-white font-bold text-base">{env.appName}</span>
+                                </div>
+                            </div>
+
+                            <div className="p-5 text-zinc-500 font-medium text-xs uppercase tracking-wider flex items-center">Auth0</div>
+                            <div className="p-5 text-zinc-500 font-medium text-xs uppercase tracking-wider flex items-center">AWS Cognito</div>
+                            <div className="p-5 text-zinc-500 font-medium text-xs uppercase tracking-wider flex items-center">Google Identity</div>
+                        </div>
+
+                        {/* Rows */}
+                        <div className="divide-y divide-zinc-800/30">
+                            {features.map((feature, i) => (
+                                <div key={i} className="grid grid-cols-[1.2fr_1.2fr_1fr_1fr_1fr] group transition-colors hover:bg-zinc-800/20">
+
+                                    {/* Feature Name */}
+                                    <div className="p-5 pl-8 flex items-center text-zinc-400 font-medium text-xs group-hover:text-zinc-200 transition-colors">
+                                        {feature.name}
+                                    </div>
+
+                                    {/* Tokenly Cell (Highlighted) */}
+                                    <div className="p-5 flex items-center bg-zinc-900/20 border-x border-zinc-800/30 relative">
+                                        {/* Subtle highlight gradient only on hover or active */}
+                                        <div className="absolute inset-0 bg-gradient-to-b from-white/[0.02] to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                                        <StatusCell status={feature.tokenly.status} text={feature.tokenly.text} isTokenly={true} />
+                                    </div>
+
+                                    {/* Competitor Cells */}
+                                    <div className="p-5 flex items-center">
+                                        <StatusCell status={feature.auth0.status} text={feature.auth0.text} />
+                                    </div>
+                                    <div className="p-5 flex items-center">
+                                        <StatusCell status={feature.cognito.status} text={feature.cognito.text} />
+                                    </div>
+                                    <div className="p-5 flex items-center">
+                                        <StatusCell status={feature.google.status} text={feature.google.text} />
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    );
+}
+
 function FeaturesSection() {
     const sectionRef = useRef(null);
     const { scrollYProgress } = useScroll({
@@ -782,11 +978,11 @@ function SecuritySection() {
     const backgroundPositionY = useTransform(scrollYProgress, [0, 1], ["0%", "-400%"]);
 
     return (
-        <section ref={sectionRef} className="relative py-32 overflow-hidden bg-white">
+        <section ref={sectionRef} className="relative py-32 overflow-hidden bg-black/50">
             {/* Parallax Grid Background - Infinite Scroll */}
             <motion.div
                 style={{ backgroundPositionY }}
-                className="absolute inset-0 bg-[linear-gradient(to_right,#d4d4d8_1px,transparent_1px),linear-gradient(to_bottom,#d4d4d8_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_80%_80%_at_50%_50%,#000_70%,transparent_100%)] pointer-events-none"
+                className="absolute inset-0 bg-[linear-gradient(to_right,#27272a_1px,transparent_1px),linear-gradient(to_bottom,#27272a_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_80%_80%_at_50%_50%,#000_70%,transparent_100%)] pointer-events-none opacity-20"
             />
 
             <div className="container mx-auto px-6 relative z-10">
@@ -798,9 +994,9 @@ function SecuritySection() {
                                 initial={{ opacity: 0, x: -20 }}
                                 whileInView={{ opacity: 1, x: 0 }}
                                 viewport={{ once: true }}
-                                className="inline-flex items-center gap-2 px-4 py-2 border border-zinc-800 rounded-full text-sm bg-white font-medium mb-8 "
+                                className="inline-flex items-center gap-2 px-4 py-2 border border-zinc-800 rounded-full text-sm bg-zinc-900/50 font-medium mb-8 text-zinc-300"
                             >
-                                <Shield className="w-4 h-4 text-red-700 bg-red-50/50 backdrop-blur-sm animate-pulse" />
+                                <Shield className="w-4 h-4 text-emerald-500 bg-emerald-500/10 backdrop-blur-sm animate-pulse" />
                                 SECURITY FIRST
                             </motion.span>
 
@@ -809,11 +1005,11 @@ function SecuritySection() {
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
                                 transition={{ delay: 0.1 }}
-                                className="text-4xl md:text-6xl font-bold mb-8 tracking-tight leading-tight text-black"
+                                className="text-4xl md:text-6xl font-bold mb-8 tracking-tight leading-tight text-white"
                             >
                                 Security is not an add-on.
                                 <br />
-                                <span className="text-zinc-700">It's the default.</span>
+                                <span className="text-zinc-500">It's the default.</span>
                             </motion.h2>
                         </div>
                     </div>
@@ -823,38 +1019,38 @@ function SecuritySection() {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <SecurityCard
                                 icon={<Lock className="w-6 h-6" />}
-                                title="Strong password hashing"
-                                description="Bcrypt with configurable rounds"
+                                title="Enterprise Hashing"
+                                description="Bcrypt and Argon2id with configurable work factors."
                                 delay={0}
                             />
                             <SecurityCard
                                 icon={<Database className="w-6 h-6" />}
-                                title="App-level isolation"
-                                description="Complete data separation"
+                                title="Tenant Isolation"
+                                description="Logical separation of user data across applications."
                                 delay={0.1}
                             />
                             <SecurityCard
                                 icon={<Key className="w-6 h-6" />}
-                                title="API-key protected"
-                                description="Secure all endpoints"
+                                title="API Guard"
+                                description="Route-level authentication with secure API Keys."
                                 delay={0.2}
                             />
                             <SecurityCard
                                 icon={<Shield className="w-6 h-6" />}
-                                title="Stateless auth"
-                                description="JWT tokens, no sessions"
+                                title="Stateless Architecture"
+                                description="RS256 signed JWTs for distributed verification."
                                 delay={0.3}
                             />
                             <SecurityCard
                                 icon={<CheckCircle2 className="w-6 h-6" />}
-                                title="Production-safe"
-                                description="Secure out of the box"
+                                title="Production Ready"
+                                description="Secure defaults compliant with OWASP standards."
                                 delay={0.4}
                             />
                             <SecurityCard
                                 icon={<Zap className="w-6 h-6" />}
-                                title="Rate limiting"
-                                description="Prevent abuse automatically"
+                                title="Adaptive Rate Limiting"
+                                description="Intelligent abuse prevention and throttling."
                                 delay={0.5}
                             />
                         </div>
@@ -872,15 +1068,15 @@ function SecurityCard({ icon, title, description, delay }) {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-50px" }}
             transition={{ duration: 0.5, delay }}
-            className="p-8 bg-zinc-100 border border-zinc-200 rounded-2xl hover:border-zinc-300 transition-all hover:shadow-lg hover:shadow-zinc-200/50"
+            className="p-8 bg-zinc-900/50 backdrop-blur-sm border border-zinc-800 rounded-2xl hover:border-zinc-700 transition-all hover:shadow-lg hover:shadow-black/50"
         >
-            <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center mb-4 shadow-sm border border-zinc-100">
-                <div className="text-black">
+            <div className="w-12 h-12 bg-zinc-800 rounded-xl flex items-center justify-center mb-4 shadow-sm border border-zinc-700/50">
+                <div className="text-white">
                     {icon}
                 </div>
             </div>
-            <h3 className="text-lg font-bold text-black mb-2">{title}</h3>
-            <p className="text-zinc-500 text-sm leading-relaxed">{description}</p>
+            <h3 className="text-lg font-bold text-white mb-2">{title}</h3>
+            <p className="text-zinc-400 text-sm leading-relaxed">{description}</p>
         </motion.div>
     );
 }
