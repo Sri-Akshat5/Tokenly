@@ -4,7 +4,7 @@ import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
 import Button from '../components/ui/Button';
 import AnimatedCounter from '../components/ui/AnimatedCounter';
 import Navbar from '../components/layout/Navbar';
-import { Shield, Zap, Code2, Lock, Sparkles, Database, Key, Users, Terminal, ArrowRight, CheckCircle2, ChevronRight, X, Check } from 'lucide-react';
+import { Shield, Zap, Code2, Lock, Sparkles, Database, Key, Users, Terminal, ArrowRight, CheckCircle2, ChevronRight, X, Check, Twitter, Github, Linkedin, Youtube, Heart, Mail, Globe } from 'lucide-react';
 import env from '../config/env';
 
 export default function Landing() {
@@ -370,12 +370,73 @@ export default function Landing() {
             </section>
 
             {/* Footer */}
-            <footer className="container mx-auto px-6 py-16 border-t border-zinc-900">
-                <div className="text-center text-zinc-600">
-                    <p className="text-sm">© 2026 {env.footerText}. Built with precision for developers worldwide.</p>
-                </div>
-            </footer>
+            {/* Footer */}
+            <FooterSection />
         </div>
+    );
+}
+
+function FooterSection() {
+    return (
+        <footer className="bg-black border-t border-zinc-800 py-12">
+            <div className="container mx-auto px-6">
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
+                    {/* Brand Column */}
+                    <div className="space-y-4">
+                        <div className="flex items-center gap-2">
+                            <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center">
+                                <span className="text-black font-bold text-xl">T</span>
+                            </div>
+                            <span className="text-2xl font-bold text-white tracking-tight">Tokenly</span>
+                        </div>
+                        <p className="text-zinc-400 leading-relaxed max-w-sm">
+                            Secure, scalable authentication for modern applications. Built for developers who care about security and user experience.
+                        </p>
+                    </div>
+
+                    {/* Bottom Bar Info - Moved Up/Merged for simpler layout */}
+                    <div className="flex flex-col md:items-end justify-center space-y-4">
+                        <div className="flex items-center gap-2 px-3 py-1 bg-emerald-500/10 rounded-full border border-emerald-500/20 w-fit">
+                            <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                            <span className="text-emerald-500 text-xs font-medium">All systems operational</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-zinc-500 text-sm">
+                            <span>Made with</span>
+                            <Heart className="w-4 h-4 text-red-500 fill-red-500" />
+                            <span>by developers</span>
+                        </div>
+                        <div className="text-zinc-600 text-sm">
+                            © 2026 Tokenly Inc. All rights reserved.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    );
+}
+
+function SocialIcon({ icon, href }) {
+    return (
+        <a
+            href={href}
+            className="w-10 h-10 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-400 hover:text-white hover:bg-zinc-800 hover:border-zinc-700 transition-all duration-300"
+        >
+            {icon}
+        </a>
+    );
+}
+
+function FooterLink({ href, children }) {
+    return (
+        <li>
+            <a
+                href={href}
+                className="text-zinc-400 hover:text-white transition-colors flex items-center gap-1 group"
+            >
+                <ChevronRight className="w-3 h-3 opacity-0 -ml-4 group-hover:opacity-100 group-hover:translate-x-1 group-hover:ml-0 transition-all duration-300 text-zinc-600" />
+                <span className="group-hover:translate-x-1 transition-transform duration-300">{children}</span>
+            </a>
+        </li>
     );
 }
 
@@ -978,7 +1039,7 @@ function SecuritySection() {
     const backgroundPositionY = useTransform(scrollYProgress, [0, 1], ["0%", "-400%"]);
 
     return (
-        <section ref={sectionRef} className="relative py-32 overflow-hidden bg-black/50">
+        <section ref={sectionRef} className="relative py-32 overflow-hidden bg-white">
             {/* Parallax Grid Background - Infinite Scroll */}
             <motion.div
                 style={{ backgroundPositionY }}
@@ -994,9 +1055,9 @@ function SecuritySection() {
                                 initial={{ opacity: 0, x: -20 }}
                                 whileInView={{ opacity: 1, x: 0 }}
                                 viewport={{ once: true }}
-                                className="inline-flex items-center gap-2 px-4 py-2 border border-zinc-800 rounded-full text-sm bg-zinc-900/50 font-medium mb-8 text-zinc-300"
+                                className="inline-flex items-center gap-2 px-4 py-2 border border-zinc-200 rounded-full text-sm bg-zinc-100 font-medium mb-8 text-zinc-600"
                             >
-                                <Shield className="w-4 h-4 text-emerald-500 bg-emerald-500/10 backdrop-blur-sm animate-pulse" />
+                                <Shield className="w-4 h-4 text-emerald-600 bg-emerald-500/10 backdrop-blur-sm animate-pulse" />
                                 SECURITY FIRST
                             </motion.span>
 
@@ -1005,7 +1066,7 @@ function SecuritySection() {
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
                                 transition={{ delay: 0.1 }}
-                                className="text-4xl md:text-6xl font-bold mb-8 tracking-tight leading-tight text-white"
+                                className="text-4xl md:text-6xl font-bold mb-8 tracking-tight leading-tight text-zinc-900"
                             >
                                 Security is not an add-on.
                                 <br />
@@ -1068,15 +1129,15 @@ function SecurityCard({ icon, title, description, delay }) {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-50px" }}
             transition={{ duration: 0.5, delay }}
-            className="p-8 bg-zinc-900/50 backdrop-blur-sm border border-zinc-800 rounded-2xl hover:border-zinc-700 transition-all hover:shadow-lg hover:shadow-black/50"
+            className="p-8 bg-zinc-50 border border-zinc-200 rounded-2xl hover:border-zinc-300 transition-all hover:shadow-lg hover:shadow-zinc-200/50"
         >
-            <div className="w-12 h-12 bg-zinc-800 rounded-xl flex items-center justify-center mb-4 shadow-sm border border-zinc-700/50">
-                <div className="text-white">
+            <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center mb-4 shadow-sm border border-zinc-200">
+                <div className="text-zinc-900">
                     {icon}
                 </div>
             </div>
-            <h3 className="text-lg font-bold text-white mb-2">{title}</h3>
-            <p className="text-zinc-400 text-sm leading-relaxed">{description}</p>
+            <h3 className="text-lg font-bold text-zinc-900 mb-2">{title}</h3>
+            <p className="text-zinc-500 text-sm leading-relaxed">{description}</p>
         </motion.div>
     );
 }
