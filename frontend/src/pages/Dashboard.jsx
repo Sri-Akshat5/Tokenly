@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
-import { Plus, Layers, Users, Zap, AlertCircle, TrendingUp, BarChart3, CheckCircle2 } from 'lucide-react';
+import { Plus, Layers, Users, Zap, Activity, AlertCircle, TrendingUp, BarChart3, CheckCircle2, Info } from 'lucide-react';
 import DashboardLayout from '../components/layout/DashboardLayout';
 import Card from '../components/ui/Card';
 import Button from '../components/ui/Button';
 import Badge from '../components/ui/Badge';
 import Modal from '../components/ui/Modal';
 import Input from '../components/ui/Input';
+import Select from '../components/ui/Select';
 import applicationService from '../services/applicationService';
 import dashboardService from '../services/dashboardService';
 import ApplicationCard from '../components/ApplicationCard';
@@ -49,42 +50,48 @@ export default function Dashboard() {
                 {/* Header Section */}
                 <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
                     <div>
-                        <h1 className="text-5xl font-extrabold text-white tracking-tighter mb-3">
+                        <h1 className="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white via-zinc-200 to-zinc-400 tracking-tighter mb-3 animate-gradient">
                             Welcome back
                         </h1>
                         <p className="text-zinc-500 text-lg max-w-2xl leading-relaxed">
                             Monitor your authentication traffic and manage your security configurations across all your digital products.
                         </p>
                     </div>
-                    <Button onClick={() => setShowCreateModal(true)} className="h-12 px-8 shadow-xl shadow-white/10 group">
-                        <Plus className="w-5 h-5 mr-2 group-hover:rotate-90 transition-transform duration-300" />
-                        Create Application
+                    <Button
+                        onClick={() => setShowCreateModal(true)}
+                        className="h-12 px-8 shadow-xl shadow-white/10 group hover:shadow-2xl hover:shadow-white/20 transition-all duration-300 hover:scale-105 relative overflow-hidden"
+                    >
+                        {/* Button shimmer effect */}
+                        <div className="absolute inset-0 shimmer opacity-0 group-hover:opacity-100" />
+                        <Plus className="w-5 h-5 mr-2 group-hover:rotate-90 transition-transform duration-300 relative z-10" />
+                        <span className="relative z-10">Create Application</span>
                     </Button>
                 </div>
 
                 {/* Performance Overview */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
                     <StatCard
                         title="Total Applications"
                         value={stats.totalApplications}
                         icon={Layers}
-                        color="blue"
                         description="Across all environments"
                     />
                     <StatCard
                         title="Total Registered Users"
                         value={stats.totalUsers.toLocaleString()}
                         icon={Users}
-                        color="green"
-                        trend={stats.userTrend}
                         description="Across all applications"
                     />
                     <StatCard
                         title="API Success Rate"
-                        value={`${stats.apiSuccessRate}%`}
+                        value={`${stats.apiSuccessRate?.toFixed(1) || 100}%`}
                         icon={Zap}
-                        color="purple"
-                        trend={stats.successRateTrend}
+                        description="Last 24 hours"
+                    />
+                    <StatCard
+                        title="Total API Requests"
+                        value={stats.totalRequests24h?.toLocaleString() || 0}
+                        icon={Activity}
                         description="Last 24 hours"
                     />
                 </div>
@@ -109,7 +116,11 @@ export default function Dashboard() {
                     ) : (
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             {applications.map((app) => (
-                                <ApplicationCard key={app.id} application={app} />
+                                <ApplicationCard
+                                    key={app.id}
+                                    application={app}
+                                    onStatusChange={loadData}
+                                />
                             ))}
                         </div>
                     )}
@@ -129,39 +140,29 @@ export default function Dashboard() {
     );
 }
 
-function StatCard({ title, value, icon: Icon, color, trend, description }) {
-    const colorClasses = {
-        blue: 'text-blue-400 bg-blue-500/10 border-blue-500/20',
-        green: 'text-green-400 bg-green-500/10 border-green-500/20',
-        purple: 'text-purple-400 bg-purple-500/10 border-purple-500/20',
-    };
-
+function StatCard({ title, value, icon: Icon, description }) {
     return (
-        <Card className="p-8 group">
-            <div className="flex items-start justify-between mb-6">
-                <div className={`p-3 rounded-2xl border ${colorClasses[color]}`}>
-                    <Icon className="w-6 h-6" />
+        <Card className="p-4 group hover:border-zinc-700 transition-all duration-300 relative overflow-hidden">
+            {/* Subtle gradient overlay on hover */}
+            <div className="absolute inset-0 bg-gradient-to-br from-zinc-800/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+            <div className="relative z-10 flex items-center gap-3">
+                {/* Icon */}
+                <div className="p-2.5 rounded-lg bg-zinc-900/50 border border-zinc-800/50 shrink-0">
+                    <Icon className="w-5 h-5 text-zinc-400" />
                 </div>
-                {trend && (
-                    <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-green-500/10 border border-green-500/20">
-                        <TrendingUp className="w-3 h-3 text-green-400" />
-                        <span className="text-[10px] font-bold text-green-400">
-                            {trend}
-                        </span>
-                    </div>
-                )}
-            </div>
-            <div>
-                <p className="text-zinc-500 text-sm font-semibold uppercase tracking-widest mb-1">{title}</p>
-                <div className="flex items-baseline gap-2">
-                    <p className="text-4xl font-extrabold text-white tracking-tighter">{value}</p>
+
+                {/* Content - Vertical Stack */}
+                <div className="flex-1 min-w-0">
+                    <p className="text-[10px] text-zinc-500 font-medium uppercase tracking-wider mb-1">{title}</p>
+                    <p className="text-2xl font-bold text-white tracking-tight mb-1">{value}</p>
+                    {description && (
+                        <p className="text-[10px] text-zinc-600 font-medium flex items-center gap-1">
+                            <Info className="w-3 h-3" />
+                            {description}
+                        </p>
+                    )}
                 </div>
-                {description && (
-                    <p className="text-xs text-zinc-600 mt-3 flex items-center gap-1.5 font-medium">
-                        <Info className="w-3 h-3" />
-                        {description}
-                    </p>
-                )}
             </div>
         </Card>
     );
@@ -283,29 +284,27 @@ function CreateApplicationModal({ isOpen, onClose, onSuccess }) {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="space-y-3">
                             <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest block px-1">Authentication Mode</label>
-                            <select
+                            <Select
                                 value={formData.authMode}
                                 onChange={(e) => setFormData({ ...formData, authMode: e.target.value })}
-                                className="w-full bg-zinc-900 border border-zinc-800 text-white rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-white/20 transition-all"
                             >
                                 <option value="JWT">Stateless (JWT Tokens)</option>
                                 <option value="SESSION">Stateful (Sessions)</option>
                                 <option value="API_TOKEN">Simple (API Tokens)</option>
-                            </select>
+                            </Select>
                         </div>
 
                         <div className="space-y-3">
                             <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest block px-1">Login Method</label>
-                            <select
+                            <Select
                                 value={formData.loginMethod}
                                 onChange={(e) => setFormData({ ...formData, loginMethod: e.target.value })}
-                                className="w-full bg-zinc-900 border border-zinc-800 text-white rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-white/20 transition-all"
                             >
                                 <option value="PASSWORD">Email + Password</option>
                                 <option value="OTP">One-Time Password (OTP)</option>
                                 <option value="MAGIC_LINK">Magic Link</option>
                                 <option value="OAUTH">OAuth / Social Login</option>
-                            </select>
+                            </Select>
                         </div>
                     </div>
 
@@ -335,13 +334,5 @@ function CreateApplicationModal({ isOpen, onClose, onSuccess }) {
                 </div>
             </form>
         </Modal>
-    );
-}
-
-function Info({ className }) {
-    return (
-        <svg xmlns="http://www.w3.org/2000/svg" className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <circle cx="12" cy="12" r="10" /><path d="M12 16v-4" /><path d="M12 8h.01" />
-        </svg>
     );
 }

@@ -30,6 +30,9 @@ public class User extends BaseEntity {
     @Column(unique = true, nullable = false)
     private String email;
 
+    private String firstName;
+    private String lastName;
+
     @JsonIgnore
     private String passwordHash;
 

@@ -25,6 +25,7 @@ public class AuthServiceImpl implements AuthService {
     private final StringRedisTemplate redisTemplate;
     private final EmailService emailService;
     private final AppProperties appProperties;
+    private final com.tokenly.backend.repository.ApiKeyRepository apiKeyRepository;
 
     private static final String OTP_PREFIX = "tokenly:otp:";
     private static final String MAGIC_PREFIX = "tokenly:magic:";
@@ -52,11 +53,39 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public void requestMagicLink(Application application, String email) {
+    public void requestMagicLink(Application application, String email, String redirectUrl) {
+        // Find active public key
+        com.tokenly.backend.entity.ApiKey apiKey = apiKeyRepository.findByApplication(application).stream()
+                .filter(k -> k.isActive() && k.getPublicKey().startsWith("pk_"))
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("No active public API key found for this application"));
+                
+        String publicKey = apiKey.getPublicKey();
+
+        // Validate redirectUrl if provided, or use default
+        String targetRedirectUrl = redirectUrl;
+        if (targetRedirectUrl == null || targetRedirectUrl.isBlank()) {
+            if (application.getAuthConfig() != null) {
+                targetRedirectUrl = application.getAuthConfig().getDefaultRedirectUrl();
+            }
+        }
+
+        if (targetRedirectUrl != null && !targetRedirectUrl.isBlank()) {
+            boolean isAllowed = new com.tokenly.backend.security.util.OriginValidator(new com.fasterxml.jackson.databind.ObjectMapper())
+                    .isAllowed(targetRedirectUrl, apiKey.getAllowedOrigins());
+            
+            if (!isAllowed) {
+                throw new com.tokenly.backend.exception.ForbiddenException("Invalid redirect URL");
+            }
+        }
+
         String token = UUID.randomUUID().toString();
+        // Store redirectUrl in Redis alongside email? Or just pass it in link?
+        // Passing in link is stateless and simpler.
+        
         String redisKey = MAGIC_PREFIX + application.getId() + ":" + token;
         
         redisTemplate.opsForValue().set(redisKey, email, Duration.ofMinutes(appProperties.getAuth().getMagicLinkExpiryMinutes()));
-        emailService.sendMagicLinkEmail(email, token, application.getId().toString(), application.getAppName());
+        emailService.sendMagicLinkEmail(email, token, publicKey, application.getAppName(), targetRedirectUrl);
     }
 }

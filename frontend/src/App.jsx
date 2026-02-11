@@ -17,6 +17,7 @@ import ResetPassword from './pages/ResetPassword';
 import Documentation from './pages/Documentation';
 import Terms from './pages/Terms';
 import Privacy from './pages/Privacy';
+import RequestLogs from './pages/RequestLogs';
 import authService from './services/authService';
 
 // Protected Route Component
@@ -56,6 +57,7 @@ function App() {
 
         {/* Protected Routes */}
         <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+        <Route path="/request-logs" element={<ProtectedRoute><RequestLogs /></ProtectedRoute>} />
         <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
 
         {/* Application Routes */}

@@ -25,5 +25,5 @@ public interface EmailService {
     /**
      * Send Magic Link for login
      */
-    void sendMagicLinkEmail(String to, String magicToken, String appId, String appName);
+    void sendMagicLinkEmail(String to, String magicToken, String publicKey, String appName, String redirectUrl);
 }

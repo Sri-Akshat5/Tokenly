@@ -78,9 +78,10 @@ public class AuthController {
     @PostMapping("/request-magic-link")
     public ApiResponse<?> requestMagicLink(
             @RequestAttribute Application application,
-            @RequestParam String email
+            @RequestParam String email,
+            @RequestParam(required = false) String redirectUrl
     ) {
-        authService.requestMagicLink(application, email);
+        authService.requestMagicLink(application, email, redirectUrl);
         return ApiResponse.success("Magic link sent to your email", null);
     }
 

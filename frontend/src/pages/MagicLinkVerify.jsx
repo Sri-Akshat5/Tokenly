@@ -14,7 +14,8 @@ export default function MagicLinkVerify() {
     useEffect(() => {
         const verifyToken = async () => {
             const token = searchParams.get('token');
-            const appId = searchParams.get('appId'); // We need appId to know which context to login to
+            const appId = searchParams.get('appId'); // We need appId to know which login
+            const redirectUrl = searchParams.get('redirectUrl');
 
             if (!token || !appId) {
                 setStatus('error');
@@ -27,8 +28,16 @@ export default function MagicLinkVerify() {
                 setStatus('success');
                 // Store token and redirect after a short delay
                 setTimeout(() => {
-                    // Redirect to a dashboard or configured success URL
-                    alert('Authenticated! Token: ' + response.data.accessToken.substring(0, 10) + '...');
+                    if (redirectUrl) {
+                        // Append token to redirectUrl
+                        const url = new URL(redirectUrl);
+                        url.searchParams.set('accessToken', response.data.accessToken);
+                        url.searchParams.set('refreshToken', response.data.refreshToken);
+                        window.location.href = url.toString();
+                    } else {
+                        // Default behavior
+                        alert('Authenticated! Token: ' + response.data.accessToken.substring(0, 10) + '...');
+                    }
                 }, 2000);
             } catch (err) {
                 setStatus('error');
@@ -87,7 +96,7 @@ export default function MagicLinkVerify() {
                                 <h2 className="text-2xl font-bold text-white mb-2">Verification Failed</h2>
                                 <p className="text-zinc-500 leading-relaxed">{error}</p>
                             </div>
-                            <div className="pt-4">
+                            <div className="pt-4 space-y-3">
                                 <Button
                                     className="w-full h-12 group"
                                     onClick={() => navigate('/login')}
@@ -95,6 +104,15 @@ export default function MagicLinkVerify() {
                                     Try signing in again
                                     <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
                                 </Button>
+                                {searchParams.get('redirectUrl') && (
+                                    <Button
+                                        variant="outline"
+                                        className="w-full h-12"
+                                        onClick={() => window.location.href = searchParams.get('redirectUrl')}
+                                    >
+                                        Return to App
+                                    </Button>
+                                )}
                             </div>
                         </div>
                     )}

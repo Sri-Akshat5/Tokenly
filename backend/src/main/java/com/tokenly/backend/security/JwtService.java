@@ -40,7 +40,9 @@ public class JwtService {
     public String generateAccessToken(User user, Application application) {
         Instant now = Instant.now();
         AuthConfig config = application.getAuthConfig();
-        int expiryMinutes = config != null ? config.getAccessTokenTtlMinutes() : (int) (properties.getAccessTokenExpiry() / 60);
+        int expiryMinutes = (config != null && config.getAccessTokenTtlMinutes() != null)
+                ? config.getAccessTokenTtlMinutes()
+                : (int) (properties.getAccessTokenExpiry() / 60);
 
         JwtBuilder builder = Jwts.builder()
                 .setSubject(user.getId().toString())

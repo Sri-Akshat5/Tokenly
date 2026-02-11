@@ -15,4 +15,11 @@ public class AuthConfigResponse {
     private boolean signupEnabled;
     private boolean emailVerificationRequired;
     private String googleClientId;
+    private String githubClientId;
+    private String metaAppId;
+    private String auth0Domain;
+    private String auth0ClientId;
+    private Integer accessTokenTtlMinutes;
+    private Integer refreshTokenTtlMinutes;
+    private String defaultRedirectUrl;
 }

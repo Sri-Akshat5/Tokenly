@@ -39,9 +39,10 @@ public class ConsoleEmailService implements EmailService {
     }
 
     @Override
-    public void sendMagicLinkEmail(String to, String magicToken, String appId, String appName) {
+    public void sendMagicLinkEmail(String to, String magicToken, String publicKey, String appName, String redirectUrl) {
         log.info("[SIMULATION] Sending Magic Link for {} to: {}", appName, to);
-        log.info("[SIMULATION] Link: {}/auth/verify?token={}&appId={}", appProperties.getUrl().getBaseFrontend(), magicToken, appId);
+        String rUrl = redirectUrl != null ? "&redirectUrl=" + redirectUrl : "";
+        log.info("[SIMULATION] Link: {}/auth/verify?token={}&appId={}{}", appProperties.getUrl().getBaseFrontend(), magicToken, publicKey, rUrl);
         log.info("======================================");
     }
 

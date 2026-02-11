@@ -19,5 +19,7 @@ public interface ApplicationService {
     
     Application updateApplication(Client client, UUID id, CreateApplicationRequest request);
     
+    Application toggleStatus(Client client, UUID id, com.tokenly.backend.enums.ApplicationStatus status);
+    
     void deleteApplication(Client client, UUID id);
 }

@@ -91,6 +91,19 @@ public class ApplicationController {
         return ApiResponse.success(applicationMapper.toResponse(application));
     }
 
+    @PatchMapping("/{id}/status")
+    @Operation(summary = "Toggle Application Status", description = "Enable or disable an application")
+    public ApiResponse<ApplicationResponse> toggleStatus(
+            HttpServletRequest request,
+            @PathVariable UUID id,
+            @Valid @RequestBody com.tokenly.backend.dto.request.application.ToggleApplicationStatusRequest statusRequest
+    ) {
+        Client client = getClient(request);
+        log.info("Toggling status for application: {} to {}", id, statusRequest.getStatus());
+        Application application = applicationService.toggleStatus(client, id, statusRequest.getStatus());
+        return ApiResponse.success(applicationMapper.toResponse(application));
+    }
+
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete Application", description = "Delete an application")
     public ApiResponse<?> deleteApplication(

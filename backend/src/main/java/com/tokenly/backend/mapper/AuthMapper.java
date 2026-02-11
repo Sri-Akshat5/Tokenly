@@ -18,6 +18,13 @@ public class AuthMapper {
                 .signupEnabled(config.isSignupEnabled())
                 .emailVerificationRequired(config.isEmailVerificationRequired())
                 .googleClientId(config.getGoogleClientId())
+                .githubClientId(config.getGithubClientId())
+                .metaAppId(config.getMetaAppId())
+                .auth0Domain(config.getAuth0Domain())
+                .auth0ClientId(config.getAuth0ClientId())
+                .accessTokenTtlMinutes(config.getAccessTokenTtlMinutes())
+                .refreshTokenTtlMinutes(config.getRefreshTokenTtlMinutes())
+                .defaultRedirectUrl(config.getDefaultRedirectUrl())
                 .build();
     }
 

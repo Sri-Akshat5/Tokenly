@@ -21,6 +21,10 @@ public class OtpLoginHandler implements LoginMethodHandler {
     @Override
     public User authenticate(Application application, UserLoginRequest request) {
         String email = request.getEmail();
+        if (email == null || email.isBlank()) {
+            throw new UnauthorizedException("Email is required");
+        }
+
         String code = request.getOtpCode();
 
         if (code == null || code.isEmpty()) {

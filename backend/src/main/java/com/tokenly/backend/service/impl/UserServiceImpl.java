@@ -59,12 +59,22 @@ public class UserServiceImpl implements UserService {
             user.setPasswordHash(encoderFactory.getEncoderForApplication(application).encode(request.getPassword()));
         }
         user.setStatus(UserStatus.ACTIVE);
-        user.setEmailVerified(false);
+        // Check verification requirement (default to false if config missing, though config should exist)
+        boolean verificationRequired = application.getAuthConfig() != null && application.getAuthConfig().isEmailVerificationRequired();
+        user.setEmailVerified(!verificationRequired);
 
-        // Generate verification token
+        // Generate verification token (still useful to have even if auto-verified, or maybe not?)
+        // If not required, maybe we don't need token? But keep it consistent for now or nuullify.
+        // Let's keep it generated but expire it or just leave it.
+        // Actually if verified, token should be null.
         String verificationToken = UUID.randomUUID().toString();
-        user.setVerificationToken(verificationToken);
-        user.setVerificationTokenExpiry(Instant.now().plus(appProperties.getAuth().getVerificationTokenExpiryHours(), ChronoUnit.HOURS));
+        if (verificationRequired) {
+             user.setVerificationToken(verificationToken);
+             user.setVerificationTokenExpiry(Instant.now().plus(appProperties.getAuth().getVerificationTokenExpiryHours(), ChronoUnit.HOURS));
+        } else {
+             user.setVerificationToken(null);
+             user.setVerificationTokenExpiry(null);
+        }
 
         try {
             user.setCustomData(
@@ -78,8 +88,13 @@ public class UserServiceImpl implements UserService {
 
         User savedUser = userRepository.save(user);
 
-        // Send verification email
-        emailService.sendVerificationEmail(savedUser.getEmail(), verificationToken, application.getAppName());
+        // Send confirmation email
+        if (verificationRequired) {
+            emailService.sendVerificationEmail(savedUser.getEmail(), verificationToken, application.getAppName());
+        } else {
+            // Auto-verified, send welcome email
+            emailService.sendWelcomeEmail(savedUser.getEmail(), savedUser.getEmail(), application.getAppName());
+        }
 
         return savedUser;
     }

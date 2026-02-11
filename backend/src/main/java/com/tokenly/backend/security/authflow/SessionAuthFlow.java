@@ -46,7 +46,9 @@ public class SessionAuthFlow implements AuthFlow {
         // Log successful login
         loginLogService.logSuccessfulLogin(user, application, request.getIpAddress(), request.getUserAgent());
 
-        int accessTtl = application.getAuthConfig() != null ? application.getAuthConfig().getAccessTokenTtlMinutes() : 60;
+        int accessTtl = (application.getAuthConfig() != null && application.getAuthConfig().getAccessTokenTtlMinutes() != null)
+                ? application.getAuthConfig().getAccessTokenTtlMinutes()
+                : 60;
 
         return AuthResponse.builder()
                 .accessToken(accessToken)

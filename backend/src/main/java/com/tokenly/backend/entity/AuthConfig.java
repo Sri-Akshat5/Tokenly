@@ -45,4 +45,16 @@ public class AuthConfig extends BaseEntity {
     private String jwtCustomClaims; // Comma-separated list of user fields or custom field keys
 
     private String googleClientId;
+
+    private String githubClientId;
+    private String githubClientSecret;
+
+    private String metaAppId;
+    private String metaAppSecret;
+
+    private String auth0Domain;
+    private String auth0ClientId;
+
+    @Column(length = 1000)
+    private String defaultRedirectUrl;
 }

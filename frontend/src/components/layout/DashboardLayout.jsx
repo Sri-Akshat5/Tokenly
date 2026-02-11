@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Shield, Home, Settings as SettingsIcon, LogOut, LayoutDashboard, ChevronRight, Menu, X } from 'lucide-react';
+import { Shield, Home, Settings as SettingsIcon, LogOut, LayoutDashboard, Activity, ChevronRight, Menu, X } from 'lucide-react';
 import authService from '../../services/authService';
 
 export default function DashboardLayout({ children }) {
@@ -33,6 +33,13 @@ export default function DashboardLayout({ children }) {
                         onClick={() => setIsMobileMenuOpen(false)}
                     />
                     <SidebarItem
+                        to="/request-logs"
+                        icon={Activity}
+                        label="Request Logs"
+                        active={isActive('/request-logs')}
+                        onClick={() => setIsMobileMenuOpen(false)}
+                    />
+                    <SidebarItem
                         to="/settings"
                         icon={SettingsIcon}
                         label="Account Settings"
@@ -49,7 +56,7 @@ export default function DashboardLayout({ children }) {
                         Check our documentation or contact our specialized support team.
                     </p>
                     <Link
-                        to="/dashboard"
+                        to="/docs"
                         className="text-[11px] font-bold text-white flex items-center gap-1 group"
                         onClick={() => setIsMobileMenuOpen(false)}
                     >

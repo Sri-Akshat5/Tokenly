@@ -99,6 +99,10 @@ public class ApiKeyFilter extends OncePerRequestFilter {
         if (application == null) {
             throw new UnauthorizedException("Invalid API key (no application)");
         }
+        
+        // Set attribute early so logs capture the application even if validation fails later
+        request.setAttribute("application", application);
+        request.setAttribute("client", application.getClient());
 
         if (application.getStatus() == ApplicationStatus.INACTIVE) {
             throw new UnauthorizedException("Application is inactive");
@@ -126,8 +130,8 @@ public class ApiKeyFilter extends OncePerRequestFilter {
         }
 
         // 6️⃣ Resolve application (already done in step 3 but keeping for attribute)
-        request.setAttribute("application", application);
-
+        // Attribute set earlier to capture logs for failed requests
+        
         // 7️⃣ Continue request
         filterChain.doFilter(request, response);
     }

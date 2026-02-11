@@ -81,13 +81,23 @@ public class AdminAuthConfigController {
         if (authConfigRequest.getLoginMethod() != null) config.setLoginMethod(authConfigRequest.getLoginMethod());
         if (authConfigRequest.getPasswordHashAlgorithm() != null) config.setPasswordHashAlgorithm(authConfigRequest.getPasswordHashAlgorithm());
         
-        config.setAccessTokenTtlMinutes(authConfigRequest.getAccessTokenTtlMinutes());
-        config.setRefreshTokenTtlMinutes(authConfigRequest.getRefreshTokenTtlMinutes());
+        if (authConfigRequest.getAccessTokenTtlMinutes() != null) config.setAccessTokenTtlMinutes(authConfigRequest.getAccessTokenTtlMinutes());
+        if (authConfigRequest.getRefreshTokenTtlMinutes() != null) config.setRefreshTokenTtlMinutes(authConfigRequest.getRefreshTokenTtlMinutes());
         config.setRefreshTokenEnabled(authConfigRequest.isRefreshTokenEnabled());
         config.setSignupEnabled(authConfigRequest.isSignupEnabled());
         config.setEmailVerificationRequired(authConfigRequest.isEmailVerificationRequired());
         config.setJwtCustomClaims(authConfigRequest.getJwtCustomClaims());
+        config.setJwtCustomClaims(authConfigRequest.getJwtCustomClaims());
         config.setGoogleClientId(authConfigRequest.getGoogleClientId());
+        config.setGithubClientId(authConfigRequest.getGithubClientId());
+        config.setGithubClientSecret(authConfigRequest.getGithubClientSecret());
+        config.setMetaAppId(authConfigRequest.getMetaAppId());
+        config.setMetaAppSecret(authConfigRequest.getMetaAppSecret());
+        
+        config.setAuth0Domain(authConfigRequest.getAuth0Domain());
+        config.setAuth0ClientId(authConfigRequest.getAuth0ClientId());
+        
+        config.setDefaultRedirectUrl(authConfigRequest.getDefaultRedirectUrl());
         
         AuthConfig savedConfig = authConfigRepository.save(config);
         

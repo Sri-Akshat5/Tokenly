@@ -13,5 +13,5 @@ public interface AuthService {
 
     void requestOtp(Application application, String email);
 
-    void requestMagicLink(Application application, String email);
+    void requestMagicLink(Application application, String email, String redirectUrl);
 }

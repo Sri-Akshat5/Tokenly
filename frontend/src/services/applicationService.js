@@ -36,6 +36,12 @@ export const applicationService = {
         const response = await api.get(`/applications/${id}/endpoints`);
         return response.data;
     },
+
+    // Toggle application status
+    toggleStatus: async (id, status) => {
+        const response = await api.patch(`/applications/${id}/status`, { status });
+        return response.data;
+    },
 };
 
 export default applicationService;

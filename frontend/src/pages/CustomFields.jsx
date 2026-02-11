@@ -74,7 +74,7 @@ export default function CustomFields() {
 
     return (
         <DashboardLayout>
-            <div className="max-w-7xl mx-auto pb-12">
+            <div className="max-w-7xl mx-auto pb-6">
                 <ApplicationHeader
                     application={application}
                     appId={appId}
@@ -89,30 +89,54 @@ export default function CustomFields() {
                 />
 
                 {/* Content */}
+                {/* Content */}
                 <div className="grid grid-cols-1 gap-6">
-                    {fields.length === 0 ? (
-                        <Card className="p-20 text-center flex flex-col items-center justify-center border-dashed border-2 border-zinc-800">
-                            <div className="w-20 h-20 bg-zinc-800/50 rounded-full flex items-center justify-center mb-6 text-zinc-600">
-                                <Database className="w-10 h-10" />
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {/* Default System Fields */}
+                        <FieldCard
+                            field={{
+                                fieldName: 'Email Address',
+                                fieldType: 'STRING',
+                                required: true,
+                                displayInSignup: true,
+                                displayInLogin: true,
+                                isSystem: true
+                            }}
+                        />
+                        <FieldCard
+                            field={{
+                                fieldName: 'Password',
+                                fieldType: 'STRING',
+                                required: true,
+                                displayInSignup: true,
+                                displayInLogin: true,
+                                isSystem: true
+                            }}
+                        />
+
+                        {/* Custom Fields */}
+                        {fields.map((field) => (
+                            <FieldCard
+                                key={field.fieldName}
+                                field={field}
+                                onDelete={handleDeleteField}
+                            />
+                        ))}
+                    </div>
+
+                    {fields.length === 0 && (
+                        <div className="p-12 text-center flex flex-col items-center justify-center border-dashed border-2 border-zinc-800 rounded-3xl">
+                            <div className="w-16 h-16 bg-zinc-900 rounded-full flex items-center justify-center mb-4 text-zinc-600">
+                                <Plus className="w-8 h-8" />
                             </div>
-                            <h3 className="text-xl font-bold text-white mb-2">No custom fields defined</h3>
-                            <p className="text-zinc-400 max-w-sm mx-auto mb-8">
-                                Define additional attributes to collect from your users during signup (e.g. phone, address, company).
+                            <h3 className="text-lg font-bold text-white mb-1">Add Custom Attributes</h3>
+                            <p className="text-sm text-zinc-500 max-w-sm mx-auto mb-6">
+                                Collect additional data like phone numbers or job titles.
                             </p>
-                            <Button onClick={() => setShowAddModal(true)}>
+                            <Button onClick={() => setShowAddModal(true)} variant="secondary">
                                 <Plus className="w-4 h-4 mr-2" />
-                                Define First Field
+                                Create Field
                             </Button>
-                        </Card>
-                    ) : (
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {fields.map((field) => (
-                                <FieldCard
-                                    key={field.fieldName}
-                                    field={field}
-                                    onDelete={handleDeleteField}
-                                />
-                            ))}
                         </div>
                     )}
                 </div>
@@ -123,9 +147,9 @@ export default function CustomFields() {
                         <Info className="w-5 h-5" />
                     </div>
                     <div>
-                        <h4 className="text-sm font-semibold text-white mb-1">How Custom Fields Work</h4>
+                        <h4 className="text-sm font-semibold text-white mb-1">Standard & Custom Fields</h4>
                         <p className="text-xs text-zinc-500 leading-relaxed max-w-2xl">
-                            Custom fields allow you to extend the user profile with your own data schema. Once defined, these fields will be validated and stored automatically when a user signs up or updates their profile.
+                            <strong>Email</strong> and <strong>Password</strong> are collected by default for all users. You can define additional custom fields below to extend the user profile with your own data schema (e.g. phone, job title).
                         </p>
                     </div>
                 </div>
@@ -156,29 +180,42 @@ function FieldCard({ field, onDelete }) {
     const Icon = typeIcons[field.fieldType] || Database;
 
     return (
-        <Card className="p-6 group hover:border-zinc-700 transition-all">
+        <Card className={`p-6 transition-all ${field.isSystem
+            ? 'bg-zinc-900/40 border-zinc-800/50 opacity-75'
+            : 'group hover:border-zinc-700'
+            }`}>
             <div className="flex items-start justify-between mb-6">
                 <div className="flex items-center gap-3">
-                    <div className="p-2 bg-zinc-800 rounded-xl text-zinc-400 group-hover:text-emerald-400 transition-colors">
+                    <div className={`p-2 rounded-xl transition-colors ${field.isSystem
+                        ? 'bg-zinc-800 text-zinc-500'
+                        : 'bg-zinc-800 text-zinc-400 group-hover:text-emerald-400'
+                        }`}>
                         <Icon className="w-5 h-5" />
                     </div>
                     <div>
-                        <h3 className="text-lg font-bold text-white mb-0.5">{field.fieldName}</h3>
+                        <div className="flex items-center gap-2">
+                            <h3 className="text-lg font-bold text-white mb-0.5">{field.fieldName}</h3>
+                            {field.isSystem && (
+                                <Badge className="bg-zinc-800 text-zinc-500 border-zinc-700 text-[9px] px-1.5 py-0">SYSTEM</Badge>
+                            )}
+                        </div>
                         <div className="flex items-center gap-2">
                             <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">{field.fieldType}</span>
-                            {field.required && (
+                            {field.required && !field.isSystem && (
                                 <Badge className="bg-red-500/10 text-red-500 border-red-500/20 text-[9px] px-1.5 py-0">REQUIRED</Badge>
                             )}
                         </div>
                     </div>
                 </div>
-                <button
-                    onClick={() => onDelete(field.fieldName)}
-                    className="p-2 text-zinc-600 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-all"
-                    title="Delete Field"
-                >
-                    <Trash2 className="w-4 h-4" />
-                </button>
+                {!field.isSystem && (
+                    <button
+                        onClick={() => onDelete(field.fieldName)}
+                        className="p-2 text-zinc-600 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-all"
+                        title="Delete Field"
+                    >
+                        <Trash2 className="w-4 h-4" />
+                    </button>
+                )}
             </div>
 
             <div className="grid grid-cols-2 gap-2">

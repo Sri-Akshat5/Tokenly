@@ -89,8 +89,8 @@ public class SessionServiceImpl implements SessionService {
 
         // 7. Create new session with SAME token family
         AuthConfig config = application.getAuthConfig();
-        int refreshTtl = config != null ? config.getRefreshTokenTtlMinutes() : 43200; // 30 days default
-        int accessTtl = config != null ? config.getAccessTokenTtlMinutes() : 60; // 1 hour default
+        int refreshTtl = (config != null && config.getRefreshTokenTtlMinutes() != null) ? config.getRefreshTokenTtlMinutes() : 43200; // 30 days default
+        int accessTtl = (config != null && config.getAccessTokenTtlMinutes() != null) ? config.getAccessTokenTtlMinutes() : 60; // 1 hour default
 
         Session newSession = new Session();
         newSession.setUser(user);
@@ -118,7 +118,7 @@ public class SessionServiceImpl implements SessionService {
     @Override
     public Session createSession(User user, Application application, String refreshToken, String ipAddress, String userAgent) {
         AuthConfig config = application.getAuthConfig();
-        int refreshTtl = config != null ? config.getRefreshTokenTtlMinutes() : 43200;
+        int refreshTtl = (config != null && config.getRefreshTokenTtlMinutes() != null) ? config.getRefreshTokenTtlMinutes() : 43200;
 
         Session session = new Session();
         session.setUser(user);

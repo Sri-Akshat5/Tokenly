@@ -43,13 +43,20 @@ export default function IntegrationGuide() {
 
     const loadData = async () => {
         try {
-            const [appRes, fieldsRes, keysRes, usersRes] = await Promise.all([
+            const [appRes, configRes, fieldsRes, keysRes, usersRes] = await Promise.all([
                 applicationService.get(appId),
+                api.get(`/admin/${appId}/auth-config`),
                 api.get(`/admin/${appId}/fields`),
                 api.get(`/admin/${appId}/api-keys`),
                 api.get(`/admin/${appId}/users?limit=1`)
             ]);
-            setApplication(appRes.data);
+
+            const appData = appRes.data;
+            if (configRes.data.data) {
+                appData.authConfig = configRes.data.data;
+            }
+
+            setApplication(appData);
             setFields(fieldsRes.data.data || []);
             setApiKeys(keysRes.data.data || []);
 
@@ -98,10 +105,53 @@ export default function IntegrationGuide() {
             body[field.fieldName] = sampleValue;
         });
 
-        return `curl -X POST "${baseUrl}/signup" \\
+        return {
+            request: `curl -X POST "${baseUrl}/signup" \\
   -H "X-API-Key: ${apiKey}" \\
   -H "Content-Type: application/json" \\
-  -d '${JSON.stringify(body, null, 2)}'`;
+  -d '${JSON.stringify(body, null, 2)}'`,
+            success: {
+                status: 201,
+                body: JSON.stringify({
+                    success: true,
+                    message: "User created successfully",
+                    data: {
+                        id: "usr_1a2b3c4d5e6f",
+                        email: "user@example.com",
+                        emailVerified: false,
+                        createdAt: "2024-01-15T10:30:00Z",
+                        ...Object.fromEntries(Object.keys(body).filter(k => k !== 'email' && k !== 'password').map(k => [k, body[k]]))
+                    }
+                }, null, 2)
+            },
+            errors: [
+                {
+                    status: 400,
+                    description: "Invalid request body",
+                    body: JSON.stringify({
+                        success: false,
+                        error: "Validation failed",
+                        details: ["Email is required", "Password must be at least 8 characters"]
+                    }, null, 2)
+                },
+                {
+                    status: 409,
+                    description: "User already exists",
+                    body: JSON.stringify({
+                        success: false,
+                        error: "User with this email already exists"
+                    }, null, 2)
+                },
+                {
+                    status: 401,
+                    description: "Invalid API key",
+                    body: JSON.stringify({
+                        success: false,
+                        error: "Invalid or missing API key"
+                    }, null, 2)
+                }
+            ]
+        };
     };
 
     const generateLoginCode = () => {
@@ -109,44 +159,234 @@ export default function IntegrationGuide() {
         const apiKey = getActiveApiKey();
         const method = application?.authConfig?.loginMethod;
 
-        if (method === 'OTP') {
-            return `# Step 1: Request OTP
-curl -X POST "${baseUrl}/request-otp?email=user@example.com" \\
-  -H "X-API-Key: ${apiKey}"
+        const successResponse = {
+            status: 200,
+            body: JSON.stringify({
+                success: true,
+                message: "Login successful",
+                data: {
+                    accessToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+                    refreshToken: "rt_1a2b3c4d5e6f7g8h9i0j",
+                    tokenType: "Bearer",
+                    expiresIn: 3600
+                }
+            }, null, 2)
+        };
 
-# Step 2: Login with OTP
-curl -X POST "${baseUrl}/login" \\
+        const commonErrors = [
+            {
+                status: 401,
+                description: "Invalid credentials",
+                body: JSON.stringify({
+                    success: false,
+                    error: "Invalid email or password"
+                }, null, 2)
+            },
+            {
+                status: 401,
+                description: "Invalid API key",
+                body: JSON.stringify({
+                    success: false,
+                    error: "Invalid or missing API key"
+                }, null, 2)
+            }
+        ];
+
+        if (method === 'OTP') {
+            return {
+                request: [
+                    {
+                        title: "1. Request OTP",
+                        content: `curl -X POST "${baseUrl}/request-otp?email=user@example.com" \\
+  -H "X-API-Key: ${apiKey}"`
+                    },
+                    {
+                        title: "2. Login with OTP",
+                        content: `curl -X POST "${baseUrl}/login" \\
   -H "X-API-Key: ${apiKey}" \\
   -H "Content-Type: application/json" \\
   -d '{
     "email": "user@example.com",
     "otp": "123456"
-  }'`;
+  }'`
+                    }
+                ],
+                success: successResponse,
+                errors: [
+                    {
+                        status: 401,
+                        description: "Invalid or expired OTP",
+                        body: JSON.stringify({
+                            success: false,
+                            error: "Invalid or expired OTP code"
+                        }, null, 2)
+                    },
+                    ...commonErrors
+                ],
+                note: "Use request-otp first, then login with the code received in email."
+            };
         }
 
         if (method === 'MAGIC_LINK') {
-            return `# Request Magic Link (user receives email with login link)
-curl -X POST "${baseUrl}/request-magic-link?email=user@example.com" \\
-  -H "X-API-Key: ${apiKey}"`;
+            const defaultUrl = application?.authConfig?.defaultRedirectUrl;
+            const hasDefault = !!defaultUrl;
+
+            return {
+                request: hasDefault
+                    ? `curl -X POST "${baseUrl}/request-magic-link?email=user@example.com" \\
+  -H "X-API-Key: ${apiKey}"`
+                    : `curl -X POST "${baseUrl}/request-magic-link?email=user@example.com&redirectUrl=https://yourapp.com/callback" \\
+  -H "X-API-Key: ${apiKey}"`,
+                success: {
+                    status: 200,
+                    body: JSON.stringify({
+                        success: true,
+                        message: "Magic link sent to email"
+                    }, null, 2)
+                },
+                errors: [
+                    {
+                        status: 404,
+                        description: "User not found",
+                        body: JSON.stringify({
+                            success: false,
+                            error: "No user found with this email"
+                        }, null, 2)
+                    },
+                    {
+                        status: 400,
+                        description: "Invalid redirect URL",
+                        body: JSON.stringify({
+                            success: false,
+                            error: "Redirect URL not in allowed origins"
+                        }, null, 2)
+                    },
+                    ...commonErrors
+                ],
+                note: "User clicks link in email to complete login. Tokens are returned via redirect URL."
+            };
+        }
+
+        if (method === 'OAUTH') {
+            const requests = [];
+
+            if (application?.authConfig?.googleClientId) {
+                requests.push({
+                    title: "Login with Google",
+                    content: `// Use Client ID: ${application.authConfig.googleClientId}
+// Get ID Token from Google SDK, then POST here:
+curl -X POST "${baseUrl}/login" \\
+  -H "X-API-Key: ${apiKey}" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "provider": "GOOGLE",
+    "providerToken": "PASTE_ID_TOKEN_HERE"
+  }'`
+                });
+            }
+
+            if (application?.authConfig?.githubClientId) {
+                requests.push({
+                    title: "Login with GitHub",
+                    content: `curl -X POST "${baseUrl}/login" \\
+  -H "X-API-Key: ${apiKey}" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "provider": "GITHUB",
+    "providerToken": "GITHUB_ACCESS_TOKEN_FROM_CLIENT"
+  }'`
+                });
+            }
+
+            if (application?.authConfig?.metaAppId) {
+                requests.push({
+                    title: "Login with Meta/Facebook",
+                    content: `curl -X POST "${baseUrl}/login" \\
+  -H "X-API-Key: ${apiKey}" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "provider": "META",
+    "providerToken": "FACEBOOK_ACCESS_TOKEN_FROM_CLIENT"
+  }'`
+                });
+            }
+
+            if (requests.length === 0) {
+                // Fallback if OAUTH is selected but no provider configured (shouldn't happen ideally)
+                requests.push({
+                    title: "Login with OAuth",
+                    content: `curl -X POST "${baseUrl}/login" \\
+  -H "X-API-Key: ${apiKey}" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "provider": "GOOGLE",
+    "providerToken": "PROVIDER_TOKEN"
+  }'`
+                });
+            }
+
+            return {
+                request: requests,
+                success: successResponse,
+                errors: commonErrors,
+                note: "Requires valid access/ID token from the respective provider's SDK. This SINGLE request handles both Signup (auto-creation) and Login."
+            };
         }
 
         // Default: PASSWORD
-        return `curl -X POST "${baseUrl}/login" \\
+        return {
+            request: `curl -X POST "${baseUrl}/login" \\
   -H "X-API-Key: ${apiKey}" \\
   -H "Content-Type: application/json" \\
   -d '{
     "email": "user@example.com",
     "password": "SecurePass123!"
-  }'`;
+  }'`,
+            success: successResponse,
+            errors: commonErrors
+        };
     };
 
     const generateGetProfileCode = () => {
         const baseUrl = getBaseUrl();
         const apiKey = getActiveApiKey();
 
-        return `curl -X GET "${baseUrl}/profile" \\
+        return {
+            request: `curl -X GET "${baseUrl}/profile" \\
   -H "X-API-Key: ${apiKey}" \\
-  -H "Authorization: Bearer ACCESS_TOKEN"`;
+  -H "Authorization: Bearer ACCESS_TOKEN"`,
+            success: {
+                status: 200,
+                body: JSON.stringify({
+                    success: true,
+                    data: {
+                        id: "usr_1a2b3c4d5e6f",
+                        email: "user@example.com",
+                        emailVerified: true,
+                        createdAt: "2024-01-15T10:30:00Z",
+                        ...(fields.length > 0 ? Object.fromEntries(fields.slice(0, 2).map(f => [f.fieldName, f.fieldType === 'NUMBER' ? 12345 : 'sample_value'])) : {})
+                    }
+                }, null, 2)
+            },
+            errors: [
+                {
+                    status: 401,
+                    description: "Unauthorized - Invalid or expired token",
+                    body: JSON.stringify({
+                        success: false,
+                        error: "Invalid or expired access token"
+                    }, null, 2)
+                },
+                {
+                    status: 401,
+                    description: "Invalid API key",
+                    body: JSON.stringify({
+                        success: false,
+                        error: "Invalid or missing API key"
+                    }, null, 2)
+                }
+            ]
+        };
     };
 
     const generateUpdateProfileCode = () => {
@@ -162,68 +402,211 @@ curl -X POST "${baseUrl}/request-magic-link?email=user@example.com" \\
             updates.customField1 = 'new_value';
         }
 
-        return `curl -X PUT "${baseUrl}/profile" \\
+        return {
+            request: `curl -X PUT "${baseUrl}/profile" \\
   -H "X-API-Key: ${apiKey}" \\
   -H "Authorization: Bearer ACCESS_TOKEN" \\
   -H "Content-Type: application/json" \\
-  -d '${JSON.stringify(updates, null, 2)}'`;
+  -d '${JSON.stringify(updates, null, 2)}'`,
+            success: {
+                status: 200,
+                body: JSON.stringify({
+                    success: true,
+                    message: "Profile updated successfully",
+                    data: {
+                        id: "usr_1a2b3c4d5e6f",
+                        email: "user@example.com",
+                        ...updates
+                    }
+                }, null, 2)
+            },
+            errors: [
+                {
+                    status: 401,
+                    description: "Unauthorized",
+                    body: JSON.stringify({
+                        success: false,
+                        error: "Invalid or expired access token"
+                    }, null, 2)
+                },
+                {
+                    status: 400,
+                    description: "Validation error",
+                    body: JSON.stringify({
+                        success: false,
+                        error: "Invalid field values"
+                    }, null, 2)
+                }
+            ]
+        };
     };
 
     const generateChangePasswordCode = () => {
         const baseUrl = getBaseUrl();
         const apiKey = getActiveApiKey();
 
-        return `curl -X PUT "${baseUrl}/change-password" \\
+        return {
+            request: `curl -X PUT "${baseUrl}/change-password" \\
   -H "X-API-Key: ${apiKey}" \\
   -H "Authorization: Bearer ACCESS_TOKEN" \\
   -H "Content-Type: application/json" \\
   -d '{
     "currentPassword": "OldPass123!",
     "newPassword": "NewSecurePass456!"
-  }'`;
+  }'`,
+            success: {
+                status: 200,
+                body: JSON.stringify({
+                    success: true,
+                    message: "Password changed successfully"
+                }, null, 2)
+            },
+            errors: [
+                {
+                    status: 401,
+                    description: "Current password incorrect",
+                    body: JSON.stringify({
+                        success: false,
+                        error: "Current password is incorrect"
+                    }, null, 2)
+                },
+                {
+                    status: 400,
+                    description: "Weak password",
+                    body: JSON.stringify({
+                        success: false,
+                        error: "New password does not meet security requirements"
+                    }, null, 2)
+                }
+            ]
+        };
     };
 
     const generateForgotPasswordCode = () => {
         const baseUrl = getBaseUrl();
         const apiKey = getActiveApiKey();
 
-        return `curl -X POST "${baseUrl}/forgot-password" \\
+        return {
+            request: `curl -X POST "${baseUrl}/forgot-password" \\
   -H "X-API-Key: ${apiKey}" \\
   -H "Content-Type: application/json" \\
   -d '{
     "email": "user@example.com"
-  }'`;
+  }'`,
+            success: {
+                status: 200,
+                body: JSON.stringify({
+                    success: true,
+                    message: "Password reset email sent"
+                }, null, 2)
+            },
+            errors: [
+                {
+                    status: 404,
+                    description: "User not found",
+                    body: JSON.stringify({
+                        success: false,
+                        error: "No user found with this email"
+                    }, null, 2)
+                }
+            ]
+        };
     };
 
     const generateResetPasswordCode = () => {
         const baseUrl = getBaseUrl();
         const apiKey = getActiveApiKey();
 
-        return `curl -X POST "${baseUrl}/reset-password" \\
+        return {
+            request: `curl -X POST "${baseUrl}/reset-password" \\
   -H "X-API-Key: ${apiKey}" \\
   -H "Content-Type: application/json" \\
   -d '{
     "token": "RESET_TOKEN_FROM_EMAIL",
     "newPassword": "NewSecurePass456!"
-  }'`;
+  }'`,
+            success: {
+                status: 200,
+                body: JSON.stringify({
+                    success: true,
+                    message: "Password reset successfully"
+                }, null, 2)
+            },
+            errors: [
+                {
+                    status: 400,
+                    description: "Invalid or expired token",
+                    body: JSON.stringify({
+                        success: false,
+                        error: "Reset token is invalid or has expired"
+                    }, null, 2)
+                },
+                {
+                    status: 400,
+                    description: "Weak password",
+                    body: JSON.stringify({
+                        success: false,
+                        error: "Password does not meet security requirements"
+                    }, null, 2)
+                }
+            ]
+        };
     };
 
     const generateLogoutCode = () => {
         const baseUrl = getBaseUrl();
         const apiKey = getActiveApiKey();
 
-        return `curl -X POST "${baseUrl}/logout" \\
+        return {
+            request: `curl -X POST "${baseUrl}/logout" \\
   -H "X-API-Key: ${apiKey}" \\
-  -H "Authorization: Bearer ACCESS_TOKEN"`;
+  -H "Authorization: Bearer ACCESS_TOKEN"`,
+            success: {
+                status: 200,
+                body: JSON.stringify({
+                    success: true,
+                    message: "Logged out successfully"
+                }, null, 2)
+            },
+            errors: [
+                {
+                    status: 401,
+                    description: "Unauthorized",
+                    body: JSON.stringify({
+                        success: false,
+                        error: "Invalid or expired access token"
+                    }, null, 2)
+                }
+            ]
+        };
     };
 
     const generateLogoutAllCode = () => {
         const baseUrl = getBaseUrl();
         const apiKey = getActiveApiKey();
 
-        return `curl -X POST "${baseUrl}/logout-all" \\
+        return {
+            request: `curl -X POST "${baseUrl}/logout-all" \\
   -H "X-API-Key: ${apiKey}" \\
-  -H "Authorization: Bearer ACCESS_TOKEN"`;
+  -H "Authorization: Bearer ACCESS_TOKEN"`,
+            success: {
+                status: 200,
+                body: JSON.stringify({
+                    success: true,
+                    message: "Logged out from all devices successfully"
+                }, null, 2)
+            },
+            errors: [
+                {
+                    status: 401,
+                    description: "Unauthorized",
+                    body: JSON.stringify({
+                        success: false,
+                        error: "Invalid or expired access token"
+                    }, null, 2)
+                }
+            ]
+        };
     };
 
     const generateCode = (endpoint) => {
@@ -295,7 +678,12 @@ curl -X POST "${baseUrl}/request-magic-link?email=user@example.com" \\
             description: 'Retrieve authenticated user details',
             badge: 'Protected'
         }
-    ];
+    ].filter(endpoint => {
+        if (endpoint.id === 'signup' && application?.authConfig?.loginMethod === 'OAUTH') {
+            return false;
+        }
+        return true;
+    });
 
     const supportingEndpoints = [
         {
@@ -488,6 +876,8 @@ curl -X POST "${baseUrl}/request-magic-link?email=user@example.com" \\
 }
 
 function EndpointCard({ endpoint, code, onGenerate, onCopy, isCopied, compact = false }) {
+    const [copiedSection, setCopiedSection] = useState(null);
+
     const colorMap = {
         emerald: 'emerald',
         blue: 'blue',
@@ -501,6 +891,34 @@ function EndpointCard({ endpoint, code, onGenerate, onCopy, isCopied, compact = 
     };
 
     const color = colorMap[endpoint.color] || 'blue';
+
+    const copyToClipboard = (text, section) => {
+        navigator.clipboard.writeText(text);
+        setCopiedSection(section);
+        setTimeout(() => setCopiedSection(null), 2000);
+    };
+
+    const CodeBlock = ({ title, content, section, language = 'bash' }) => (
+        <div className="mb-4">
+            <div className="flex items-center justify-between bg-zinc-900/50 px-4 py-2 rounded-t-xl border border-zinc-800">
+                <span className="text-xs font-bold text-zinc-400 uppercase tracking-widest">
+                    {title}
+                </span>
+                <button
+                    onClick={() => copyToClipboard(content, section)}
+                    className="text-zinc-500 hover:text-white transition-colors"
+                >
+                    {copiedSection === section ?
+                        <Check className="w-4 h-4 text-green-500" /> :
+                        <Copy className="w-4 h-4" />
+                    }
+                </button>
+            </div>
+            <pre className="bg-black/80 p-4 rounded-b-xl border border-t-0 border-zinc-800 font-mono text-xs leading-relaxed text-zinc-300 overflow-x-auto max-h-[250px]">
+                <code>{content}</code>
+            </pre>
+        </div>
+    );
 
     return (
         <Card className="overflow-hidden border-zinc-800">
@@ -534,25 +952,53 @@ function EndpointCard({ endpoint, code, onGenerate, onCopy, isCopied, compact = 
                         Generate Code
                     </Button>
                 ) : (
-                    <div className="space-y-3">
-                        <div className="flex items-center justify-between bg-zinc-900/50 px-4 py-2 rounded-t-xl border border-zinc-800">
-                            <span className="text-xs font-bold text-zinc-400 uppercase tracking-widest">
-                                Ready to Use cURL
-                            </span>
-                            <button
-                                onClick={() => onCopy(code, endpoint.id)}
-                                className="text-zinc-500 hover:text-white transition-colors"
-                            >
-                                {isCopied ?
-                                    <Check className="w-4 h-4 text-green-500" /> :
-                                    <Copy className="w-4 h-4" />
-                                }
-                            </button>
-                        </div>
-                        <pre className={`bg-black/80 p-4 rounded-b-xl border border-t-0 border-zinc-800 font-mono text-xs leading-relaxed text-zinc-300 overflow-x-auto ${compact ? 'max-h-[200px]' : 'max-h-[300px]'
-                            }`}>
-                            <code>{code}</code>
-                        </pre>
+                    <div className="space-y-4">
+                        {code.note && (
+                            <div className="p-3 bg-blue-500/10 border border-blue-500/30 rounded-lg">
+                                <p className="text-xs text-blue-300">
+                                    <span className="font-bold">Note:</span> {code.note}
+                                </p>
+                            </div>
+                        )}
+
+                        {Array.isArray(code.request) ? (
+                            code.request.map((req, idx) => (
+                                <CodeBlock
+                                    key={idx}
+                                    title={req.title}
+                                    content={req.content}
+                                    section={`request-${idx}`}
+                                />
+                            ))
+                        ) : (
+                            <CodeBlock
+                                title="Request"
+                                content={code.request}
+                                section="request"
+                            />
+                        )}
+
+                        <CodeBlock
+                            title={`Success Response (${code.success.status})`}
+                            content={code.success.body}
+                            section="success"
+                            language="json"
+                        />
+
+                        {code.errors && code.errors.length > 0 && (
+                            <div>
+                                <h4 className="text-sm font-bold text-zinc-300 mb-3">Error Responses</h4>
+                                {code.errors.map((error, index) => (
+                                    <CodeBlock
+                                        key={index}
+                                        title={`${error.status} - ${error.description}`}
+                                        content={error.body}
+                                        section={`error-${index}`}
+                                        language="json"
+                                    />
+                                ))}
+                            </div>
+                        )}
                     </div>
                 )}
             </div>

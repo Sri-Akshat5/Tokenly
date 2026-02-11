@@ -56,7 +56,7 @@ public class AdminUserController {
         Client client = getClient(request);
         Application application = getAndVerifyApplication(client, applicationId);
         log.info("Admin listing users for application: {}", application.getAppName());
-        Page<User> users = userRepository.findAll(PageRequest.of(page, size));
+        Page<User> users = userRepository.findByApplication(application, PageRequest.of(page, size));
         return ResponseEntity.ok(ApiResponse.success(users));
     }
 
@@ -182,7 +182,7 @@ public class AdminUserController {
         Client client = getClient(request);
         Application application = getAndVerifyApplication(client, applicationId);
         Map<String, Object> analytics = new HashMap<>();
-        analytics.put("totalUsers", userRepository.count());
+        analytics.put("totalUsers", userRepository.countByApplication(application));
         analytics.put("activeUsers", userRepository.countByApplicationAndStatus(application, UserStatus.ACTIVE));
         analytics.put("activeSessions", sessionRepository.countByApplicationAndRevokedFalse(application));
 

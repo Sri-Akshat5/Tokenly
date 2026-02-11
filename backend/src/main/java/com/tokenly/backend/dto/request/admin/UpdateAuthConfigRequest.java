@@ -24,4 +24,12 @@ public class UpdateAuthConfigRequest {
     private boolean emailVerificationRequired;
     private String jwtCustomClaims;
     private String googleClientId;
+    private String githubClientId;
+    private String githubClientSecret;
+    private String metaAppId;
+    private String metaAppSecret;
+    
+    private String auth0Domain;
+    private String auth0ClientId;
+    private String defaultRedirectUrl;
 }

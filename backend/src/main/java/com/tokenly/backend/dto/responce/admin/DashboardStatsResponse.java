@@ -9,7 +9,5 @@ public class DashboardStatsResponse {
     private long totalApplications;
     private long totalUsers;
     private double apiSuccessRate;
-    private long activeUsers24h;
-    private String userTrend;
-    private String successRateTrend;
+    private long totalRequests24h;
 }

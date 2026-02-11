@@ -91,6 +91,17 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     @Override
+    public Application toggleStatus(Client client, UUID id, ApplicationStatus status) {
+        Application application = getApplicationById(client, id);
+        
+        application.setStatus(status);
+        applicationRepository.save(application);
+        
+        log.info("Toggled application status: {} to {}", application.getId(), status);
+        return application;
+    }
+
+    @Override
     public void deleteApplication(Client client, UUID id) {
         Application application = getApplicationById(client, id);
         

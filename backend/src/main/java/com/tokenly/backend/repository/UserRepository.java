@@ -29,4 +29,6 @@ public interface UserRepository extends JpaRepository<User, UUID> {
     List<User> findByApplicationAndStatus(Application application, UserStatus status);
     
     List<User> findByApplication(Application application);
+    
+    org.springframework.data.domain.Page<User> findByApplication(Application application, org.springframework.data.domain.Pageable pageable);
 }

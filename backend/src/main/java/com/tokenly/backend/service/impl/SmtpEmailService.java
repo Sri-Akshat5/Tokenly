@@ -57,9 +57,9 @@ public class SmtpEmailService implements EmailService {
     }
 
     @Override
-    public void sendMagicLinkEmail(String to, String magicToken, String appId, String appName) {
+    public void sendMagicLinkEmail(String to, String magicToken, String publicKey, String appName, String redirectUrl) {
         String subject = "Your " + appName + " Magic Link";
-        String body = buildMagicLinkEmailBody(magicToken, appId, appName);
+        String body = buildMagicLinkEmailBody(magicToken, publicKey, appName, redirectUrl);
         sendHtmlEmail(to, subject, body, appName);
         log.info("Magic link email sent to: {}", to);
     }
@@ -168,8 +168,12 @@ public class SmtpEmailService implements EmailService {
             """.formatted(appName, appName, otp, appProperties.getBranding().getSecuredByText());
     }
 
-    private String buildMagicLinkEmailBody(String token, String appId, String appName) {
-        String magicLink = appProperties.getUrl().getBaseFrontend() + "/auth/verify?token=" + token + "&appId=" + appId;
+    private String buildMagicLinkEmailBody(String token, String publicKey, String appName, String redirectUrl) {
+        String magicLink = appProperties.getUrl().getBaseFrontend() + "/auth/verify?token=" + token + "&appId=" + publicKey;
+        if (redirectUrl != null && !redirectUrl.isBlank()) {
+            magicLink += "&redirectUrl=" + java.net.URLEncoder.encode(redirectUrl, java.nio.charset.StandardCharsets.UTF_8);
+        }
+        
         return """
             <html>
             <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">

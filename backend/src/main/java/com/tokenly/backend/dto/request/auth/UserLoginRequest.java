@@ -7,17 +7,19 @@ import lombok.Data;
 @Data
 public class UserLoginRequest {
 
-    @Email
-    @NotBlank
     private String email;
 
     private String password; // Optional for OTP/Magic Link
     
     // Multi-factor / Passwordless
+    @com.fasterxml.jackson.annotation.JsonAlias("otp")
     private String otpCode;
+    @com.fasterxml.jackson.annotation.JsonAlias("token")
     private String magicToken;
     
+    
     // Social OAuth
+    private String provider; // "GOOGLE", "GITHUB", "META"
     private String providerToken;
 
     // Session tracking

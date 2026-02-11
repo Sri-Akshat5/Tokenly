@@ -25,7 +25,9 @@ public class ApiTokenAuthFlow implements AuthFlow {
         // Generate stateless JWT for API Token auth
         String accessToken = jwtService.generateAccessToken(user, application);
 
-        int accessTtl = application.getAuthConfig() != null ? application.getAuthConfig().getAccessTokenTtlMinutes() : 60;
+        int accessTtl = (application.getAuthConfig() != null && application.getAuthConfig().getAccessTokenTtlMinutes() != null)
+                ? application.getAuthConfig().getAccessTokenTtlMinutes()
+                : 60;
 
         return AuthResponse.builder()
                 .accessToken(accessToken)
