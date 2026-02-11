@@ -12,7 +12,7 @@ export default function Navbar() {
             <div className="flex items-center justify-between">
                 <Link to="/" className="flex items-center gap-3">
                     <div className="w-11 h-11 bg-white rounded-xl flex items-center justify-center shadow-lg shadow-white/20">
-                        <Shield className="w-6 h-6 text-black" />
+                        <img src="/favicon.png" alt="Tokenly Logo" className="w-8 h-8 object-contain" />
                     </div>
                     <span className="text-2xl font-bold text-white tracking-tight">{env.appName}</span>
                 </Link>

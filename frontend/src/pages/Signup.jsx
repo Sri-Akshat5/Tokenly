@@ -87,7 +87,7 @@ export default function Signup() {
                 {/* Logo */}
                 <Link to="/" className="flex items-center justify-center gap-3 mb-12">
                     <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-lg shadow-white/20">
-                        <Shield className="w-7 h-7 text-black" />
+                        <img src="/favicon.png" alt="Tokenly Logo" className="w-10 h-10 object-contain" />
                     </div>
                     <span className="text-3xl font-bold text-white tracking-tight">{env.appName}</span>
                 </Link>

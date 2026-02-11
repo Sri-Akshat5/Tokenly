@@ -385,7 +385,7 @@ function FooterSection() {
                     <div className="space-y-4">
                         <div className="flex items-center gap-2">
                             <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center">
-                                <span className="text-black font-bold text-xl">T</span>
+                                <img src="/favicon.png" alt="Tokenly Logo" className="w-6 h-6 object-contain" />
                             </div>
                             <span className="text-2xl font-bold text-white tracking-tight">Tokenly</span>
                         </div>
@@ -403,7 +403,7 @@ function FooterSection() {
                         <div className="flex items-center gap-2 text-zinc-500 text-sm">
                             <span>Made with</span>
                             <Heart className="w-4 h-4 text-red-500 fill-red-500" />
-                            <span>by developers</span>
+                            <span>by <a href="https://www.linkedin.com/in/sriakshat5" className="text-white hover:underline cursor-pointer animate-pulse shadow-sm shadow-white/20">Akshat Srivastava</a></span>
                         </div>
                         <div className="text-zinc-600 text-sm">
                             © 2026 Tokenly Inc. All rights reserved.
