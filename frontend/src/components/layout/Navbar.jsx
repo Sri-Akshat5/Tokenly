@@ -19,6 +19,11 @@ export default function Navbar() {
 
                 {/* Desktop Navigation */}
                 <div className="hidden md:flex items-center gap-6">
+                    <Link to="/docs">
+                        <button className="px-5 py-2.5 text-zinc-400 hover:text-white transition-colors font-medium">
+                            Docs
+                        </button>
+                    </Link>
                     <Link to="/contact">
                         <button className="px-5 py-2.5 text-zinc-400 hover:text-white transition-colors font-medium">
                             Contact
@@ -31,7 +36,7 @@ export default function Navbar() {
                     </Link>
                     <Link to="/signup">
                         <Button size="md">
-                            Get Started
+                            Sign Up
                             <ChevronRight className="w-4 h-4 ml-1" />
                         </Button>
                     </Link>
@@ -49,6 +54,11 @@ export default function Navbar() {
             {/* Mobile Menu Dropdown */}
             {isMobileMenuOpen && (
                 <div className="absolute top-full left-0 right-0 bg-zinc-950/95 backdrop-blur-xl border-b border-zinc-800 p-6 flex flex-col gap-4 md:hidden animate-in slide-in-from-top-4">
+                    <Link to="/docs" onClick={() => setIsMobileMenuOpen(false)}>
+                        <button className="w-full px-5 py-3 text-zinc-400 hover:text-white transition-colors font-medium text-left">
+                            Docs
+                        </button>
+                    </Link>
                     <Link to="/contact" onClick={() => setIsMobileMenuOpen(false)}>
                         <button className="w-full px-5 py-3 text-zinc-400 hover:text-white transition-colors font-medium text-left">
                             Contact
@@ -61,7 +71,7 @@ export default function Navbar() {
                     </Link>
                     <Link to="/signup" onClick={() => setIsMobileMenuOpen(false)}>
                         <Button size="md" className="w-full justify-center">
-                            Get Started
+                            Sign Up
                             <ChevronRight className="w-4 h-4 ml-1" />
                         </Button>
                     </Link>

@@ -7,8 +7,8 @@ export default function Privacy() {
     return (
         <div className="min-h-screen bg-black text-zinc-300 py-20 px-6">
             <SEO
-                title="Privacy Policy – Tokenly"
-                description="Read Tokenly's Privacy Policy. Learn how we collect, use, and protect your data when using our authentication platform."
+                title="Privacy Policy – Tokenly Data Protection"
+                description="Tokenly's Privacy Policy outlining how we secure developer data, handle authentication sessions, and protect master API keys."
                 url="https://tokenly.codes/privacy"
                 noIndex={true}
             />

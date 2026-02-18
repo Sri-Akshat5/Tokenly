@@ -55,6 +55,130 @@ export default function Landing() {
                 'Session Management with Redis',
             ],
         },
+        {
+            '@context': 'https://schema.org',
+            '@type': 'Organization',
+            name: 'Tokenly',
+            url: 'https://tokenly.codes',
+            logo: 'https://tokenly.codes/favicon.png',
+            description: 'Secure, multi-tenant Auth-as-a-Service for developers.',
+            founder: {
+                '@type': 'Person',
+                name: 'Akshat Srivastava',
+                url: 'https://www.linkedin.com/in/sriakshat5',
+            },
+            sameAs: [
+                'https://github.com/Sri-Akshat5',
+                'https://www.linkedin.com/in/sriakshat5',
+            ],
+        },
+        {
+            '@context': 'https://schema.org',
+            '@type': 'ItemList',
+            name: 'Tokenly Site Navigation',
+            itemListElement: [
+                {
+                    '@type': 'SiteNavigationElement',
+                    position: 1,
+                    name: 'Home',
+                    url: 'https://tokenly.codes/',
+                },
+                {
+                    '@type': 'SiteNavigationElement',
+                    position: 2,
+                    name: 'Documentation',
+                    url: 'https://tokenly.codes/docs',
+                },
+                {
+                    '@type': 'SiteNavigationElement',
+                    position: 3,
+                    name: 'Login',
+                    url: 'https://tokenly.codes/login',
+                },
+                {
+                    '@type': 'SiteNavigationElement',
+                    position: 4,
+                    name: 'Sign Up',
+                    url: 'https://tokenly.codes/signup',
+                },
+                {
+                    '@type': 'SiteNavigationElement',
+                    position: 5,
+                    name: 'Contact',
+                    url: 'https://tokenly.codes/contact',
+                },
+            ],
+        },
+        {
+            '@context': 'https://schema.org',
+            '@type': 'FAQPage',
+            mainEntity: [
+                {
+                    '@type': 'Question',
+                    name: 'What is JWT authentication?',
+                    acceptedAnswer: {
+                        '@type': 'Answer',
+                        text: 'JWT (JSON Web Token) authentication is a stateless method of securely transmitting user identity between a client and server. Tokenly provides a ready-to-use JWT authentication API so you can add secure login to any app without building it from scratch.',
+                    },
+                },
+                {
+                    '@type': 'Question',
+                    name: 'What is OAuth 2.0 and how does Tokenly support it?',
+                    acceptedAnswer: {
+                        '@type': 'Answer',
+                        text: 'OAuth 2.0 is an authorization framework that lets users log in with third-party providers like Google or GitHub. Tokenly supports OAuth 2.0 flows out of the box, letting you add social login to your app via a single API call.',
+                    },
+                },
+                {
+                    '@type': 'Question',
+                    name: 'What is magic link login?',
+                    acceptedAnswer: {
+                        '@type': 'Answer',
+                        text: 'Magic link login is a passwordless authentication method where users receive a one-time login link via email. Tokenly supports magic link authentication natively, eliminating the need for passwords entirely.',
+                    },
+                },
+                {
+                    '@type': 'Question',
+                    name: 'What is API key authentication?',
+                    acceptedAnswer: {
+                        '@type': 'Answer',
+                        text: 'API key authentication allows developers to authenticate programmatic requests using a unique key. Tokenly provides full API key management including creation, rotation, and revocation via a simple REST API.',
+                    },
+                },
+                {
+                    '@type': 'Question',
+                    name: 'What is Auth-as-a-Service?',
+                    acceptedAnswer: {
+                        '@type': 'Answer',
+                        text: 'Auth-as-a-Service (AaaS) is a hosted authentication platform that handles login, signup, token management, and session handling for your app. Tokenly is a free, multi-tenant Auth-as-a-Service that supports JWT, OAuth, magic links, OTP, and API key auth.',
+                    },
+                },
+                {
+                    '@type': 'Question',
+                    name: 'Does Tokenly support multi-tenant authentication?',
+                    acceptedAnswer: {
+                        '@type': 'Answer',
+                        text: 'Yes. Tokenly is built with multi-tenancy at its core. Each application gets its own isolated authentication context, user pool, and configuration — making it ideal for SaaS products and platforms serving multiple clients.',
+                    },
+                },
+                {
+                    '@type': 'Question',
+                    name: 'Is Tokenly free to use?',
+                    acceptedAnswer: {
+                        '@type': 'Answer',
+                        text: 'Yes, Tokenly is free to use. You can add JWT authentication, OAuth, magic link login, email OTP, and API key management to your application at no cost.',
+                    },
+                },
+                {
+                    '@type': 'Question',
+                    name: 'How do I add authentication to my app with Tokenly?',
+                    acceptedAnswer: {
+                        '@type': 'Answer',
+                        text: 'Sign up at tokenly.codes, create an application, and use the provided REST API endpoints to handle login, signup, token verification, and session management. No SDK required — works with any language or framework.',
+                    },
+                },
+            ],
+        },
     ];
 
     useEffect(() => {
@@ -67,9 +191,9 @@ export default function Landing() {
     return (
         <div className="min-h-screen bg-black overflow-x-hidden">
             <SEO
-                title="Tokenly – Auth-as-a-Service for Developers"
-                description="Tokenly is a secure, multi-tenant Auth-as-a-Service. Add login, signup, JWT, OAuth, magic links, and API key auth to any app in minutes. No SDK lock-in."
-                url="https://tokenly.dev/"
+                title="Tokenly – JWT Auth, OAuth & Magic Link API for Developers"
+                description="Free Auth-as-a-Service API. Add JWT authentication, OAuth 2.0, magic link login, email OTP, and API key management to any app in minutes. Multi-tenant, no SDK lock-in."
+                url="https://tokenly.codes/"
                 schema={landingSchema}
             />
             {/* Subtle grid background */}

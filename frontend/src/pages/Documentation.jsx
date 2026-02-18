@@ -25,8 +25,8 @@ export default function Documentation() {
     return (
         <div className="min-h-screen bg-black text-zinc-300">
             <SEO
-                title="Documentation – Tokenly Auth API Reference"
-                description="Complete API reference and integration guide for Tokenly Auth-as-a-Service. Learn how to add JWT, OAuth, magic links, and OTP authentication to your app."
+                title="Tokenly API Documentation – JWT, OAuth & Magic Link Integration"
+                description="Comprehensive Tokenly API documentation. Learn to implement JWT authentication, OAuth 2.0, magic links, and OTP login using our REST API. Guides for React, Node.js, and secure session management."
                 url="https://tokenly.codes/docs"
             />
             {/* Navigation */}

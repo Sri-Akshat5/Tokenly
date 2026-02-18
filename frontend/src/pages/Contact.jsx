@@ -8,8 +8,8 @@ export default function Contact() {
     return (
         <div className="min-h-screen bg-black overflow-x-hidden text-white flex flex-col">
             <SEO
-                title="Contact – Tokenly"
-                description="Get in touch with the Tokenly team. Have questions about our Auth-as-a-Service? Reach out via LinkedIn, email, or GitHub."
+                title="Contact Tokenly – Support for Auth Integration & Enterprise"
+                description="Need help with Tokenly integration? Contact our developer support team for assistance with JWT auth, OAuth setup, API keys, or custom enterprise authentication requirements."
                 url="https://tokenly.codes/contact"
             />
             {/* Background Grid */}
