@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import env from '../config/env';
 import Button from '../components/ui/Button';
+import SEO from '../components/seo/SEO';
 
 export default function Documentation() {
     const [activeSection, setActiveSection] = useState('introduction');
@@ -23,6 +24,11 @@ export default function Documentation() {
 
     return (
         <div className="min-h-screen bg-black text-zinc-300">
+            <SEO
+                title="Documentation – Tokenly Auth API Reference"
+                description="Complete API reference and integration guide for Tokenly Auth-as-a-Service. Learn how to add JWT, OAuth, magic links, and OTP authentication to your app."
+                url="https://tokenly.dev/docs"
+            />
             {/* Navigation */}
             <nav className="border-b border-zinc-900 bg-black/50 backdrop-blur-xl sticky top-0 z-50">
                 <div className="container mx-auto px-6 py-4 flex items-center justify-between">

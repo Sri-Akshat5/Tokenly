@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { HelmetProvider } from 'react-helmet-async';
 import Landing from './pages/Landing';
 import Contact from './pages/Contact';
 import Login from './pages/Login';
@@ -38,39 +39,41 @@ function PublicRoute({ children }) {
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        {/* Public Routes */}
-        <Route path="/" element={<PublicRoute><Landing /></PublicRoute>} />
-        <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
-        <Route path="/signup" element={<PublicRoute><Signup /></PublicRoute>} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/docs" element={<Documentation />} />
-        <Route path="/terms" element={<Terms />} />
-        <Route path="/privacy" element={<Privacy />} />
+    <HelmetProvider>
+      <BrowserRouter>
+        <Routes>
+          {/* Public Routes */}
+          <Route path="/" element={<PublicRoute><Landing /></PublicRoute>} />
+          <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
+          <Route path="/signup" element={<PublicRoute><Signup /></PublicRoute>} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/docs" element={<Documentation />} />
+          <Route path="/terms" element={<Terms />} />
+          <Route path="/privacy" element={<Privacy />} />
 
-        {/* End-User Application Auth (Public) */}
-        <Route path="/auth/:appId/login" element={<UserAuth />} />
-        <Route path="/auth/verify" element={<MagicLinkVerify />} />
-        <Route path="/auth/verified" element={<EmailVerified />} />
-        <Route path="/auth/reset-password" element={<ResetPassword />} />
+          {/* End-User Application Auth (Public) */}
+          <Route path="/auth/:appId/login" element={<UserAuth />} />
+          <Route path="/auth/verify" element={<MagicLinkVerify />} />
+          <Route path="/auth/verified" element={<EmailVerified />} />
+          <Route path="/auth/reset-password" element={<ResetPassword />} />
 
-        {/* Protected Routes */}
-        <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-        <Route path="/request-logs" element={<ProtectedRoute><RequestLogs /></ProtectedRoute>} />
-        <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
+          {/* Protected Routes */}
+          <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+          <Route path="/request-logs" element={<ProtectedRoute><RequestLogs /></ProtectedRoute>} />
+          <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
 
-        {/* Application Routes */}
-        <Route path="/app/:appId" element={<ProtectedRoute><ApiKeys /></ProtectedRoute>} />
-        <Route path="/app/:appId/auth-config" element={<ProtectedRoute><AuthConfig /></ProtectedRoute>} />
-        <Route path="/app/:appId/custom-fields" element={<ProtectedRoute><CustomFields /></ProtectedRoute>} />
-        <Route path="/app/:appId/users" element={<ProtectedRoute><Users /></ProtectedRoute>} />
-        <Route path="/app/:appId/docs" element={<ProtectedRoute><IntegrationGuide /></ProtectedRoute>} />
+          {/* Application Routes */}
+          <Route path="/app/:appId" element={<ProtectedRoute><ApiKeys /></ProtectedRoute>} />
+          <Route path="/app/:appId/auth-config" element={<ProtectedRoute><AuthConfig /></ProtectedRoute>} />
+          <Route path="/app/:appId/custom-fields" element={<ProtectedRoute><CustomFields /></ProtectedRoute>} />
+          <Route path="/app/:appId/users" element={<ProtectedRoute><Users /></ProtectedRoute>} />
+          <Route path="/app/:appId/docs" element={<ProtectedRoute><IntegrationGuide /></ProtectedRoute>} />
 
-        {/* Catch all - redirect to landing */}
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
-    </BrowserRouter>
+          {/* Catch all - redirect to landing */}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </BrowserRouter>
+    </HelmetProvider>
   );
 }
 

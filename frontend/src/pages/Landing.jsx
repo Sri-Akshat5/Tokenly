@@ -6,10 +6,56 @@ import AnimatedCounter from '../components/ui/AnimatedCounter';
 import Navbar from '../components/layout/Navbar';
 import { Shield, Zap, Code2, Lock, Sparkles, Database, Key, Users, Terminal, ArrowRight, CheckCircle2, ChevronRight, X, Check, Twitter, Github, Linkedin, Youtube, Heart, Mail, Globe } from 'lucide-react';
 import env from '../config/env';
+import SEO from '../components/seo/SEO';
 
 export default function Landing() {
     const apiFeatures = ['JWT', 'Bcrypt', 'OAuth', 'Redis', 'API Keys'];
     const [currentFeature, setCurrentFeature] = useState(0);
+
+    const landingSchema = [
+        {
+            '@context': 'https://schema.org',
+            '@type': 'WebSite',
+            name: 'Tokenly',
+            url: 'https://tokenly.dev',
+            description: 'Secure, multi-tenant Auth-as-a-Service for developers.',
+            potentialAction: {
+                '@type': 'SearchAction',
+                target: 'https://tokenly.dev/docs?q={search_term_string}',
+                'query-input': 'required name=search_term_string',
+            },
+        },
+        {
+            '@context': 'https://schema.org',
+            '@type': 'SoftwareApplication',
+            name: 'Tokenly',
+            applicationCategory: 'DeveloperApplication',
+            operatingSystem: 'Web',
+            url: 'https://tokenly.dev',
+            description:
+                'Tokenly is a secure, multi-tenant Auth-as-a-Service. Add login, signup, JWT, OAuth, magic links, and API key auth to any app in minutes.',
+            offers: {
+                '@type': 'Offer',
+                price: '0',
+                priceCurrency: 'USD',
+            },
+            author: {
+                '@type': 'Person',
+                name: 'Akshat Srivastava',
+                url: 'https://www.linkedin.com/in/sriakshat5',
+            },
+            featureList: [
+                'JWT Authentication',
+                'OAuth 2.0',
+                'Magic Link Login',
+                'Email OTP',
+                'API Key Management',
+                'Multi-tenant Architecture',
+                'Bcrypt Password Hashing',
+                'Session Management with Redis',
+            ],
+        },
+    ];
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -20,6 +66,12 @@ export default function Landing() {
 
     return (
         <div className="min-h-screen bg-black overflow-x-hidden">
+            <SEO
+                title="Tokenly – Auth-as-a-Service for Developers"
+                description="Tokenly is a secure, multi-tenant Auth-as-a-Service. Add login, signup, JWT, OAuth, magic links, and API key auth to any app in minutes. No SDK lock-in."
+                url="https://tokenly.dev/"
+                schema={landingSchema}
+            />
             {/* Subtle grid background */}
             <div className="fixed inset-0 bg-[linear-gradient(to_right,#18181b_1px,transparent_1px),linear-gradient(to_bottom,#18181b_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_110%)] -z-10" />
 

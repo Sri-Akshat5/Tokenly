@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /dashboard
+Disallow: /app/
+Disallow: /settings
+Disallow: /request-logs
+Disallow: /auth/
+
+Sitemap: https://tokenly.dev/sitemap.xml

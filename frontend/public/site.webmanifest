@@ -1,0 +1,21 @@
+{
+    "name": "Tokenly - Auth-as-a-Service",
+    "short_name": "Tokenly",
+    "description": "Secure, multi-tenant authentication infrastructure for modern applications. Add login, signup, and token-based auth to any app in minutes.",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#000000",
+    "theme_color": "#ffffff",
+    "icons": [
+        {
+            "src": "/favicon.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "/favicon.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}

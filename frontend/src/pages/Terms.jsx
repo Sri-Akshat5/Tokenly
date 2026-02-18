@@ -1,10 +1,17 @@
 import { Shield, ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import env from '../config/env';
+import SEO from '../components/seo/SEO';
 
 export default function Terms() {
     return (
         <div className="min-h-screen bg-black text-zinc-300 py-20 px-6">
+            <SEO
+                title="Terms of Service – Tokenly"
+                description="Read Tokenly's Terms of Service. Understand your rights and responsibilities when using our Auth-as-a-Service platform."
+                url="https://tokenly.dev/terms"
+                noIndex={true}
+            />
             <div className="max-w-3xl mx-auto">
                 <Link to="/" className="inline-flex items-center gap-2 text-zinc-500 hover:text-white transition-colors mb-12 group">
                     <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
