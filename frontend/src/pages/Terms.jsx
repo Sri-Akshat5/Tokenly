@@ -9,7 +9,7 @@ export default function Terms() {
             <SEO
                 title="Terms of Service – Tokenly"
                 description="Read Tokenly's Terms of Service. Understand your rights and responsibilities when using our Auth-as-a-Service platform."
-                url="https://tokenly.dev/terms"
+                url="https://tokenly.codes/terms"
                 noIndex={true}
             />
             <div className="max-w-3xl mx-auto">

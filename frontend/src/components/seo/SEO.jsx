@@ -3,8 +3,8 @@ import { Helmet } from 'react-helmet-async';
 const DEFAULT_TITLE = 'Tokenly – Auth-as-a-Service for Developers';
 const DEFAULT_DESCRIPTION =
     'Tokenly is a secure, multi-tenant Auth-as-a-Service. Add login, signup, JWT, OAuth, magic links, and API key auth to any app in minutes. No SDK lock-in.';
-const DEFAULT_IMAGE = 'https://tokenly.dev/favicon.png';
-const SITE_URL = 'https://tokenly.dev';
+const DEFAULT_IMAGE = 'https://tokenly.codes/favicon.png';
+const SITE_URL = 'https://tokenly.codes';
 
 export default function SEO({
     title = DEFAULT_TITLE,

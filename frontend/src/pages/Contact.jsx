@@ -10,7 +10,7 @@ export default function Contact() {
             <SEO
                 title="Contact – Tokenly"
                 description="Get in touch with the Tokenly team. Have questions about our Auth-as-a-Service? Reach out via LinkedIn, email, or GitHub."
-                url="https://tokenly.dev/contact"
+                url="https://tokenly.codes/contact"
             />
             {/* Background Grid */}
             <div className="fixed inset-0 bg-[linear-gradient(to_right,#18181b_1px,transparent_1px),linear-gradient(to_bottom,#18181b_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_110%)] -z-10" />

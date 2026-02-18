@@ -17,11 +17,11 @@ export default function Landing() {
             '@context': 'https://schema.org',
             '@type': 'WebSite',
             name: 'Tokenly',
-            url: 'https://tokenly.dev',
+            url: 'https://tokenly.codes',
             description: 'Secure, multi-tenant Auth-as-a-Service for developers.',
             potentialAction: {
                 '@type': 'SearchAction',
-                target: 'https://tokenly.dev/docs?q={search_term_string}',
+                target: 'https://tokenly.codes/docs?q={search_term_string}',
                 'query-input': 'required name=search_term_string',
             },
         },
@@ -31,7 +31,7 @@ export default function Landing() {
             name: 'Tokenly',
             applicationCategory: 'DeveloperApplication',
             operatingSystem: 'Web',
-            url: 'https://tokenly.dev',
+            url: 'https://tokenly.codes',
             description:
                 'Tokenly is a secure, multi-tenant Auth-as-a-Service. Add login, signup, JWT, OAuth, magic links, and API key auth to any app in minutes.',
             offers: {

@@ -9,7 +9,7 @@ export default function Privacy() {
             <SEO
                 title="Privacy Policy – Tokenly"
                 description="Read Tokenly's Privacy Policy. Learn how we collect, use, and protect your data when using our authentication platform."
-                url="https://tokenly.dev/privacy"
+                url="https://tokenly.codes/privacy"
                 noIndex={true}
             />
             <div className="max-w-3xl mx-auto">
