@@ -76,7 +76,7 @@ export default function DashboardLayout({ children }) {
                     <div className="flex items-center gap-4">
                         {/* Mobile Menu Button */}
                         <button
-                            className="lg:hidden p-2 text-zinc-400 hover:text-white"
+                            className="lg:hidden p-2 text-zinc-400 hover:text-white cursor-pointer"
                             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                         >
                             {isMobileMenuOpen ? <X /> : <Menu />}
@@ -107,7 +107,7 @@ export default function DashboardLayout({ children }) {
 
                         <button
                             onClick={handleLogout}
-                            className="group p-2 md:p-2.5 bg-zinc-900 border border-zinc-800 rounded-xl text-zinc-500 hover:text-white hover:border-zinc-600 transition-all shadow-xl active:scale-95"
+                            className="group p-2 md:p-2.5 bg-zinc-900 border border-zinc-800 rounded-xl text-zinc-500 hover:text-white hover:border-zinc-600 transition-all shadow-xl active:scale-95 cursor-pointer"
                             title="Sign out of your account"
                         >
                             <LogOut className="w-4 h-4 md:w-5 md:h-5 group-hover:translate-x-0.5 transition-transform" />

@@ -1,0 +1,32 @@
+<svg width="1200" height="675" viewBox="0 0 1200 675" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="675" fill="#09090B"/>
+  
+  <text x="600" y="80" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="32" font-weight="700">API Key vs JWT</text>
+  <text x="600" y="115" text-anchor="middle" fill="#71717A" font-family="Inter, sans-serif" font-size="18">Comparison of Authentication Mechanisms</text>
+
+  <!-- API Key Side -->
+  <rect x="150" y="200" width="400" height="350" rx="20" fill="#18181B" stroke="#Amber" stroke-width="2" style="stroke:#D97706"/>
+  <text x="350" y="240" text-anchor="middle" fill="#F59E0B" font-family="Inter, sans-serif" font-size="22" font-weight="700">API Key</text>
+  <text x="350" y="280" text-anchor="middle" fill="#A1A1AA" font-family="Inter, sans-serif" font-size="14">Machine-to-Machine Auth</text>
+  
+  <rect x="200" y="320" width="300" height="180" rx="12" fill="#27272A"/>
+  <text x="220" y="350" fill="#FFFFFF" font-family="monospace" font-size="12">tk_live_abcdef123456...</text>
+  <text x="220" y="380" fill="#71717A" font-family="Inter, sans-serif" font-size="12">• Long-lived identifier</text>
+  <text x="220" y="405" fill="#71717A" font-family="Inter, sans-serif" font-size="12">• Server-side validation</text>
+  <text x="220" y="430" fill="#71717A" font-family="Inter, sans-serif" font-size="12">• Perfect for programmatic access</text>
+  <text x="220" y="455" fill="#71717A" font-family="Inter, sans-serif" font-size="12">• Identity of the Application</text>
+
+  <!-- JWT Side -->
+  <rect x="650" y="200" width="400" height="350" rx="20" fill="#18181B" stroke="#3B82F6" stroke-width="2"/>
+  <text x="850" y="240" text-anchor="middle" fill="#3B82F6" font-family="Inter, sans-serif" font-size="22" font-weight="700">JWT</text>
+  <text x="850" y="280" text-anchor="middle" fill="#A1A1AA" font-family="Inter, sans-serif" font-size="14">User-to-Machine Auth</text>
+
+  <rect x="700" y="320" width="300" height="180" rx="12" fill="#27272A"/>
+  <text x="720" y="350" fill="#FFFFFF" font-family="monospace" font-size="12">eyJhbGciOiJIUzI1NiIs...</text>
+  <text x="720" y="380" fill="#71717A" font-family="Inter, sans-serif" font-size="12">• Short-lived token</text>
+  <text x="720" y="405" fill="#71717A" font-family="Inter, sans-serif" font-size="12">• Stateless validation</text>
+  <text x="720" y="430" fill="#71717A" font-family="Inter, sans-serif" font-size="12">• Context &amp; Claims embedded</text>
+  <text x="720" y="455" fill="#71717A" font-family="Inter, sans-serif" font-size="12">• Identity of the User</text>
+
+  <text x="600" y="600" text-anchor="middle" fill="#71717A" font-family="Inter, sans-serif" font-size="16">Use API Keys for software integrations, JWT for user sessions.</text>
+</svg>

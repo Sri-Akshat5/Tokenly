@@ -20,17 +20,22 @@ export default function Navbar() {
                 {/* Desktop Navigation */}
                 <div className="hidden md:flex items-center gap-6">
                     <Link to="/docs">
-                        <button className="px-5 py-2.5 text-zinc-400 hover:text-white transition-colors font-medium">
+                        <button className="px-5 py-2.5 text-zinc-400 hover:text-white transition-colors font-medium cursor-pointer">
                             Docs
                         </button>
                     </Link>
+                    <Link to="/blog">
+                        <button className="px-5 py-2.5 text-zinc-400 hover:text-white transition-colors font-medium cursor-pointer">
+                            Blog
+                        </button>
+                    </Link>
                     <Link to="/contact">
-                        <button className="px-5 py-2.5 text-zinc-400 hover:text-white transition-colors font-medium">
+                        <button className="px-5 py-2.5 text-zinc-400 hover:text-white transition-colors font-medium cursor-pointer">
                             Contact
                         </button>
                     </Link>
                     <Link to="/login">
-                        <button className="px-5 py-2.5 text-zinc-400 hover:text-white transition-colors font-medium">
+                        <button className="px-5 py-2.5 text-zinc-400 hover:text-white transition-colors font-medium cursor-pointer">
                             Login
                         </button>
                     </Link>
@@ -55,17 +60,22 @@ export default function Navbar() {
             {isMobileMenuOpen && (
                 <div className="absolute top-full left-0 right-0 bg-zinc-950/95 backdrop-blur-xl border-b border-zinc-800 p-6 flex flex-col gap-4 md:hidden animate-in slide-in-from-top-4">
                     <Link to="/docs" onClick={() => setIsMobileMenuOpen(false)}>
-                        <button className="w-full px-5 py-3 text-zinc-400 hover:text-white transition-colors font-medium text-left">
+                        <button className="w-full px-5 py-3 text-zinc-400 hover:text-white transition-colors font-medium text-left cursor-pointer">
                             Docs
                         </button>
                     </Link>
+                    <Link to="/blog" onClick={() => setIsMobileMenuOpen(false)}>
+                        <button className="w-full px-5 py-3 text-zinc-400 hover:text-white transition-colors font-medium text-left cursor-pointer">
+                            Blog
+                        </button>
+                    </Link>
                     <Link to="/contact" onClick={() => setIsMobileMenuOpen(false)}>
-                        <button className="w-full px-5 py-3 text-zinc-400 hover:text-white transition-colors font-medium text-left">
+                        <button className="w-full px-5 py-3 text-zinc-400 hover:text-white transition-colors font-medium text-left cursor-pointer">
                             Contact
                         </button>
                     </Link>
                     <Link to="/login" onClick={() => setIsMobileMenuOpen(false)}>
-                        <button className="w-full px-5 py-3 text-zinc-400 hover:text-white transition-colors font-medium text-left">
+                        <button className="w-full px-5 py-3 text-zinc-400 hover:text-white transition-colors font-medium text-left cursor-pointer">
                             Login
                         </button>
                     </Link>

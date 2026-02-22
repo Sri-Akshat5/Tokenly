@@ -1,0 +1,22 @@
+<svg width="1200" height="675" viewBox="0 0 1200 675" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="675" fill="#09090B"/>
+  
+  <rect x="100" y="80" width="1000" height="515" rx="16" fill="#18181B" stroke="#27272A" stroke-width="2"/>
+  <rect x="100" y="80" width="1000" height="40" rx="16 16 0 0" fill="#27272A"/>
+
+  <text x="390" y="180" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="24" font-weight="700">My Applications</text>
+
+  <rect x="390" y="220" width="310" height="150" rx="16" fill="#27272A" stroke="#3B82F6" stroke-width="2"/>
+  <text x="415" y="260" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="18" font-weight="700">Production App</text>
+  <rect x="415" y="315" width="80" height="24" rx="12" fill="#3B82F6" fill-opacity="0.1" stroke="#3B82F6" stroke-width="1"/>
+  <text x="455" y="331" text-anchor="middle" fill="#3B82F6" font-family="Inter, sans-serif" font-size="10">Active</text>
+
+  <rect x="720" y="220" width="310" height="150" rx="16" fill="#18181B" stroke="#3F3F46" stroke-width="1"/>
+  <text x="745" y="260" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="18" font-weight="700">Staging App</text>
+  <rect x="745" y="315" width="80" height="24" rx="12" fill="#27272A" stroke="#3F3F46" stroke-width="1"/>
+  <text x="785" y="331" text-anchor="middle" fill="#A1A1AA" font-family="Inter, sans-serif" font-size="10">Paused</text>
+
+  <rect x="390" y="390" width="310" height="150" rx="16" fill="#18181B" stroke="#3F3F46" stroke-width="1" stroke-dasharray="8 4"/>
+  <text x="545" y="470" text-anchor="middle" fill="#71717A" font-family="Inter, sans-serif" font-size="48">+</text>
+  <text x="545" y="500" text-anchor="middle" fill="#71717A" font-family="Inter, sans-serif" font-size="14">Create Application</text>
+</svg>

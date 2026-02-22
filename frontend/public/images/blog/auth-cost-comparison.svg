@@ -1,0 +1,43 @@
+<svg width="1200" height="675" viewBox="0 0 1200 675" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="675" fill="#09090B"/>
+  
+  <text x="600" y="80" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="32" font-weight="700">Time to Build Authentication</text>
+  <text x="600" y="120" text-anchor="middle" fill="#71717A" font-family="Inter, sans-serif" font-size="18">In-House Development vs. Tokenly AaaS</text>
+
+  <!-- In-House -->
+  <rect x="200" y="200" width="350" height="350" rx="20" fill="#18181B" stroke="#EF4444" stroke-width="2"/>
+  <text x="375" y="245" text-anchor="middle" fill="#EF4444" font-family="Inter, sans-serif" font-size="20" font-weight="700">IN-HOUSE (DIY)</text>
+  
+  <rect x="230" y="280" width="290" height="10" rx="5" fill="#27272A"/>
+  <rect x="230" y="280" width="250" height="10" rx="5" fill="#EF4444"/>
+  <text x="230" y="310" fill="#A1A1AA" font-family="Inter, sans-serif" font-size="14">Core Auth Logic (Weeks)</text>
+
+  <rect x="230" y="340" width="290" height="10" rx="5" fill="#27272A"/>
+  <rect x="230" y="340" width="200" height="10" rx="5" fill="#EF4444"/>
+  <text x="230" y="370" fill="#A1A1AA" font-family="Inter, sans-serif" font-size="14">Email Verification (Weeks)</text>
+
+  <rect x="230" y="400" width="290" height="10" rx="5" fill="#27272A"/>
+  <rect x="230" y="400" width="180" height="10" rx="5" fill="#EF4444"/>
+  <text x="230" y="430" fill="#A1A1AA" font-family="Inter, sans-serif" font-size="14">Security Maintenance (Ongoing)</text>
+
+  <text x="375" y="510" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="32" font-weight="800">200+ Hours</text>
+
+  <!-- Tokenly -->
+  <rect x="650" y="200" width="350" height="350" rx="20" fill="#18181B" stroke="#3B82F6" stroke-width="2"/>
+  <text x="825" y="245" text-anchor="middle" fill="#3B82F6" font-family="Inter, sans-serif" font-size="20" font-weight="700">WITH TOKENLY</text>
+  
+  <rect x="680" y="280" width="290" height="10" rx="5" fill="#27272A"/>
+  <rect x="680" y="280" width="50" height="10" rx="5" fill="#3B82F6"/>
+  <text x="680" y="310" fill="#A1A1AA" font-family="Inter, sans-serif" font-size="14">API Integration (Minutes)</text>
+
+  <rect x="680" y="340" width="290" height="10" rx="5" fill="#3B82F6" fill-opacity="0.1"/>
+  <text x="825" y="348" text-anchor="middle" fill="#3B82F6" font-family="Inter, sans-serif" font-size="10">Done</text>
+
+  <rect x="680" y="400" width="290" height="10" rx="5" fill="#3B82F6" fill-opacity="0.1"/>
+  <text x="825" y="408" text-anchor="middle" fill="#3B82F6" font-family="Inter, sans-serif" font-size="10">Done</text>
+
+  <text x="825" y="510" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="32" font-weight="800">Less than 10 Mins</text>
+
+  <circle cx="600" cy="375" r="40" fill="#09090B"/>
+  <text x="600" y="385" text-anchor="middle" fill="#27272A" font-family="Inter, sans-serif" font-size="36" font-weight="900">VS</text>
+</svg>

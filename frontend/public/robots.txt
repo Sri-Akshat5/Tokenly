@@ -6,4 +6,25 @@ Disallow: /settings
 Disallow: /request-logs
 Disallow: /auth/
 
+# Explicitly allow AI crawlers to index our public docs and blog
+User-agent: GPTBot
+Allow: /
+Disallow: /dashboard
+
+User-agent: Google-Extended
+Allow: /
+Disallow: /dashboard
+
+User-agent: ClaudeBot
+Allow: /
+Disallow: /dashboard
+
+User-agent: CCBot
+Allow: /
+Disallow: /dashboard
+
+User-agent: PerplexityBot
+Allow: /
+Disallow: /dashboard
+
 Sitemap: https://tokenly.codes/sitemap.xml

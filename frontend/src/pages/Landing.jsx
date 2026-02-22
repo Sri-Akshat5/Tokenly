@@ -7,6 +7,7 @@ import Navbar from '../components/layout/Navbar';
 import { Shield, Zap, Code2, Lock, Sparkles, Database, Key, Users, Terminal, ArrowRight, CheckCircle2, ChevronRight, X, Check, Twitter, Github, Linkedin, Youtube, Heart, Mail, Globe } from 'lucide-react';
 import env from '../config/env';
 import SEO from '../components/seo/SEO';
+import FloatingTourVideo from '../components/FloatingTourVideo';
 
 export default function Landing() {
     const apiFeatures = ['JWT', 'Bcrypt', 'OAuth', 'Redis', 'API Keys'];
@@ -548,11 +549,12 @@ export default function Landing() {
             {/* Footer */}
             {/* Footer */}
             <FooterSection />
+            <FloatingTourVideo />
         </div>
     );
 }
 
-function FooterSection() {
+export function FooterSection() {
     return (
         <footer className="bg-black border-t border-zinc-800 py-12">
             <div className="container mx-auto px-6">
@@ -595,7 +597,7 @@ function SocialIcon({ icon, href }) {
     return (
         <a
             href={href}
-            className="w-10 h-10 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-400 hover:text-white hover:bg-zinc-800 hover:border-zinc-700 transition-all duration-300"
+            className="w-10 h-10 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-400 hover:text-white hover:bg-zinc-800 hover:border-zinc-700 transition-all duration-300 cursor-pointer"
         >
             {icon}
         </a>
@@ -607,7 +609,7 @@ function FooterLink({ href, children }) {
         <li>
             <a
                 href={href}
-                className="text-zinc-400 hover:text-white transition-colors flex items-center gap-1 group"
+                className="text-zinc-400 hover:text-white transition-colors flex items-center gap-1 group cursor-pointer"
             >
                 <ChevronRight className="w-3 h-3 opacity-0 -ml-4 group-hover:opacity-100 group-hover:translate-x-1 group-hover:ml-0 transition-all duration-300 text-zinc-600" />
                 <span className="group-hover:translate-x-1 transition-transform duration-300">{children}</span>
@@ -693,7 +695,7 @@ function TechSpecsSection() {
                             <div className="absolute top-0 right-0 p-4">
                                 <button
                                     onClick={() => setSelectedFeature(null)}
-                                    className="p-2 text-zinc-500 hover:text-white transition-colors"
+                                    className="p-2 text-zinc-500 hover:text-white transition-colors cursor-pointer"
                                 >
                                     <X className="w-6 h-6" />
                                 </button>
@@ -913,7 +915,7 @@ function UserManagementSection() {
                                                 <div className="text-zinc-600 text-[10px] mt-1">{user.time}</div>
                                             </div>
                                             {/* Block/Unblock Action */}
-                                            <button className={`p-1.5 rounded-md transition-colors ${user.status === 'Active' ? 'text-zinc-600 hover:text-red-400 hover:bg-red-500/10' : 'text-zinc-600 hover:text-emerald-400 hover:bg-emerald-500/10'}`}>
+                                            <button className={`p-1.5 rounded-md transition-colors cursor-pointer ${user.status === 'Active' ? 'text-zinc-600 hover:text-red-400 hover:bg-red-500/10' : 'text-zinc-600 hover:text-emerald-400 hover:bg-emerald-500/10'}`}>
                                                 {user.status === 'Active' ? <Lock className="w-3.5 h-3.5" /> : <Shield className="w-3.5 h-3.5" />}
                                             </button>
                                         </div>

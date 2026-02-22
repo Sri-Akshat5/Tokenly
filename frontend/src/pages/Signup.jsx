@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Button from '../components/ui/Button';
 import Input from '../components/ui/Input';
@@ -17,6 +17,8 @@ export default function Signup() {
     const [errors, setErrors] = useState({});
     const [loading, setLoading] = useState(false);
 
+    // Removed useEffect related to tour
+
     const validateForm = () => {
         const newErrors = {};
 
@@ -24,7 +26,7 @@ export default function Signup() {
             newErrors.name = 'Name must be at least 2 characters';
         }
 
-        if (!/\S+@\S+\.\S+/.test(formData.email)) {
+        if (!/\S+@\S+\.\S/.test(formData.email)) {
             newErrors.email = 'Please enter a valid email';
         }
 
@@ -98,7 +100,10 @@ export default function Signup() {
                     <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none" />
 
                     <div className="relative z-10">
-                        <h2 className="text-4xl font-bold text-white mb-3 tracking-tight">Create Account</h2>
+                        <div className="flex items-center justify-between mb-3">
+                            <h2 className="text-4xl font-bold text-white tracking-tight">Create Account</h2>
+                            {/* Removed tour button */}
+                        </div>
                         <p className="text-zinc-400 mb-10 text-lg">Start building authentication today</p>
 
                         {errors.general && (
@@ -178,15 +183,15 @@ export default function Signup() {
                                 <input
                                     type="checkbox"
                                     required
-                                    className="mt-1 rounded border-zinc-700 bg-zinc-900 text-white focus:ring-white focus:ring-offset-black transition-all"
+                                    className="mt-1 rounded border-zinc-700 bg-zinc-900 text-white focus:ring-white focus:ring-offset-black transition-all cursor-pointer"
                                 />
                                 <span className="ml-3 text-sm text-zinc-400 leading-relaxed">
                                     I agree to the{' '}
-                                    <Link to="/terms" className="text-white hover:text-zinc-300 font-medium transition-colors">
+                                    <Link to="/terms" className="text-white hover:text-zinc-300 font-medium transition-colors cursor-pointer">
                                         Terms of Service
                                     </Link>
                                     {' '}and{' '}
-                                    <Link to="/privacy" className="text-white hover:text-zinc-300 font-medium transition-colors">
+                                    <Link to="/privacy" className="text-white hover:text-zinc-300 font-medium transition-colors cursor-pointer">
                                         Privacy Policy
                                     </Link>
                                 </span>
@@ -205,7 +210,7 @@ export default function Signup() {
                         <div className="mt-10 text-center">
                             <p className="text-zinc-400">
                                 Already have an account?{' '}
-                                <Link to="/login" className="text-white hover:text-zinc-300 font-semibold transition-colors">
+                                <Link to="/login" className="text-white hover:text-zinc-300 font-semibold transition-colors cursor-pointer">
                                     Sign in
                                 </Link>
                             </p>

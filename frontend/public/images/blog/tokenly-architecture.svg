@@ -1,0 +1,36 @@
+<svg width="1200" height="675" viewBox="0 0 1200 675" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="675" fill="#09090B"/>
+  
+  <text x="600" y="80" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="32" font-weight="700">Tokenly Platform Architecture</text>
+  <text x="600" y="120" text-anchor="middle" fill="#71717A" font-family="Inter, sans-serif" font-size="18">The engine behind your application's authentication</text>
+
+  <!-- Core Engine -->
+  <rect x="450" y="250" width="300" height="200" rx="24" fill="#18181B" stroke="#3B82F6" stroke-width="3"/>
+  <text x="600" y="330" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="22" font-weight="800">TOKENLY CORE</text>
+
+  <!-- Apps -->
+  <rect x="850" y="180" width="200" height="80" rx="12" fill="#18181B" stroke="#27272A" stroke-width="1"/>
+  <text x="950" y="225" text-anchor="middle" fill="#A1A1AA" font-family="Inter, sans-serif" font-size="16">Prod App</text>
+  
+  <rect x="850" y="300" width="200" height="80" rx="12" fill="#18181B" stroke="#27272A" stroke-width="1"/>
+  <text x="950" y="345" text-anchor="middle" fill="#A1A1AA" font-family="Inter, sans-serif" font-size="16">Staging App</text>
+
+  <rect x="850" y="420" width="200" height="80" rx="12" fill="#18181B" stroke="#27272A" stroke-width="1"/>
+  <text x="950" y="465" text-anchor="middle" fill="#A1A1AA" font-family="Inter, sans-serif" font-size="16">Mobile App</text>
+
+  <!-- Connectors -->
+  <path d="M750 350H850M750 350L850 220M750 350L850 460" stroke="#3B82F6" stroke-width="2" stroke-dasharray="5 5"/>
+
+  <!-- Features -->
+  <rect x="150" y="180" width="200" height="60" rx="30" fill="#3B82F6" fill-opacity="0.1" stroke="#3B82F6" stroke-width="1"/>
+  <text x="250" y="215" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="14">JWT / Tokens</text>
+
+  <rect x="150" y="260" width="200" height="60" rx="30" fill="#3B82F6" fill-opacity="0.1" stroke="#3B82F6" stroke-width="1"/>
+  <text x="250" y="295" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="14">OAuth 2.0</text>
+
+  <rect x="150" y="340" width="200" height="60" rx="30" fill="#3B82F6" fill-opacity="0.1" stroke="#3B82F6" stroke-width="1"/>
+  <text x="250" y="375" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="14">Magic Links</text>
+
+  <rect x="150" y="420" width="200" height="60" rx="30" fill="#3B82F6" fill-opacity="0.1" stroke="#3B82F6" stroke-width="1"/>
+  <text x="250" y="455" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="14">API Keys</text>
+</svg>

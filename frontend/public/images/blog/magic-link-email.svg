@@ -1,0 +1,25 @@
+<svg width="1200" height="675" viewBox="0 0 1200 675" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="675" fill="#09090B"/>
+  
+  <!-- Email Client Window -->
+  <rect x="300" y="50" width="600" height="575" rx="12" fill="#FFFFFF"/>
+  <rect x="300" y="50" width="600" height="40" rx="12 12 0 0" fill="#F8FAFC"/>
+  <text x="600" y="75" text-anchor="middle" fill="#64748B" font-family="Inter, sans-serif" font-size="12">Magic Link Login</text>
+
+  <!-- Email Content -->
+  <rect x="340" y="110" width="80" height="30" rx="8" fill="#000000"/>
+  <text x="380" y="130" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="14" font-weight="700">T</text>
+  
+  <text x="340" y="180" fill="#0F172A" font-family="Inter, sans-serif" font-size="24" font-weight="800">Your Magic Link</text>
+  <text x="340" y="220" fill="#475569" font-family="Inter, sans-serif" font-size="16">Click the button below to sign in to your Tokenly account. This link will expire in 15 minutes.</text>
+
+  <rect x="340" y="270" width="200" height="50" rx="8" fill="#3B82F6"/>
+  <text x="440" y="302" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="16" font-weight="700">Verify and Login</text>
+
+  <text x="340" y="360" fill="#94A3B8" font-family="Inter, sans-serif" font-size="14">If you didn't request this email, you can safely ignore it.</text>
+  
+  <path d="M340 400H860" stroke="#E2E8F0" stroke-width="1"/>
+  
+  <text x="340" y="440" fill="#64748B" font-family="Inter, sans-serif" font-size="12">Tokenly Inc. 123 Auth St, SF, CA</text>
+  <text x="340" y="460" fill="#64748B" font-family="Inter, sans-serif" font-size="12">Unsubscribe | Manage Notifications</text>
+</svg>

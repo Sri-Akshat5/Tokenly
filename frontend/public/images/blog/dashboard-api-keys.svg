@@ -1,0 +1,48 @@
+<svg width="1200" height="675" viewBox="0 0 1200 675" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="675" fill="#09090B"/>
+  
+  <!-- Dashboard UI -->
+  <rect x="100" y="80" width="1000" height="515" rx="20" fill="#18181B" stroke="#27272A" stroke-width="2"/>
+  <rect x="100" y="80" width="240" height="515" rx="20 0 0 20" fill="#09090B"/>
+  
+  <!-- Sidebar -->
+  <rect x="130" y="130" width="180" height="30" rx="6" fill="#27272A"/>
+  <rect x="130" y="180" width="180" height="30" rx="6" fill="#3B82F6" fill-opacity="0.1"/>
+  <text x="145" y="200" fill="#3B82F6" font-family="Inter, sans-serif" font-size="14" font-weight="600">API Keys</text>
+  
+  <rect x="130" y="230" width="180" height="30" rx="6" fill="#27272A"/>
+  <rect x="130" y="280" width="180" height="30" rx="6" fill="#27272A"/>
+  
+  <!-- Content -->
+  <text x="380" y="140" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="24" font-weight="700">API Keys</text>
+  <text x="380" y="170" fill="#71717A" font-family="Inter, sans-serif" font-size="14">Manage and rotate keys for your applications</text>
+  
+  <rect x="1000" y="120" width="80" height="35" rx="8" fill="#3B82F6"/>
+  <text x="1040" y="142" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="12" font-weight="600">Create Key</text>
+  
+  <!-- Table -->
+  <rect x="380" y="210" width="700" height="340" rx="12" fill="#09090B" stroke="#27272A" stroke-width="1"/>
+  <rect x="380" y="210" width="700" height="40" rx="12 12 0 0" fill="#18181B"/>
+  
+  <text x="400" y="235" fill="#A1A1AA" font-family="Inter, sans-serif" font-size="11" font-weight="600">NAME</text>
+  <text x="550" y="235" fill="#A1A1AA" font-family="Inter, sans-serif" font-size="11" font-weight="600">STATUS</text>
+  <text x="700" y="235" fill="#A1A1AA" font-family="Inter, sans-serif" font-size="11" font-weight="600">CREATED</text>
+  
+  <path d="M380 250H1080" stroke="#27272A" stroke-width="1"/>
+  
+  <!-- Row 1 -->
+  <text x="400" y="285" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="13">Prod Server</text>
+  <rect x="550" y="270" width="50" height="20" rx="10" fill="#10B981" fill-opacity="0.1"/>
+  <text x="575" y="284" text-anchor="middle" fill="#10B981" font-family="Inter, sans-serif" font-size="10">Active</text>
+  <text x="700" y="285" fill="#71717A" font-family="Inter, sans-serif" font-size="13">2 days ago</text>
+  
+  <path d="M380 305H1080" stroke="#27272A" stroke-width="1"/>
+  
+  <!-- Row 2 -->
+  <text x="400" y="340" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="13">Staging API</text>
+  <rect x="550" y="325" width="50" height="20" rx="10" fill="#10B981" fill-opacity="0.1"/>
+  <text x="575" y="339" text-anchor="middle" fill="#10B981" font-family="Inter, sans-serif" font-size="10">Active</text>
+  <text x="700" y="340" fill="#71717A" font-family="Inter, sans-serif" font-size="13">1 week ago</text>
+  
+  <path d="M380 360H1080" stroke="#27272A" stroke-width="1"/>
+</svg>

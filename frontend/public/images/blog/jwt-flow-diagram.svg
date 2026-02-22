@@ -1,0 +1,40 @@
+<svg width="1200" height="675" viewBox="0 0 1200 675" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="675" fill="#09090B"/>
+  
+  <!-- Content -->
+  <text x="600" y="80" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="32" font-weight="700">JWT Authentication Flow</text>
+  <text x="600" y="120" text-anchor="middle" fill="#71717A" font-family="Inter, sans-serif" font-size="18">The request-response lifecycle of JSON Web Tokens</text>
+
+  <!-- Flow lines -->
+  <path d="M200 337.5H1000" stroke="#27272A" stroke-width="2" stroke-dasharray="10 10"/>
+  
+  <!-- Step 1 -->
+  <rect x="50" y="237.5" width="200" height="200" rx="20" fill="#18181B" stroke="#3F3F46" stroke-width="2"/>
+  <text x="150" y="460" text-anchor="middle" fill="#A1A1AA" font-family="Inter, sans-serif" font-size="18" font-weight="500">1. Client Request</text>
+  <text x="150" y="320" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="14">POST /auth/login</text>
+  <rect x="100" y="340" width="100" height="40" rx="8" fill="#27272A"/>
+  <text x="150" y="365" text-anchor="middle" fill="#71717A" font-family="Inter, sans-serif" font-size="12">Credentials</text>
+
+  <!-- Step 2 -->
+  <rect x="350" y="237.5" width="200" height="200" rx="20" fill="#18181B" stroke="#3B82F6" stroke-width="2"/>
+  <text x="450" y="460" text-anchor="middle" fill="#A1A1AA" font-family="Inter, sans-serif" font-size="18" font-weight="500">2. Validation</text>
+  <circle cx="450" cy="337.5" r="40" fill="#3B82F6" fill-opacity="0.1" stroke="#3B82F6" stroke-width="2"/>
+  <path d="M435 337.5L445 347.5L465 327.5" stroke="#3B82F6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Step 3 -->
+  <rect x="650" y="237.5" width="200" height="200" rx="20" fill="#18181B" stroke="#8B5CF6" stroke-width="2"/>
+  <text x="750" y="460" text-anchor="middle" fill="#A1A1AA" font-family="Inter, sans-serif" font-size="18" font-weight="500">3. Issue JWT</text>
+  <rect x="680" y="310" width="140" height="55" rx="8" fill="#5B21B6" fill-opacity="0.1" stroke="#8B5CF6" stroke-width="1"/>
+  <text x="750" y="345" text-anchor="middle" fill="#DDD6FE" font-family="monospace" font-size="14">header.payload.sig</text>
+
+  <!-- Step 4 -->
+  <rect x="950" y="237.5" width="200" height="200" rx="20" fill="#18181B" stroke="#10B981" stroke-width="2"/>
+  <text x="1050" y="460" text-anchor="middle" fill="#A1A1AA" font-family="Inter, sans-serif" font-size="18" font-weight="500">4. Protected Resource</text>
+  <rect x="990" y="325" width="120" height="25" rx="4" fill="#10B981" fill-opacity="0.1"/>
+  <text x="1050" y="342" text-anchor="middle" fill="#10B981" font-family="Inter, sans-serif" font-size="10">Bearer Token</text>
+
+  <!-- Arrows -->
+  <path d="M250 337.5H340M340 337.5L330 327.5M340 337.5L330 347.5" stroke="#3F3F46" stroke-width="2"/>
+  <path d="M550 337.5H640M640 337.5L630 327.5M640 337.5L630 347.5" stroke="#3F3F46" stroke-width="2"/>
+  <path d="M850 337.5H940M940 337.5L930 327.5M940 337.5L930 347.5" stroke="#3F3F46" stroke-width="2"/>
+</svg>

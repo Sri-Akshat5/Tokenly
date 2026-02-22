@@ -18,6 +18,8 @@ import ResetPassword from './pages/ResetPassword';
 import Documentation from './pages/Documentation';
 import Terms from './pages/Terms';
 import Privacy from './pages/Privacy';
+import Blog from './pages/Blog';
+import BlogPost from './pages/BlogPost';
 import RequestLogs from './pages/RequestLogs';
 import authService from './services/authService';
 
@@ -50,6 +52,8 @@ function App() {
           <Route path="/docs" element={<Documentation />} />
           <Route path="/terms" element={<Terms />} />
           <Route path="/privacy" element={<Privacy />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/blog/:slug" element={<BlogPost />} />
 
           {/* End-User Application Auth (Public) */}
           <Route path="/auth/:appId/login" element={<UserAuth />} />

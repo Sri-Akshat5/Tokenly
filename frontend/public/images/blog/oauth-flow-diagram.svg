@@ -1,0 +1,36 @@
+<svg width="1200" height="675" viewBox="0 0 1200 675" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="675" fill="#09090B"/>
+  
+  <!-- App/Server -->
+  <rect x="100" y="150" width="200" height="400" rx="12" fill="#18181B" stroke="#27272A" stroke-width="2"/>
+  <text x="200" y="130" text-anchor="middle" fill="#A1A1AA" font-family="Inter, sans-serif" font-size="18" font-weight="600">Your App</text>
+  
+  <!-- Auth Provider -->
+  <rect x="500" y="150" width="200" height="400" rx="12" fill="#18181B" stroke="#27272A" stroke-width="2"/>
+  <text x="600" y="130" text-anchor="middle" fill="#A1A1AA" font-family="Inter, sans-serif" font-size="18" font-weight="600">Auth Provider</text>
+
+  <!-- Tokenly API -->
+  <rect x="900" y="150" width="200" height="400" rx="12" fill="#18181B" stroke="#3B82F6" stroke-dasharray="8 4" stroke-width="2"/>
+  <text x="1000" y="130" text-anchor="middle" fill="#3B82F6" font-family="Inter, sans-serif" font-size="18" font-weight="600">Tokenly API</text>
+
+  <!-- Sequence lines -->
+  <path d="M200 150V550" stroke="#27272A" stroke-width="1"/>
+  <path d="M600 150V550" stroke="#27272A" stroke-width="1"/>
+  <path d="M1000 150V550" stroke="#27272A" stroke-width="1"/>
+
+  <!-- Arrows -->
+  <path d="M200 200H590M590 200L580 190M590 200L580 210" stroke="#FFFFFF" stroke-width="2"/>
+  <text x="400" y="190" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="14">1. Auth Redirect</text>
+
+  <path d="M600 270H210M210 270L220 260M210 270L220 280" stroke="#FFFFFF" stroke-width="2"/>
+  <text x="400" y="260" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="14">2. Auth Code</text>
+
+  <path d="M200 340H990M990 340L980 330M990 340L980 350" stroke="#3B82F6" stroke-width="2"/>
+  <text x="600" y="330" text-anchor="middle" fill="#3B82F6" font-family="Inter, sans-serif" font-size="14">3. Code for JWT</text>
+
+  <path d="M1000 410H210M210 410L220 400M210 410L220 420" stroke="#3B82F6" stroke-width="2"/>
+  <text x="600" y="400" text-anchor="middle" fill="#3B82F6" font-family="Inter, sans-serif" font-size="14">4. JWT Issued</text>
+
+  <text x="600" y="60" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="32" font-weight="700">OAuth 2.0 Auth Code Flow</text>
+  <text x="600" y="90" text-anchor="middle" fill="#71717A" font-family="Inter, sans-serif" font-size="18">The standard way to implement social login</text>
+</svg>

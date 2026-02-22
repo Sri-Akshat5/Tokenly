@@ -52,7 +52,9 @@ export default function Login() {
                     <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none" />
 
                     <div className="relative z-10">
-                        <h2 className="text-4xl font-bold text-white mb-3 tracking-tight">Welcome Back</h2>
+                        <div className="flex items-center justify-between mb-3">
+                            <h2 className="text-4xl font-bold text-white tracking-tight">Welcome Back</h2>
+                        </div>
                         <p className="text-zinc-400 mb-10 text-lg">Sign in to your account to continue</p>
 
                         {errors.general && (
@@ -88,11 +90,11 @@ export default function Login() {
                                 <label className="flex items-center group cursor-pointer">
                                     <input
                                         type="checkbox"
-                                        className="rounded border-zinc-700 bg-zinc-900 text-white focus:ring-white focus:ring-offset-black transition-all"
+                                        className="rounded border-zinc-700 bg-zinc-900 text-white focus:ring-white focus:ring-offset-black transition-all cursor-pointer"
                                     />
                                     <span className="ml-3 text-sm text-zinc-400 group-hover:text-zinc-300 transition-colors">Remember me</span>
                                 </label>
-                                <Link to="/forgot-password" className="text-sm text-white hover:text-zinc-300 font-medium transition-colors">
+                                <Link to="/forgot-password" className="text-sm text-white hover:text-zinc-300 font-medium transition-colors cursor-pointer">
                                     Forgot password?
                                 </Link>
                             </div>
@@ -110,7 +112,7 @@ export default function Login() {
                         <div className="mt-10 text-center">
                             <p className="text-zinc-400">
                                 Don't have an account?{' '}
-                                <Link to="/signup" className="text-white hover:text-zinc-300 font-semibold transition-colors">
+                                <Link to="/signup" className="text-white hover:text-zinc-300 font-semibold transition-colors cursor-pointer">
                                     Sign up for free
                                 </Link>
                             </p>

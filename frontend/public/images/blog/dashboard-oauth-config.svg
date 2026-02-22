@@ -1,0 +1,22 @@
+<svg width="1200" height="675" viewBox="0 0 1200 675" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="675" fill="#09090B"/>
+  
+  <rect x="100" y="80" width="1000" height="515" rx="20" fill="#18181B" stroke="#27272A" stroke-width="2"/>
+  <rect x="100" y="80" width="1000" height="40" rx="20 20 0 0" fill="#27272A"/>
+
+  <text x="390" y="180" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="24" font-weight="700">OAuth Settings</text>
+  
+  <rect x="390" y="220" width="650" height="80" rx="12" fill="#27272A" stroke="#3B82F6" stroke-width="1"/>
+  <rect x="410" y="240" width="40" height="40" rx="20" fill="#FFFFFF"/>
+  <text x="460" y="255" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="16" font-weight="600">Google Auth</text>
+  <text x="460" y="275" fill="#71717A" font-family="Inter, sans-serif" font-size="12">Configured &amp; Active</text>
+
+  <rect x="390" y="320" width="650" height="80" rx="12" fill="#27272A" stroke="#3F3F46" stroke-width="1"/>
+  <rect x="410" y="340" width="40" height="40" rx="20" fill="#333"/>
+  <text x="460" y="355" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="16" font-weight="600">GitHub Auth</text>
+  <text x="460" y="375" fill="#71717A" font-family="Inter, sans-serif" font-size="12">Not Configured</text>
+
+  <text x="390" y="440" fill="#A1A1AA" font-family="Inter, sans-serif" font-size="12" font-weight="600">REDIRECT URI</text>
+  <rect x="390" y="450" width="650" height="40" rx="8" fill="#27272A" stroke="#3F3F46" stroke-width="1"/>
+  <text x="405" y="475" fill="#FFFFFF" font-family="monospace" font-size="14">https://api.tokenly.codes/oauth/callback</text>
+</svg>

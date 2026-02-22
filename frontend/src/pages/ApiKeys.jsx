@@ -129,7 +129,6 @@ export default function ApiKeys() {
                     }
                 />
 
-                {/* Content */}
                 <div className="grid grid-cols-1 gap-6">
                     {apiKeys.length === 0 ? (
                         <Card className="p-20 text-center flex flex-col items-center justify-center border-dashed border-2 border-zinc-800">

@@ -142,14 +142,14 @@ export default function ApplicationCard({ application, onStatusChange }) {
                         <div className="flex gap-2 pt-2">
                             <Link
                                 to={`/app/${application.id}`}
-                                className="flex-1 h-10 inline-flex items-center justify-center bg-white text-black rounded-lg hover:bg-zinc-200 transition-all font-semibold text-sm tracking-tight group/btn relative overflow-hidden"
+                                className="flex-1 h-10 inline-flex items-center justify-center bg-white text-black rounded-lg hover:bg-zinc-200 transition-all font-semibold text-sm tracking-tight group/btn relative overflow-hidden cursor-pointer"
                             >
                                 <span className="relative z-10">Open Console</span>
                                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover/btn:translate-x-[100%] transition-transform duration-700" />
                             </Link>
                             <Link
-                                to={`/app/${application.id}/auth-config`}
-                                className="w-10 h-10 inline-flex items-center justify-center border border-zinc-800 rounded-lg hover:border-zinc-600 hover:bg-zinc-800/50 transition-all text-zinc-500 hover:text-white"
+                                to={`/app/${application.id}/settings`}
+                                className="w-10 h-10 inline-flex items-center justify-center border border-zinc-800 rounded-lg hover:border-zinc-600 hover:bg-zinc-800/50 transition-all text-zinc-500 hover:text-white cursor-pointer"
                                 title="Settings"
                             >
                                 <Settings className="w-4 h-4" />

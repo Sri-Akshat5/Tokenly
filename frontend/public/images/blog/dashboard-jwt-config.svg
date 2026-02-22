@@ -1,0 +1,37 @@
+<svg width="1200" height="675" viewBox="0 0 1200 675" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="675" fill="#09090B"/>
+  
+  <!-- Dashboard UI -->
+  <rect x="100" y="80" width="1000" height="515" rx="20" fill="#18181B" stroke="#27272A" stroke-width="2"/>
+  <rect x="100" y="80" width="240" height="515" rx="20 0 0 20" fill="#09090B"/>
+  
+  <!-- Sidebar -->
+  <rect x="130" y="130" width="180" height="30" rx="6" fill="#27272A"/>
+  <rect x="130" y="180" width="180" height="30" rx="6" fill="#3B82F6" fill-opacity="0.1"/>
+  <text x="145" y="200" fill="#3B82F6" font-family="Inter, sans-serif" font-size="14" font-weight="600">JWT Config</text>
+  
+  <rect x="130" y="230" width="180" height="30" rx="6" fill="#27272A"/>
+  <rect x="130" y="280" width="180" height="30" rx="6" fill="#27272A"/>
+  
+  <!-- Content -->
+  <text x="380" y="140" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="24" font-weight="700">JWT Configuration</text>
+  <text x="380" y="170" fill="#71717A" font-family="Inter, sans-serif" font-size="14">Set expiration, signing algorithms and claims</text>
+  
+  <!-- Config Box -->
+  <rect x="380" y="210" width="670" height="340" rx="12" fill="#09090B" stroke="#27272A" stroke-width="1"/>
+  
+  <text x="410" y="250" fill="#A1A1AA" font-family="Inter, sans-serif" font-size="14">Token Expiration (minutes)</text>
+  <rect x="410" y="265" width="200" height="40" rx="8" fill="#18181B" stroke="#3F3F46" stroke-width="1"/>
+  <text x="425" y="290" fill="#FFFFFF" font-family="monospace" font-size="14">60</text>
+  
+  <text x="410" y="335" fill="#A1A1AA" font-family="Inter, sans-serif" font-size="14">Signing Algorithm</text>
+  <rect x="410" y="350" width="200" height="40" rx="8" fill="#18181B" stroke="#3B82F6" stroke-width="1"/>
+  <text x="425" y="375" fill="#FFFFFF" font-family="monospace" font-size="14">RS256</text>
+  
+  <text x="410" y="420" fill="#A1A1AA" font-family="Inter, sans-serif" font-size="14">Issuer (iss)</text>
+  <rect x="410" y="435" width="400" height="40" rx="8" fill="#18181B" stroke="#3F3F46" stroke-width="1"/>
+  <text x="425" y="460" fill="#FFFFFF" font-family="monospace" font-size="14">https://tokenly.codes</text>
+  
+  <rect x="410" y="500" width="120" height="35" rx="8" fill="#3B82F6"/>
+  <text x="470" y="522" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="12" font-weight="600">Save Changes</text>
+</svg>
