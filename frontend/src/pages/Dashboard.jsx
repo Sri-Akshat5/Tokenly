@@ -295,6 +295,8 @@ function CreateApplicationModal({ isOpen, onClose, onSuccess }) {
                                 <option value="JWT">Stateless (JWT Tokens)</option>
                                 <option value="SESSION">Stateful (Sessions)</option>
                                 <option value="API_TOKEN">Simple (API Tokens)</option>
+                                <option value="PASETO_LOCAL">PASETO V2 Local (Symmetric)</option>
+                                <option value="PASETO_PUBLIC">PASETO V2 Public (Asymmetric)</option>
                             </Select>
                         </div>
 

@@ -1,9 +1,10 @@
-import { Shield, Book, Code, Lock, Zap, Server, Key, Users, Settings as SettingsIcon, AlertCircle } from 'lucide-react';
+import { Shield, Book, Code, Lock, Zap, Server, Key, Users, Settings as SettingsIcon, AlertCircle, Database } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import env from '../config/env';
 import Button from '../components/ui/Button';
 import SEO from '../components/seo/SEO';
+
 
 export default function Documentation() {
     const [activeSection, setActiveSection] = useState('introduction');
@@ -25,8 +26,8 @@ export default function Documentation() {
     return (
         <div className="min-h-screen bg-black text-zinc-300">
             <SEO
-                title="Tokenly API Documentation – JWT, OAuth & Magic Link Integration"
-                description="Comprehensive Tokenly API documentation. Learn to implement JWT authentication, OAuth 2.0, magic links, and OTP login using our REST API. Guides for React, Node.js, and secure session management."
+                title="Tokenly API Documentation – PASETO & JWT, OAuth & Magic Link Integration"
+                description="Comprehensive Tokenly API documentation. Learn to implement highly secure PASETO and JWT authentication, OAuth 2.0, magic links, and OTP login using our REST API. Guides for React, Node.js, and secure session management."
                 url="https://tokenly.codes/docs"
             />
             {/* Navigation */}
@@ -68,6 +69,7 @@ export default function Documentation() {
                                 title="Authentication"
                                 items={[
                                     { id: 'auth-overview', label: 'Overview' },
+                                    { id: 'auth-modes', label: 'Auth Modes' },
                                     { id: 'email-password', label: 'Email & Password' },
                                     { id: 'magic-links', label: 'Magic Links' },
                                     { id: 'otp', label: 'One-Time Passwords' },
@@ -128,7 +130,7 @@ export default function Documentation() {
                                 <FeatureCard
                                     icon={<Lock className="w-6 h-6 text-white" />}
                                     title="Enterprise Security"
-                                    description="Bcrypt/Argon2/PBKDF2 hashing, JWT tokens, and secure defaults."
+                                    description="Bcrypt/Argon2/PBKDF2 hashing, JWT/PASETO tokens, and secure defaults."
                                 />
                                 <FeatureCard
                                     icon={<Users className="w-6 h-6 text-white" />}
@@ -230,6 +232,154 @@ export default function Documentation() {
                                     description="Server-to-server communication only. Never expose these!"
                                     uses={['Verify Tokens', 'Manage Users', 'Admin operations']}
                                 />
+                            </div>
+                        </Section>
+
+                        {/* Authentication Modes */}
+                        <Section id="auth-modes" icon={<SettingsIcon className="w-6 h-6 text-white" />} title="Architectural Authentication Modes">
+                            <p className="text-zinc-400 mb-8 text-lg leading-relaxed">
+                                Tokenly is designed with unparalleled architectural flexibility. Instead of forcing a single persistence model, we offer 5 distinct state architectures. You can configure the exact persistence layer your application demands directly from your dashboard.
+                            </p>
+                            <div className="space-y-8">
+                                {/* JWT */}
+                                <div className="p-8 bg-zinc-900/40 border border-zinc-800 rounded-3xl relative overflow-hidden group">
+                                    <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity pointer-events-none">
+                                        <Zap className="w-24 h-24 text-blue-500" />
+                                    </div>
+                                    <div className="relative z-10">
+                                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+                                            <div>
+                                                <h4 className="text-2xl font-bold text-white mb-2">Stateless JWT Tokens</h4>
+                                                <div className="flex items-center gap-3">
+                                                    <span className="px-3 py-1 bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-mono rounded-lg font-bold">MODE: JWT</span>
+                                                    <span className="px-3 py-1 bg-zinc-800 border border-zinc-700 text-zinc-400 text-xs font-mono rounded-lg">JSON Web Token (RFC 7519)</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <p className="text-zinc-400 text-base mb-6 leading-relaxed max-w-3xl">Delivers self-contained, base64-encoded JSON payloads. Cryptographically signed using standard <strong>RS256/RS512</strong> (asymmetric) algorithms. Perfect for high-throughput distributed microservices because gateway servers can validate the token's authenticity entirely offline without consulting the database.</p>
+
+                                        <div className="bg-zinc-950 p-6 rounded-2xl border border-zinc-800/80">
+                                            <h5 className="text-white text-xs font-bold uppercase tracking-wider mb-4 flex items-center gap-2">
+                                                <Code className="w-4 h-4" /> Usage & Verification
+                                            </h5>
+                                            <p className="text-zinc-500 text-sm mb-4 leading-relaxed">Clients must inject the token into the HTTP Authorization header. Backend services decode the payload and verify the signature using your application's public JWKS endpoint.</p>
+                                            <CodeExample language="bash" code={`curl -X GET https://api.yourservice.com/data \\
+  -H "Authorization: Bearer eyJhbGciOiJSUzI1..."`} />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Session */}
+                                <div className="p-8 bg-zinc-900/40 border border-zinc-800 rounded-3xl relative overflow-hidden group">
+                                    <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity pointer-events-none">
+                                        <Database className="w-24 h-24 text-green-500" />
+                                    </div>
+                                    <div className="relative z-10">
+                                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+                                            <div>
+                                                <h4 className="text-2xl font-bold text-white mb-2">Stateful Sessions</h4>
+                                                <div className="flex items-center gap-3">
+                                                    <span className="px-3 py-1 bg-green-500/10 border border-green-500/20 text-green-400 text-xs font-mono rounded-lg font-bold">MODE: SESSION</span>
+                                                    <span className="px-3 py-1 bg-zinc-800 border border-zinc-700 text-zinc-400 text-xs font-mono rounded-lg">Redis Backed</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <p className="text-zinc-400 text-base mb-6 leading-relaxed max-w-3xl">Traditional stateful authentication. Upon login, an opaque, cryptographically random Session ID is generated and mapped to the user in a high-speed Redis cluster. This allows for absolute control over connected clients, offering <strong>immediate backend revocation</strong> and strict device concurrency limits.</p>
+
+                                        <div className="bg-zinc-950 p-6 rounded-2xl border border-zinc-800/80">
+                                            <h5 className="text-white text-xs font-bold uppercase tracking-wider mb-4 flex items-center gap-2">
+                                                <Code className="w-4 h-4" /> Usage & Verification
+                                            </h5>
+                                            <p className="text-zinc-500 text-sm mb-4 leading-relaxed">Pass the opaque Session ID. Your server proxies the session to Tokenly's verification endpoint, which performs a sub-millisecond cache lookup.</p>
+                                            <CodeExample language="bash" code={`curl -X GET https://api.yourservice.com/data \\
+  -H "Authorization: Bearer sid_8f92j..."`} />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* API Token */}
+                                <div className="p-8 bg-zinc-900/40 border border-zinc-800 rounded-3xl relative overflow-hidden group">
+                                    <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity pointer-events-none">
+                                        <Key className="w-24 h-24 text-purple-500" />
+                                    </div>
+                                    <div className="relative z-10">
+                                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+                                            <div>
+                                                <h4 className="text-2xl font-bold text-white mb-2">Simple API Tokens</h4>
+                                                <div className="flex items-center gap-3">
+                                                    <span className="px-3 py-1 bg-purple-500/10 border border-purple-500/20 text-purple-400 text-xs font-mono rounded-lg font-bold">MODE: API_TOKEN</span>
+                                                    <span className="px-3 py-1 bg-zinc-800 border border-zinc-700 text-zinc-400 text-xs font-mono rounded-lg">Infinite TTL</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <p className="text-zinc-400 text-base mb-6 leading-relaxed max-w-3xl">Opaque, non-expiring access tokens primarily engineered for <strong>Machine-to-Machine (M2M)</strong> communication, CLI toolkits, and permanent backend integrations. These tokens lack TTLs and actively exist until they are explicitly revoked through the admin dashboard or API.</p>
+
+                                        <div className="bg-zinc-950 p-6 rounded-2xl border border-zinc-800/80">
+                                            <h5 className="text-white text-xs font-bold uppercase tracking-wider mb-4 flex items-center gap-2">
+                                                <Code className="w-4 h-4" /> Usage & Verification
+                                            </h5>
+                                            <p className="text-zinc-500 text-sm mb-4 leading-relaxed">Can be ingested via the standard <code>Authorization</code> header or a dedicated <code>X-API-Key</code> header to bypass standard browser security rules.</p>
+                                            <CodeExample language="bash" code={`curl -X GET https://api.yourservice.com/data \\
+  -H "X-API-Key: atk_9a10c..."`} />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* PASETO Local */}
+                                <div className="p-8 bg-zinc-900/40 border border-zinc-800 rounded-3xl relative overflow-hidden group">
+                                    <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity pointer-events-none">
+                                        <Shield className="w-24 h-24 text-yellow-500" />
+                                    </div>
+                                    <div className="relative z-10">
+                                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+                                            <div>
+                                                <h4 className="text-2xl font-bold text-white mb-2">PASETO V2 Local (Symmetric)</h4>
+                                                <div className="flex items-center gap-3">
+                                                    <span className="px-3 py-1 bg-yellow-500/10 border border-yellow-500/20 text-yellow-400 text-xs font-mono rounded-lg font-bold">MODE: PASETO_LOCAL</span>
+                                                    <span className="px-3 py-1 bg-zinc-800 border border-zinc-700 text-zinc-400 text-xs font-mono rounded-lg">AES-256-GCM Encryption</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <p className="text-zinc-400 text-base mb-6 leading-relaxed max-w-3xl">Platform-Agnostic Security Tokens representing an ironclad alternative to JWTs. The <code>Local</code> variant employs heavy symmetric encryption (AES-256-GCM). Unlike native JWT payloads which are merely base64 encoded and publicly readable, PASETO Local <strong>fully encrypts the internal payload</strong>, obfuscating custom claims from the end-user. Perfect for closed-circuit applications where a single centralized backend generates and verifies the tokens.</p>
+
+                                        <div className="bg-zinc-950 p-6 rounded-2xl border border-zinc-800/80">
+                                            <h5 className="text-white text-xs font-bold uppercase tracking-wider mb-4 flex items-center gap-2">
+                                                <Code className="w-4 h-4" /> Usage & Verification
+                                            </h5>
+                                            <p className="text-zinc-500 text-sm mb-4 leading-relaxed">Pass the encrypted token string. Your backend verifies it symmetrically against the shared 32-byte secret key.</p>
+                                            <CodeExample language="bash" code={`curl -X GET https://api.yourservice.com/data \\
+  -H "Authorization: Bearer v2.local.h9J1k..."`} />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* PASETO Public */}
+                                <div className="p-8 bg-zinc-900/40 border border-zinc-800 rounded-3xl relative overflow-hidden group">
+                                    <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity pointer-events-none">
+                                        <Shield className="w-24 h-24 text-red-500" />
+                                    </div>
+                                    <div className="relative z-10">
+                                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+                                            <div>
+                                                <h4 className="text-2xl font-bold text-white mb-2">PASETO V2 Public (Asymmetric)</h4>
+                                                <div className="flex items-center gap-3">
+                                                    <span className="px-3 py-1 bg-red-500/10 border border-red-500/20 text-red-500 text-xs font-mono rounded-lg font-bold">MODE: PASETO_PUBLIC</span>
+                                                    <span className="px-3 py-1 bg-zinc-800 border border-zinc-700 text-zinc-400 text-xs font-mono rounded-lg">Ed25519 Signatures</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <p className="text-zinc-400 text-base mb-6 leading-relaxed max-w-3xl">Modern asymmetric digital signatures leveraging the <strong>Ed25519 curve</strong>. By categorically separating algorithms from the token header (a fundamental vector of attack in JWT), PASETO guarantees mathematical immunity to 'None Algorithm' injections and 'Algorithmic Confusion' exploits. Designed for disparate microservice architectures that require robust, trustless payload verification.</p>
+
+                                        <div className="bg-zinc-950 p-6 rounded-2xl border border-zinc-800/80">
+                                            <h5 className="text-white text-xs font-bold uppercase tracking-wider mb-4 flex items-center gap-2">
+                                                <Code className="w-4 h-4" /> Usage & Verification
+                                            </h5>
+                                            <p className="text-zinc-500 text-sm mb-4 leading-relaxed">Includes the unencrypted but heavily signed payload. Your peripheral services download your public Ed25519 key to independently verify authenticity.</p>
+                                            <CodeExample language="bash" code={`curl -X GET https://api.yourservice.com/data \\
+  -H "Authorization: Bearer v2.public.yT5m..."`} />
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </Section>
 
@@ -554,7 +704,7 @@ export default function Documentation() {
                                 response={{
                                     success: true,
                                     data: {
-                                        accessToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
+                                        accessToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9... (or v2.local...)',
                                         refreshToken: 'uuid-refresh-token',
                                         expiresIn: 3600,
                                         user: {
@@ -576,8 +726,8 @@ export default function Documentation() {
                             <div className="space-y-4">
                                 <ConfigOption
                                     name="Authentication Type"
-                                    options={['JWT', 'SESSION']}
-                                    description="Choose between stateless JWT tokens or server-side sessions."
+                                    options={['JWT', 'SESSION', 'PASETO_LOCAL', 'PASETO_PUBLIC']}
+                                    description="Choose between stateless JWT or PASETO tokens, or server-side sessions."
                                 />
                                 <ConfigOption
                                     name="Password Hashing"

@@ -196,14 +196,20 @@ export default function AuthConfig() {
                                         <option value="JWT">Stateless JWT Tokens</option>
                                         <option value="SESSION">Stateful Sessions</option>
                                         <option value="API_TOKEN">Simple API Tokens</option>
+                                        <option value="PASETO_LOCAL">PASETO V2 Local (Symmetric)</option>
+                                        <option value="PASETO_PUBLIC">PASETO V2 Public (Asymmetric)</option>
                                     </Select>
                                     <p className="text-[10px] text-zinc-600 px-1 italic">Determines how persistence is handled between client and server.</p>
                                 </div>
 
                                 <div className="space-y-4">
                                     <div className="flex items-center justify-between px-1">
-                                        <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Custom JWT Payload</label>
-                                        <Badge className="bg-zinc-800 text-zinc-500 border-zinc-700 text-[9px] px-1.5 py-0">IDENTITY TOKEN</Badge>
+                                        <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">
+                                            {config.authMode?.includes('PASETO') ? 'Custom PASETO Claims' : 'Custom JWT Payload'}
+                                        </label>
+                                        <Badge className="bg-zinc-800 text-zinc-500 border-zinc-700 text-[9px] px-1.5 py-0">
+                                            {config.authMode?.includes('PASETO') ? 'PASETO TOKEN' : 'IDENTITY TOKEN'}
+                                        </Badge>
                                     </div>
 
                                     <div className="p-4 bg-zinc-900 border border-zinc-800 rounded-2xl space-y-4">
@@ -305,7 +311,7 @@ export default function AuthConfig() {
                                         )}
                                     </div>
                                     <p className="text-[10px] text-zinc-600 px-1 italic">
-                                        These values will be injected into the Identity Token (JWT) payload during authentication.
+                                        These values will be injected into the {config.authMode?.includes('PASETO') ? 'PASETO token' : 'Identity Token (JWT)'} payload during authentication.
                                     </p>
                                 </div>
 

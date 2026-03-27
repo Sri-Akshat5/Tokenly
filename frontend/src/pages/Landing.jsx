@@ -10,7 +10,7 @@ import SEO from '../components/seo/SEO';
 import FloatingTourVideo from '../components/FloatingTourVideo';
 
 export default function Landing() {
-    const apiFeatures = ['JWT', 'Bcrypt', 'OAuth', 'Redis', 'API Keys'];
+    const apiFeatures = ['JWT', 'PASETO', 'Bcrypt', 'OAuth', 'Redis', 'API Keys'];
     const [currentFeature, setCurrentFeature] = useState(0);
 
     const landingSchema = [
@@ -34,7 +34,7 @@ export default function Landing() {
             operatingSystem: 'Web',
             url: 'https://tokenly.codes',
             description:
-                'Tokenly is a secure, multi-tenant Auth-as-a-Service. Add login, signup, JWT, OAuth, magic links, and API key auth to any app in minutes.',
+                'Tokenly is a secure, multi-tenant Auth-as-a-Service. Add login, signup, JWT, PASETO, OAuth, magic links, and API key auth to any app in minutes.',
             offers: {
                 '@type': 'Offer',
                 price: '0',
@@ -46,7 +46,8 @@ export default function Landing() {
                 url: 'https://www.linkedin.com/in/sriakshat5',
             },
             featureList: [
-                'JWT Authentication',
+                'PASETO & JWT Authentication',
+                'PASETO Authentication',
                 'OAuth 2.0',
                 'Magic Link Login',
                 'Email OTP',
@@ -124,6 +125,14 @@ export default function Landing() {
                 },
                 {
                     '@type': 'Question',
+                    name: 'What is PASETO authentication?',
+                    acceptedAnswer: {
+                        '@type': 'Answer',
+                        text: 'PASETO (Platform-Agnostic Security Tokens) is a secure, modern alternative to JWT that prevents common cryptographic vulnerabilities. Tokenly supports both V2 Local and Public PASETO tokens natively.',
+                    },
+                },
+                {
+                    '@type': 'Question',
                     name: 'What is OAuth 2.0 and how does Tokenly support it?',
                     acceptedAnswer: {
                         '@type': 'Answer',
@@ -151,7 +160,7 @@ export default function Landing() {
                     name: 'What is Auth-as-a-Service?',
                     acceptedAnswer: {
                         '@type': 'Answer',
-                        text: 'Auth-as-a-Service (AaaS) is a hosted authentication platform that handles login, signup, token management, and session handling for your app. Tokenly is a free, multi-tenant Auth-as-a-Service that supports JWT, OAuth, magic links, OTP, and API key auth.',
+                        text: 'Auth-as-a-Service (AaaS) is a hosted authentication platform that handles login, signup, token management, and session handling for your app. Tokenly is a free, multi-tenant Auth-as-a-Service that supports JWT, PASETO, OAuth, magic links, OTP, and API key auth.',
                     },
                 },
                 {
@@ -167,7 +176,7 @@ export default function Landing() {
                     name: 'Is Tokenly free to use?',
                     acceptedAnswer: {
                         '@type': 'Answer',
-                        text: 'Yes, Tokenly is free to use. You can add JWT authentication, OAuth, magic link login, email OTP, and API key management to your application at no cost.',
+                        text: 'Yes, Tokenly is free to use. You can add JWT, PASETO, OAuth, magic link login, email OTP, and API key management to your application at no cost.',
                     },
                 },
                 {
@@ -192,8 +201,8 @@ export default function Landing() {
     return (
         <div className="min-h-screen bg-black overflow-x-hidden">
             <SEO
-                title="Tokenly – JWT Auth, OAuth & Magic Link API for Developers"
-                description="Free Auth-as-a-Service API. Add JWT authentication, OAuth 2.0, magic link login, email OTP, and API key management to any app in minutes. Multi-tenant, no SDK lock-in."
+                title="Tokenly – PASETO & JWT Auth, OAuth & Magic Link API for Developers"
+                description="Free Auth-as-a-Service API. Add highly secure PASETO and JWT authentication, OAuth 2.0, magic link login, email OTP, and API key management to any app in minutes. Multi-tenant, no SDK lock-in."
                 url="https://tokenly.codes/"
                 schema={landingSchema}
             />
@@ -408,7 +417,7 @@ export default function Landing() {
                             <Key className="w-6 h-6 text-white flex-shrink-0 mt-1" />
                             <div>
                                 <h3 className="text-lg font-semibold text-white mb-2">Choose how authentication works</h3>
-                                <p className="text-zinc-400">(Simple, JWT, OAuth, OTP)</p>
+                                <p className="text-zinc-400">(Simple, JWT, PASETO, OAuth, OTP)</p>
                             </div>
                         </div>
 
@@ -424,7 +433,7 @@ export default function Landing() {
                             <Shield className="w-6 h-6 text-white flex-shrink-0 mt-1" />
                             <div>
                                 <h3 className="text-lg font-semibold text-white mb-2">Issue stateless tokens securely</h3>
-                                <p className="text-zinc-400">JWT with configurable expiration</p>
+                                <p className="text-zinc-400">JWT and PASETO with configurable expiration</p>
                             </div>
                         </div>
 
@@ -629,6 +638,7 @@ function TechSpecsSection() {
     ];
 
     const authModes = [
+        { name: 'PASETO', desc: 'Platform-Agnostic Security Tokens. A highly secure, modern alternative to JWTs with strict cryptographic design.' },
         { name: 'Stateless JWT', desc: 'Self-contained tokens signed with RS256/HS256. Perfect for microservices as they require no database lookup validation.' },
         { name: 'Stateful Sessions', desc: 'Traditional server-side sessions stored in Redis. Offers immediate revocation and strict control over concurrent user sessions.' },
         { name: 'OAuth 2.0', desc: 'The industry standard for delegated authorization. Enables secure third-party access without sharing credentials.' },
@@ -1179,7 +1189,7 @@ function FeaturesSection() {
                     <FeatureCard
                         icon={<Key className="w-8 h-8" />}
                         title="Flexible Auth Modes"
-                        description="Choose your architecture: Stateless JWTs for scalability, Stateful Sessions for control, or Simple Auth Tokens for internal APIs."
+                        description="Choose your architecture: Secure PASETO or Stateless JWTs for scalability, Stateful Sessions for control, or Simple Auth Tokens for internal APIs."
                     />
                     <FeatureCard
                         icon={<Users className="w-8 h-8" />}
@@ -1277,7 +1287,7 @@ function SecuritySection() {
                             <SecurityCard
                                 icon={<Shield className="w-6 h-6" />}
                                 title="Stateless Architecture"
-                                description="RS256 signed JWTs for distributed verification."
+                                description="RS256 signed JWTs and secure PASETO tokens."
                                 delay={0.3}
                             />
                             <SecurityCard

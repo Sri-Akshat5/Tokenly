@@ -1,0 +1,32 @@
+<svg width="1200" height="675" viewBox="0 0 1200 675" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="675" fill="#09090B"/>
+  
+  <text x="600" y="80" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="32" font-weight="700">PASETO vs JWT</text>
+  <text x="600" y="115" text-anchor="middle" fill="#71717A" font-family="Inter, sans-serif" font-size="18">The Evolution of Stateless Authentication</text>
+
+  <!-- PASETO Side -->
+  <rect x="150" y="200" width="400" height="350" rx="20" fill="#18181B" stroke="#FBBF24" stroke-width="2"/>
+  <text x="350" y="240" text-anchor="middle" fill="#FBBF24" font-family="Inter, sans-serif" font-size="22" font-weight="700">PASETO</text>
+  <text x="350" y="280" text-anchor="middle" fill="#A1A1AA" font-family="Inter, sans-serif" font-size="14">Platform-Agnostic Security Tokens</text>
+  
+  <rect x="200" y="320" width="300" height="180" rx="12" fill="#27272A"/>
+  <text x="220" y="350" fill="#FFFFFF" font-family="monospace" font-size="12">v2.local.xE8d... (Encrypted)</text>
+  <text x="220" y="380" fill="#34D399" font-family="Inter, sans-serif" font-size="12">✓ Fixed cryptographic suites</text>
+  <text x="220" y="405" fill="#34D399" font-family="Inter, sans-serif" font-size="12">✓ Immune to algorithm confusion</text>
+  <text x="220" y="430" fill="#34D399" font-family="Inter, sans-serif" font-size="12">✓ Fully encrypted payload (Local)</text>
+  <text x="220" y="455" fill="#34D399" font-family="Inter, sans-serif" font-size="12">✓ Idiot-proof API design</text>
+
+  <!-- JWT Side -->
+  <rect x="650" y="200" width="400" height="350" rx="20" fill="#18181B" stroke="#3B82F6" stroke-width="2"/>
+  <text x="850" y="240" text-anchor="middle" fill="#3B82F6" font-family="Inter, sans-serif" font-size="22" font-weight="700">JWT</text>
+  <text x="850" y="280" text-anchor="middle" fill="#A1A1AA" font-family="Inter, sans-serif" font-size="14">JSON Web Tokens</text>
+
+  <rect x="700" y="320" width="300" height="180" rx="12" fill="#27272A"/>
+  <text x="720" y="350" fill="#FFFFFF" font-family="monospace" font-size="12">eyJhbGciOiJIUzI1NiIs... (Base64)</text>
+  <text x="720" y="380" fill="#F87171" font-family="Inter, sans-serif" font-size="12">✗ Algorithmic agility flaws</text>
+  <text x="720" y="405" fill="#F87171" font-family="Inter, sans-serif" font-size="12">✗ Susceptible to 'alg: none'</text>
+  <text x="720" y="430" fill="#F87171" font-family="Inter, sans-serif" font-size="12">✗ Publicly readable claims</text>
+  <text x="720" y="455" fill="#F87171" font-family="Inter, sans-serif" font-size="12">✗ Implementation footguns</text>
+
+  <text x="600" y="600" text-anchor="middle" fill="#71717A" font-family="Inter, sans-serif" font-size="16">PASETO eliminates the classes of cryptographic vulnerabilities that plague JWT.</text>
+</svg>
