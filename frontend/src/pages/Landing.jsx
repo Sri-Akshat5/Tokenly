@@ -205,6 +205,7 @@ export default function Landing() {
                 description="Free Auth-as-a-Service API. Add highly secure PASETO and JWT authentication, OAuth 2.0, magic link login, email OTP, and API key management to any app in minutes. Multi-tenant, no SDK lock-in."
                 url="https://tokenly.codes/"
                 schema={landingSchema}
+                keywords="free auth api, paseto vs jwt, self-hosted auth, authentication as a service free, developer auth api, secure token service"
             />
             {/* Subtle grid background */}
             <div className="fixed inset-0 bg-[linear-gradient(to_right,#18181b_1px,transparent_1px),linear-gradient(to_bottom,#18181b_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_110%)] -z-10" />

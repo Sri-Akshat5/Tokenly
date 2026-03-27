@@ -171,6 +171,11 @@ export default function BlogPost() {
                 description={post.description}
                 url={`https://tokenly.codes/blog/${post.slug}`}
                 schema={postSchema}
+                ogType="article"
+                keywords={post.tags.join(', ')}
+                date={post.date}
+                authorName={post.author.name}
+                tags={post.tags}
             />
 
             {/* Subtle grid background */}

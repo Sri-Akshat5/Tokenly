@@ -29,6 +29,7 @@ export default function Documentation() {
                 title="Tokenly API Documentation – PASETO & JWT, OAuth & Magic Link Integration"
                 description="Comprehensive Tokenly API documentation. Learn to implement highly secure PASETO and JWT authentication, OAuth 2.0, magic links, and OTP login using our REST API. Guides for React, Node.js, and secure session management."
                 url="https://tokenly.codes/docs"
+                keywords="api documentation, auth implementation guide, jwt vs paseto guide, oauth2 rest api, magic link docs, authentication best practices"
             />
             {/* Navigation */}
             <nav className="border-b border-zinc-900 bg-black/50 backdrop-blur-xl sticky top-0 z-50">

@@ -95,6 +95,7 @@ export default function Blog() {
                 description="Read expert guides on JWT authentication, OAuth 2.0, magic link login, API key security, and multi-tenant auth architecture. Built by the Tokenly team."
                 url="https://tokenly.codes/blog"
                 schema={blogSchema}
+                keywords="auth blog, developer tutorials, jwt guide, oauth2 tutorial, paseto vs jwt blog, api security tips"
             />
 
             {/* Subtle grid background */}
