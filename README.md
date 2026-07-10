@@ -53,7 +53,7 @@
  
 ## What is Tokenly?
  
-Tokenly is an open-source Authentication-as-a-Service platform that allows developers to add production-ready authentication to any application — in minutes, not weeks.
+Tokenly is an open-source, self-hosted, multi-tenant authentication platform that enables developers to add production-ready authentication to any application.
  
 Instead of implementing authentication yourself, Tokenly manages:
  
@@ -230,11 +230,10 @@ The Spring Boot server will start on port `8084` by default.
 ```bash
 cd ../frontend
 npm install
-npm run build
-npm run preview
+npm run dev
 ```
 
-The Vite preview server will launch the dashboard client (by default on port `4173`).
+The Vite preview server will launch the dashboard client (by default on port `5173`).
  
 ## Core Concepts
  
@@ -356,3 +355,12 @@ See the LICENSE file for details.
  
 ---
   
+## Contributing
+
+...
+
+---
+
+<p align="center">
+Built with ❤️ by the Tokenly community.
+</p>
