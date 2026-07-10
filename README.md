@@ -152,43 +152,6 @@ Focus on building your product while Tokenly handles authentication.
  
 ## Architecture
 
-<table>
-<tr>
-<td valign="top" width="50%">
-
-### Tokenly Cloud
-
-```text
-Developer
-     │
-     ▼
-Tokenly Dashboard
-     │
-     ▼
-Create Application
-     │
-     ▼
-Configure Authentication
-     │
-     ▼
-Generate API Keys
-     │
-     ▼
-Integrate Your App
-     │
-     ▼
-Tokenly API
-     │
-     ▼
-Authenticate Users
-```
-
-</td>
-
-<td valign="top" width="50%">
-
-### Self-Hosted
-
 ```text
 Developer
      │
@@ -196,81 +159,82 @@ Developer
 Clone Repository
      │
      ▼
-Configure Environment
+Configure Properties (MySQL, Redis, SMTP, JWT)
      │
      ▼
-Deploy Tokenly
+Deploy Backend (Spring Boot) & Frontend (React/Vite)
      │
      ▼
-Create Application
+Create Application via Dashboard
      │
      ▼
 Generate API Keys
      │
      ▼
-Integrate Your App
+Integrate Tokenly API with Your Application
      │
      ▼
-Authenticate Users
+Authenticate Users Securely
 ```
 
-</td>
-</tr>
-</table>
- 
-Tokenly sits between your app and your users, handling the full authentication lifecycle so your product code never has to.
- 
+Tokenly sits between your client applications and your users, handling the full authentication lifecycle so your core product code never has to.
+
 ---
  
 ## Quick Start
 
-Choose the option that best fits your needs.
+Run your own instance of Tokenly locally or on your server in four simple steps.
 
-### Use Tokenly Cloud
+### Prerequisites
 
-The fastest way to integrate authentication into your application.
-
-#### 1. Create an Account
-
-Create your Tokenly account and access the dashboard.
-
-#### 2. Create an Application
-
-Create an application and configure your authentication settings.
-
-#### 3. Generate API Keys
-
-Generate your application's API keys.
-
-- **Public Key (`pk_`)** — Safe for client-side applications.
-- **Private Key (`sk_`)** — Backend only. Never expose this key.
-
-#### 4. Integrate Authentication
-
-Make your first API call.
-
-```bash
-curl -X POST https://api.tokenly.com/api/auth/signup \
-  -H "X-API-Key: pk_your_public_key" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "email":"user@example.com",
-    "password":"SecurePassword123!"
-  }'
-```
+* **Java 17 (OpenJDK)** and **Maven 3.8+**
+* **Node.js 18.x** and **npm**
+* **MySQL Database 8.0+**
+* **Redis Cache Server**
 
 ---
 
-### Self-Host Tokenly
-
-Run your own Tokenly instance.
+### 1. Clone the Repository
 
 ```bash
-git clone [https://github.com/tokenly/tokenly.git](https://github.com/tokenly/tokenly.git)
-cd tokenly
+git clone https://github.com/Sri-Akshat5/Tokenly.git
+cd Tokenly
 ```
 
-> Self-hosting documentation, Docker setup, and production deployment guides are currently being prepared and will be available soon.
+### 2. Configure Settings
+
+Create a local copy of the properties and environment files:
+
+```bash
+# Backend configurations (MySQL connection, Redis, SMTP, and JWT secret)
+cp backend/src/main/resources/application.properties.example backend/src/main/resources/application.properties
+
+# Frontend configurations (VITE_API_BASE_URL)
+cp frontend/.env.example frontend/.env
+```
+
+Ensure you edit `backend/src/main/resources/application.properties` to fill in your MySQL database credentials, Redis host, and your JWT signing secret key.
+
+### 3. Build & Run Backend
+
+```bash
+cd backend
+mvn clean package
+java -jar target/backend-0.0.1-SNAPSHOT.jar
+```
+
+The Spring Boot server will start on port `8084` by default.
+
+### 4. Build & Run Frontend
+
+```bash
+cd ../frontend
+npm install
+npm run build
+npm run preview
+```
+
+The Vite preview server will launch the dashboard client (by default on port `4173`).
  
 ## Core Concepts
  

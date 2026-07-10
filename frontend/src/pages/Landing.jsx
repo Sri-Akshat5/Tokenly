@@ -463,12 +463,26 @@ export default function Landing() {
                         No SDK lock-in. No black box. Just clean APIs.
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                        <Link to="/signup">
-                            <Button size="lg" className="w-full sm:w-auto justify-center">
-                                Get Started Free
-                                <ArrowRight className="w-5 h-5 ml-2" />
-                            </Button>
-                        </Link>
+                        {import.meta.env.VITE_INTERNAL_USE === 'true' ? (
+                            <a
+                                href="https://github.com/Sri-Akshat5/Tokenly"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="w-full sm:w-auto"
+                            >
+                                <Button size="lg" className="w-full justify-center flex items-center gap-2">
+                                    <Github className="w-5 h-5" />
+                                    Clone Repository
+                                </Button>
+                            </a>
+                        ) : (
+                            <Link to="/signup">
+                                <Button size="lg" className="w-full sm:w-auto justify-center">
+                                    Get Started Free
+                                    <ArrowRight className="w-5 h-5 ml-2" />
+                                </Button>
+                            </Link>
+                        )}
                         <Link to="/docs">
                             <Button size="lg" variant="secondary" className="w-full sm:w-auto justify-center">
                                 View Documentation
@@ -541,11 +555,25 @@ export default function Landing() {
                             Deploy in minutes, scale to millions.
                         </p>
                         <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
-                            <Link to="/signup">
-                                <Button size="lg" className="w-full sm:w-auto justify-center">
-                                    Start Building Free
-                                </Button>
-                            </Link>
+                            {import.meta.env.VITE_INTERNAL_USE === 'true' ? (
+                                <a
+                                    href="https://github.com/Sri-Akshat5/Tokenly"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="w-full sm:w-auto"
+                                >
+                                    <Button size="lg" className="w-full justify-center flex items-center gap-2">
+                                        <Github className="w-5 h-5" />
+                                        Clone Repository
+                                    </Button>
+                                </a>
+                            ) : (
+                                <Link to="/signup">
+                                    <Button size="lg" className="w-full sm:w-auto justify-center">
+                                        Start Building Free
+                                    </Button>
+                                </Link>
+                            )}
                             <Link to="/docs">
                                 <Button variant="secondary" size="lg" className="w-full sm:w-auto justify-center">
                                     View Documentation

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Shield, Menu, X, ChevronRight } from 'lucide-react';
+import { Shield, Menu, X, ChevronRight, Github } from 'lucide-react';
 import Button from '../ui/Button';
 import env from '../../config/env';
 
@@ -34,17 +34,32 @@ export default function Navbar() {
                             Contact
                         </button>
                     </Link>
-                    <Link to="/login">
-                        <button className="px-5 py-2.5 text-zinc-400 hover:text-white transition-colors font-medium cursor-pointer">
-                            Login
-                        </button>
-                    </Link>
-                    <Link to="/signup">
-                        <Button size="md">
-                            Sign Up
-                            <ChevronRight className="w-4 h-4 ml-1" />
-                        </Button>
-                    </Link>
+                    {import.meta.env.VITE_INTERNAL_USE === 'true' ? (
+                        <a
+                            href="https://github.com/Sri-Akshat5/Tokenly"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            <Button size="md" variant="secondary" className="flex items-center gap-2">
+                                <Github className="w-4 h-4" />
+                                Git
+                            </Button>
+                        </a>
+                    ) : (
+                        <>
+                            <Link to="/login">
+                                <button className="px-5 py-2.5 text-zinc-400 hover:text-white transition-colors font-medium cursor-pointer">
+                                    Login
+                                </button>
+                            </Link>
+                            <Link to="/signup">
+                                <Button size="md">
+                                    Sign Up
+                                    <ChevronRight className="w-4 h-4 ml-1" />
+                                </Button>
+                            </Link>
+                        </>
+                    )}
                 </div>
 
                 {/* Mobile Menu Button */}
@@ -74,17 +89,34 @@ export default function Navbar() {
                             Contact
                         </button>
                     </Link>
-                    <Link to="/login" onClick={() => setIsMobileMenuOpen(false)}>
-                        <button className="w-full px-5 py-3 text-zinc-400 hover:text-white transition-colors font-medium text-left cursor-pointer">
-                            Login
-                        </button>
-                    </Link>
-                    <Link to="/signup" onClick={() => setIsMobileMenuOpen(false)}>
-                        <Button size="md" className="w-full justify-center">
-                            Sign Up
-                            <ChevronRight className="w-4 h-4 ml-1" />
-                        </Button>
-                    </Link>
+                    {import.meta.env.VITE_INTERNAL_USE === 'true' ? (
+                        <a
+                            href="https://github.com/Sri-Akshat5/Tokenly"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={() => setIsMobileMenuOpen(false)}
+                            className="w-full"
+                        >
+                            <Button size="md" variant="secondary" className="w-full justify-center gap-2">
+                                <Github className="w-4 h-4" />
+                                Git
+                            </Button>
+                        </a>
+                    ) : (
+                        <>
+                            <Link to="/login" onClick={() => setIsMobileMenuOpen(false)}>
+                                <button className="w-full px-5 py-3 text-zinc-400 hover:text-white transition-colors font-medium text-left cursor-pointer">
+                                    Login
+                                </button>
+                            </Link>
+                            <Link to="/signup" onClick={() => setIsMobileMenuOpen(false)}>
+                                <Button size="md" className="w-full justify-center">
+                                    Sign Up
+                                    <ChevronRight className="w-4 h-4 ml-1" />
+                                </Button>
+                            </Link>
+                        </>
+                    )}
                 </div>
             )}
         </nav>
