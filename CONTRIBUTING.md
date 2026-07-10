@@ -76,8 +76,26 @@ For usage questions or general discussions, please use GitHub Discussions instea
 
 ---
 
+---
+
+## Maintainer
+
+Tokenly is currently maintained by **Akshat Srivastava**.
+
+- GitHub: https://github.com/Sri-Akshat5
+- Linkedin: https://www.linkedin.com/in/sriakshat5/
+
+If you'd like to become a long-term maintainer, feel free to start a discussion or submit consistent, high-quality contributions.
+
+
 ## Code of Conduct
 
 By participating in this project, you agree to follow our Code of Conduct.
+
+# Contributors
+<a href="https://github.com/Sri-Akshat5/Tokenly/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=Sri-Akshat5/Tokenly" />
+</a>
+
 
 Thank you for helping improve Tokenly.
