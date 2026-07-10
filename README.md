@@ -234,6 +234,35 @@ npm run dev
 ```
 
 The Vite preview server will launch the dashboard client (by default on port `5173`).
+
+---
+
+### Run with Docker
+
+Prefer a single command instead? A root-level `docker-compose.yml` orchestrates MySQL, Redis, the backend, and the frontend together.
+
+**Prerequisites:** Docker and Docker Compose.
+
+```bash
+git clone https://github.com/Sri-Akshat5/Tokenly.git
+cd Tokenly
+cp .env.example .env
+```
+
+Edit `.env` and set at least `JWT_SECRET` (generate one with `openssl rand -hex 32`). Fill in `MAIL_USERNAME` / `MAIL_PASSWORD` if you want email-based flows (magic links, OTP, verification) to work.
+
+```bash
+docker compose up --build
+```
+
+This builds and starts:
+
+- `db` — MySQL 8, exposed on `MYSQL_PORT` (default `3306`)
+- `cache` — Redis, exposed on `REDIS_PORT` (default `6379`)
+- `backend` — Spring Boot API, exposed on `BACKEND_PORT` (default `8084`)
+- `frontend` — the dashboard, built and served via Nginx, exposed on `FRONTEND_PORT` (default `5173`)
+
+All service configuration is passed through environment variables defined in `.env` — no need to hand-edit `application.properties` or `frontend/.env` for the containerized setup.
  
 ## Core Concepts
  
