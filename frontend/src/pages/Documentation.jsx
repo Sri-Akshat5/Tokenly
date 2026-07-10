@@ -1,4 +1,4 @@
-import { Shield, Book, Code, Lock, Zap, Server, Key, Users, Settings as SettingsIcon, AlertCircle, Database } from 'lucide-react';
+import { Shield, Book, Code, Lock, Zap, Server, Key, Users, Settings as SettingsIcon, AlertCircle, Database, Github } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import env from '../config/env';
@@ -41,12 +41,27 @@ export default function Documentation() {
                         <span className="text-xl font-bold text-white tracking-tight">{env.appName} Docs</span>
                     </Link>
                     <div className="flex items-center gap-4">
-                        <Link to="/login">
-                            <Button variant="secondary" size="sm">Log In</Button>
-                        </Link>
-                        <Link to="/signup">
-                            <Button size="sm">Get Started</Button>
-                        </Link>
+                        {import.meta.env.VITE_INTERNAL_USE === 'true' ? (
+                            <a
+                                href="https://github.com/Sri-Akshat5/Tokenly"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                <Button size="sm" variant="secondary" className="flex items-center gap-2">
+                                    <Github className="w-4 h-4" />
+                                    Git
+                                </Button>
+                            </a>
+                        ) : (
+                            <>
+                                <Link to="/login">
+                                    <Button variant="secondary" size="sm">Log In</Button>
+                                </Link>
+                                <Link to="/signup">
+                                    <Button size="sm">Get Started</Button>
+                                </Link>
+                            </>
+                        )}
                     </div>
                 </div>
             </nav>
@@ -55,7 +70,7 @@ export default function Documentation() {
                 <div className="grid grid-cols-1 lg:grid-cols-4 gap-12">
                     {/* Sticky Sidebar */}
                     <aside className="lg:col-span-1">
-                        <div className="lg:sticky lg:top-24 space-y-8">
+                        <div className="lg:sticky lg:top-24 max-h-[calc(100vh-8rem)] overflow-y-auto pr-4 space-y-8">
                             <NavSection
                                 title="Getting Started"
                                 items={[
@@ -99,6 +114,14 @@ export default function Documentation() {
                                 items={[
                                     { id: 'auth-config', label: 'Auth Config' },
                                     { id: 'custom-fields', label: 'Custom Fields' },
+                                ]}
+                                activeSection={activeSection}
+                                scrollToSection={scrollToSection}
+                            />
+                            <NavSection
+                                title="Deployment"
+                                items={[
+                                    { id: 'self-hosting', label: 'Self-Hosting & Deployment' },
                                 ]}
                                 activeSection={activeSection}
                                 scrollToSection={scrollToSection}
@@ -759,6 +782,93 @@ export default function Documentation() {
                                     <div className="text-zinc-400">• Number</div>
                                     <div className="text-zinc-400">• Boolean</div>
                                     <div className="text-zinc-400">• Date</div>
+                                </div>
+                            </div>
+                        </Section>
+
+                        {/* Self-Hosting & Deployment */}
+                        <Section id="self-hosting" icon={<Server className="w-6 h-6 text-white" />} title="Self-Hosting & Deployment">
+                            <p className="text-zinc-400 mb-8 leading-relaxed">
+                                Deploy your own isolated instance of {env.appName}. Since it is fully open-source, you can deploy both the backend service and the frontend dashboard on your own infrastructure.
+                            </p>
+
+                            <div className="space-y-10">
+                                <div>
+                                    <h3 className="text-white font-bold mb-4 text-lg">Prerequisites</h3>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div className="p-4 bg-zinc-900/30 border border-zinc-800 rounded-xl">
+                                            <div className="text-white font-semibold mb-2">Backend Stack</div>
+                                            <ul className="space-y-1 text-sm text-zinc-500">
+                                                <li>• Java 17 (OpenJDK) or higher</li>
+                                                <li>• Apache Maven 3.8+</li>
+                                                <li>• MySQL Database 8.0+</li>
+                                                <li>• Redis Cache Server</li>
+                                            </ul>
+                                        </div>
+                                        <div className="p-4 bg-zinc-900/30 border border-zinc-800 rounded-xl">
+                                            <div className="text-white font-semibold mb-2">Frontend Stack</div>
+                                            <ul className="space-y-1 text-sm text-zinc-500">
+                                                <li>• Node.js 18.x or higher</li>
+                                                <li>• npm or yarn package manager</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <hr className="border-zinc-900" />
+
+                                <div className="space-y-6">
+                                    <h3 className="text-white font-bold text-lg">Deployment Steps</h3>
+                                    
+                                    <Step
+                                        number="1"
+                                        title="Clone the Repository"
+                                        description="Clone the official Tokenly source code from GitHub."
+                                    />
+                                    <CodeExample
+                                        language="bash"
+                                        code={`git clone https://github.com/Sri-Akshat5/Tokenly.git\ncd Tokenly`}
+                                    />
+
+                                    <Step
+                                        number="2"
+                                        title="Property and Environment Setup"
+                                        description="Copy the example configuration files and fill in your database connection, Redis host, SMTP, and JWT configurations."
+                                    />
+                                    <p className="text-zinc-500 text-sm leading-relaxed">
+                                        For the backend, copy <code className="text-zinc-300">backend/src/main/resources/application.properties.example</code> to <code className="text-zinc-300">application.properties</code> and edit it:
+                                    </p>
+                                    <CodeExample
+                                        language="bash"
+                                        code={`cp backend/src/main/resources/application.properties.example backend/src/main/resources/application.properties`}
+                                    />
+                                    <p className="text-zinc-500 text-sm leading-relaxed">
+                                        For the frontend, copy <code className="text-zinc-300">frontend/.env.example</code> to <code className="text-zinc-300">.env</code>:
+                                    </p>
+                                    <CodeExample
+                                        language="bash"
+                                        code={`cp frontend/.env.example frontend/.env`}
+                                    />
+
+                                    <Step
+                                        number="3"
+                                        title="Build and Run the Backend"
+                                        description="Compile and build the Spring Boot executable jar using Maven, then run it."
+                                    />
+                                    <CodeExample
+                                        language="bash"
+                                        code={`cd backend\nmvn clean package\njava -jar target/backend-0.0.1-SNAPSHOT.jar`}
+                                    />
+
+                                    <Step
+                                        number="4"
+                                        title="Configure and Build Frontend"
+                                        description="Install package dependencies, compile the static client dashboard assets, and run the preview server."
+                                    />
+                                    <CodeExample
+                                        language="bash"
+                                        code={`cd ../frontend\nnpm install\nnpm run build\nnpm run preview`}
+                                    />
                                 </div>
                             </div>
                         </Section>

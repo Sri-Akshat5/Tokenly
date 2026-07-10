@@ -17,6 +17,7 @@ import Navbar from '../components/layout/Navbar';
 import SEO from '../components/seo/SEO';
 import blogPosts from '../data/blogData';
 import { FooterSection } from './Landing';
+import env from '../config/env';
 
 const fadeUp = {
     hidden: { opacity: 0, y: 30 },
@@ -459,12 +460,25 @@ export default function BlogPost() {
                             minutes. No SDK lock-in.
                         </p>
                         <div className="flex flex-col sm:flex-row gap-4 justify-center pt-2">
-                            <Link to="/signup">
-                                <button className="px-8 py-4 bg-white text-black font-semibold rounded-xl hover:bg-zinc-100 hover:shadow-lg hover:shadow-white/20 transition-all duration-300 inline-flex items-center gap-2 cursor-pointer">
-                                    Start Building Free
-                                    <ArrowRight className="w-5 h-5" />
-                                </button>
-                            </Link>
+                            {import.meta.env.VITE_INTERNAL_USE === 'true' ? (
+                                <a
+                                    href="https://github.com/Sri-Akshat5/Tokenly"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    <button className="px-8 py-4 bg-white text-black font-semibold rounded-xl hover:bg-zinc-100 hover:shadow-lg hover:shadow-white/20 transition-all duration-300 inline-flex items-center gap-2 cursor-pointer">
+                                        Clone Repository
+                                        <ArrowRight className="w-5 h-5" />
+                                    </button>
+                                </a>
+                            ) : (
+                                <Link to="/signup">
+                                    <button className="px-8 py-4 bg-white text-black font-semibold rounded-xl hover:bg-zinc-100 hover:shadow-lg hover:shadow-white/20 transition-all duration-300 inline-flex items-center gap-2 cursor-pointer">
+                                        Start Building Free
+                                        <ArrowRight className="w-5 h-5" />
+                                    </button>
+                                </Link>
+                            )}
                             <Link to="/docs">
                                 <button className="px-8 py-4 bg-transparent text-white font-semibold rounded-xl border-2 border-zinc-700 hover:border-white hover:bg-white/5 transition-all duration-300 cursor-pointer">
                                     Read the Docs
