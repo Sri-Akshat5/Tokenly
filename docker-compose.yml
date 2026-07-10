@@ -49,10 +49,25 @@ services:
       SECURITY_JWT_SECRET: ${JWT_SECRET:?JWT_SECRET must be set}
       SPRING_MAIL_USERNAME: ${MAIL_USERNAME:-}
       SPRING_MAIL_PASSWORD: ${MAIL_PASSWORD:-}
+      # .env.example ships placeholder mail credentials, which would make the
+      # mail health indicator (and therefore the whole /actuator/health
+      # response below) report DOWN out of the box. Excluded from the overall
+      # health status by default so the healthcheck reflects the app, not an
+      # unconfigured mail account; set to true once real credentials are set.
+      MANAGEMENT_HEALTH_MAIL_ENABLED: ${MANAGEMENT_HEALTH_MAIL_ENABLED:-false}
       APP_URL_BASE_BACKEND: ${BACKEND_URL:-http://localhost:8084}
       APP_URL_BASE_FRONTEND: ${FRONTEND_URL:-http://localhost:5173}
     ports:
       - "${BACKEND_PORT:-8084}:8084"
+    # Without this, `depends_on` below only waits for the container process to
+    # start, not for Spring Boot to finish initializing - so frontend could
+    # start serving traffic before the backend can actually answer requests.
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8084/actuator/health"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 30s
 
   frontend:
     build:
@@ -62,7 +77,10 @@ services:
     container_name: tokenly-frontend
     restart: unless-stopped
     depends_on:
-      - backend
+      backend:
+        # Wait for the backend's healthcheck (not just container start) so
+        # the frontend doesn't come up before the API can serve requests.
+        condition: service_healthy
     ports:
       - "${FRONTEND_PORT:-5173}:80"
 

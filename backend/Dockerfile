@@ -12,6 +12,12 @@ RUN mvn clean package -Dmaven.test.skip=true -B
 FROM eclipse-temurin:17-jre-jammy
 WORKDIR /app
 
+# Needed so docker-compose.yml's healthcheck can hit /actuator/health from
+# inside this container; not present in the base image by default.
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends curl \
+    && rm -rf /var/lib/apt/lists/*
+
 COPY --from=build /app/target/*.jar app.jar
 # Baked-in defaults (port, JPA, logging, ...); secrets are supplied via
 # environment variables at runtime, which take precedence over this file.
