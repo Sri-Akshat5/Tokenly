@@ -24,9 +24,9 @@
     <img src="https://img.shields.io/badge/Documentation-Read_Now-brightgreen" alt="Documentation">
   </a>
 
-  <a href="./LICENSE">
-    <img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="MIT License">
-  </a>
+ <a href="./LICENSE">
+  <img src="https://img.shields.io/badge/License-Apache%202.0-blue.svg" alt="Apache License 2.0">
+</a>
 
   <img src="https://img.shields.io/badge/Spring_Boot-3.x-6DB33F?logo=springboot&logoColor=white" alt="Spring Boot">
 
@@ -53,7 +53,7 @@
  
 ## What is Tokenly?
  
-Tokenly is an open-source Authentication-as-a-Service platform that allows developers to add production-ready authentication to any application — in minutes, not weeks.
+Tokenly is an open-source, self-hosted, multi-tenant authentication platform that enables developers to add production-ready authentication to any application.
  
 Instead of implementing authentication yourself, Tokenly manages:
  
@@ -230,11 +230,10 @@ The Spring Boot server will start on port `8084` by default.
 ```bash
 cd ../frontend
 npm install
-npm run build
-npm run preview
+npm run dev
 ```
 
-The Vite preview server will launch the dashboard client (by default on port `4173`).
+The Vite preview server will launch the dashboard client (by default on port `5173`).
  
 ## Core Concepts
  
@@ -350,9 +349,18 @@ Tokenly ships with secure-by-default configuration compliant with OWASP standard
  
 ## License
  
-Licensed under the MIT License.
+Licensed under the Apache License 2.0.
 
 See the LICENSE file for details.
  
 ---
   
+## Contributing
+
+Contributions are welcome!
+
+Please read CONTRIBUTING.md before opening an issue or submitting a pull request.
+
+<p align="center">
+Built with ❤️ by the Tokenly community.
+</p>
