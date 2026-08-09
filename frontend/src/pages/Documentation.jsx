@@ -4,6 +4,7 @@ import { useState } from 'react';
 import env from '../config/env';
 import Button from '../components/ui/Button';
 import SEO from '../components/seo/SEO';
+import ContextAI from '../components/ContextAI';
 
 
 export default function Documentation() {
@@ -932,6 +933,7 @@ export default function Documentation() {
                     </main>
                 </div>
             </div>
+            <ContextAI />
         </div>
     );
 }

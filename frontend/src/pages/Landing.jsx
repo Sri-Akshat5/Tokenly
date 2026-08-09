@@ -8,6 +8,7 @@ import { Shield, Zap, Code2, Lock, Sparkles, Database, Key, Users, Terminal, Arr
 import env from '../config/env';
 import SEO from '../components/seo/SEO';
 import FloatingTourVideo from '../components/FloatingTourVideo';
+import ContextAI from '../components/ContextAI';
 
 export default function Landing() {
     const apiFeatures = ['JWT', 'PASETO', 'Bcrypt', 'OAuth', 'Redis', 'API Keys'];
@@ -588,6 +589,7 @@ export default function Landing() {
             {/* Footer */}
             <FooterSection />
             <FloatingTourVideo />
+            <ContextAI />
         </div>
     );
 }

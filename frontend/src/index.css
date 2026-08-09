@@ -108,3 +108,77 @@
     background: linear-gradient(180deg, #71717a, #52525b);
     background-clip: padding-box;
 }
+
+/* RGB Glowing Border Effects for Context AI */
+@keyframes rgb-flow {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+@keyframes rgb-pulse-glow {
+
+    0%,
+    100% {
+        opacity: 0.6;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 0.9;
+        transform: scale(1.015);
+    }
+}
+
+.rgb-border-card {
+    position: relative;
+    padding: 2px;
+    border-radius: 1.25rem;
+    background: linear-gradient(125deg,
+            #ff0055,
+            #7928ca,
+            #0070f3,
+            #00dfd8,
+            #43e97b,
+            #ffbe0b,
+            #ff0055);
+    background-size: 400% 400%;
+    animation: rgb-flow 6s ease infinite;
+}
+
+.rgb-border-glow {
+    position: absolute;
+    inset: -3px;
+    border-radius: 1.35rem;
+    background: linear-gradient(125deg,
+            #ff0055,
+            #7928ca,
+            #0070f3,
+            #00dfd8,
+            #43e97b,
+            #ffbe0b,
+            #ff0055);
+    background-size: 400% 400%;
+    animation: rgb-flow 8s ease infinite, rgb-pulse-glow 10s ease-in-out infinite;
+    filter: blur(6px);
+    z-index: -1;
+    pointer-events: none;
+}
+
+.rgb-text-gradient {
+    background: linear-gradient(135deg,
+            #ff4b91 0%,
+            #9d4edd 30%,
+            #3a86ff 60%,
+            #00f5d4 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
