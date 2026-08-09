@@ -79,7 +79,7 @@ export async function queryContextAI(queryText, options = {}) {
                 primaryUrl,
                 null,
                 {
-                    timeout: options.timeout || 12000,
+                 
                     headers: {
                         'Accept': 'application/json, text/plain, */*',
                     },
